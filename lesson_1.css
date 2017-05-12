@@ -1,0 +1,839 @@
+/* =================================================
+    [知识体系] 私有页面
+===================================================*/
+/* ---------------- index.shtml(手册首页) -------------------- */
+.index .icon{
+    display: inline-block;
+    background: url("images/icon.png") no-repeat;
+    width: 141px;
+    height: 141px;
+    margin-bottom: 10px;
+}
+.index .skew{
+    transform: skewx(14deg);
+    -ms-transform: skewx(14deg);
+    -moz-transform: skewx(14deg);
+    -webkit-transform: skewx(14deg);
+    transform-origin: 0 100%;
+    -ms-transform-origin: 0 100%;
+    -moz-transform-origin: 0 100%;
+    -webkit-transform-origin:0 100%;
+}
+.index .no-skew{
+    transform: skewx(-14deg);
+    -ms-transform: skewx(-14deg);
+    -moz-transform: skewx(-14deg);
+    -webkit-transform: skewx(-14deg);
+    transform-origin: 0 100%;
+    -ms-transform-origin: 0 100%;
+    -moz-transform-origin: 0 100%;
+    -webkit-transform-origin:0 100%;
+}
+.index .title{
+    font-size: 40px;
+    color:#333;
+    margin-bottom:20px;
+    text-align: center;
+    font-weight: bold;
+}
+.index .knowledge-banner .tab{
+    background: url("images/index_tabbg.png") no-repeat;
+}
+.index .knowledge-banner .tab .list{
+    position: relative;
+}
+.index .knowledge-banner .tab .item:after{
+    display: none;
+    content: "";
+    position: absolute;
+    top: -41px;
+    right: -91px;
+    background: url("images/index_tabbg_hover.png") no-repeat;
+    width: 262px;
+    height: 91px;
+    z-index: -1;
+}
+.index .knowledge-banner .list:hover .item:after{
+    display: block;
+}
+.index .knowledge-banner .content .wrap{
+    position: absolute;
+    left: 50%;
+    margin-left: -590px;
+    color:#fff;
+    padding: 50px 0;
+}
+.index .knowledge-banner .content .video{
+    position: relative;
+    float: left;
+    width: 271px;
+    height: 138px;
+    border: 1px solid #264043;
+    margin-right: -271px;
+    margin-left: 100px;
+    cursor: pointer;
+}
+.index .knowledge-banner .content .video .bg{
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+}
+.index .knowledge-banner .content .video .ico{
+    position: absolute;
+    top:50%;
+    left: 50%;
+    margin: -28.5px 0 0 -28.5px;
+    background:url("http://gad.qpic.cn/assets/web/img/community/knowledge/video_ico.png") no-repeat;
+    width: 57px;
+    height: 57px;
+
+}
+.index .knowledge-banner .title .english{
+    font-size: 84px;
+    line-height: 84px;
+    color:#4A398A;
+    font-weight: bold;
+    margin-top: -12px;
+}
+.index .knowledge-banner .content .info{
+    float: left;
+    margin-left: 278px;
+    padding: 0 50px;
+    width: 57%;
+}
+.index .knowledge-banner .info .word{
+    color:#dfd6ff;
+    line-height: 34px;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+.index .knowledge-banner .info .total{
+    margin-top:13px;
+    font-size: 14px;
+}
+.index .knowledge-banner .info .total .item{
+    margin-left: 40px;
+}
+.index .knowledge-banner .info .total .knowledge-ico{
+    margin-right: 5px;
+    vertical-align: sub;
+}
+.index .special .item{
+    float: left;
+    width: 25%;
+}
+.index .special .item .info{
+    text-align: center;
+    margin: 0 35px;
+}
+.index .special .item .ico1{
+    background-position: 0 0;
+}
+.index .special .item .ico2{
+    background-position: -292px 0;
+}
+.index .special .item .ico3{
+    background-position: -585px 0;
+}
+.index .special .item .ico4{
+    background-position: -879px 0;
+}
+.index .special .item .small-tit{
+    font-size: 28px;
+    color:#106c68;
+    font-weight: bold;
+}
+.index .special .item .intr{
+    font-size: 15px;
+    line-height: 24px;
+    color:#333;
+}
+.index .fit .item{
+    position: relative;
+    float: left;
+}
+.index .fit .pic{
+    position: absolute;
+    overflow: hidden;
+}
+.index .fit .info{
+    position: relative;
+    box-shadow: 0 0 15px #ccc;
+    -webkit-box-shadow: 0 0 15px #ccc;
+    -moz-box-shadow: 0 0 15px #ccc;
+}
+.index .fit .pic .img{
+    position: absolute;
+}
+.index .fit .crowd-num2 .item{
+    margin:50px 0 80px 50px;
+}
+.index .fit .crowd-num2 .info,.index .fit .crowd-num3 .info{
+    width: 356px;
+    height: 118px;
+    padding-left: 180px;
+    font-size: 18px;
+}
+.index .fit .crowd-num2 .pic,.index .fit .crowd-num3 .pic{
+    bottom: 0;
+    left: 0;
+    width: 146px;
+    height: 144px;
+}
+.index .fit .crowd-num2 .img,.index .fit .crowd-num3 .img{
+    width: 220px;
+    height: 144px;
+    left: -49px;
+}
+.index .fit .crowd-num2 .intr{
+    padding: 35px 20px 0 0;
+}
+.index .fit .crowd-num3 .item{
+    margin:50px 0 80px 30px;
+}
+.index .fit .crowd-num3 .info{
+    width: 360px;
+    padding-left: 0;
+}
+.index .fit .crowd-num3 .box{
+    padding: 32px 10px 0 157px;
+}
+.index .fit .crowd-num4{
+    margin-left: 20px;
+}
+.index .fit .crowd-num4 .item,.index .fit .crowd-num5 .item{
+    margin: 30px 0 50px 30px;
+}
+.index .fit .crowd-num4 .pic{
+    top: 0;
+    left:0;
+    width: 260px;
+    height:248px;
+}
+.index .fit .crowd-num4 .pic .img{
+    width: 307px;
+    height: 161px;
+    left: -40px;
+}
+.index .fit .crowd-num4 .info{
+    width: 260px;
+    height:248px;
+}
+.index .fit .crowd-num4 .info .intr{
+    font-size: 16px;
+    padding: 181px 10px 0;
+    color:#717171;
+}
+.index .fit .crowd-num5{
+    margin-left: 35px;
+}
+.index .fit .crowd-num5 .pic{
+    top: 0;
+    left:0;
+    width: 198px;
+    height:248px;
+}
+.index .fit .crowd-num5 .pic .img{
+    width: 264px;
+    height: 161px;
+    left: -44px;
+}
+.index .fit .crowd-num5 .info{
+    width: 198px;
+    height:248px;
+}
+.index .fit .crowd-num5 .info .intr{
+    font-size: 15px;
+    padding: 181px 16px 0;
+    color:#717171;
+}
+.index .advantage {
+    position: relative;
+    height: 347px;
+    background-color: #F0F0F0;
+}
+.index .advantage .info{
+    position: relative;
+    float: left;
+    width: 470px;
+    margin-right: -470px;
+}
+.index .advantage .info .num{
+    background: url("images/index_advantage_img.png") no-repeat;
+    width:303px;
+    height: 273px;
+    display: inline-block;
+    margin-left: 120px;
+}
+.index .advantage .list{
+    float: left;
+    margin-left: 480px;
+}
+.index .advantage .list .item{
+   margin-bottom: 25px;
+}
+.index .advantage .list .tit{
+    font-size: 22px;
+    color:#333;
+    overflow: hidden;
+    font-weight: bold;
+}
+.index .advantage .list .num{
+    font-size: 30px;
+    color:#028a80;
+    float: left;
+    margin-top: -6px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+.index .advantage .list .intr{
+    font-size: 14px;
+    color:#717171;
+}
+.index .slide {
+    position: relative;
+    width: 1180px;
+    height: 320px;
+    margin: 50px auto;
+    overflow: hidden;
+}
+.index .slide .list {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 99999px;
+}
+.index .slide .item {
+    position: relative;
+    float: left;
+    width: 1180px;
+    height: 320px;
+}
+.index .slide .pic {
+    position: relative;
+    margin-left: 92px;
+    width: 392px;
+    text-align: left;
+    height: 252px;
+    overflow: hidden;
+}
+.index .slide .pic>img {
+    position: absolute;
+    left: -63px;
+    width: 459px;
+    height: 252px;
+}
+.index .slide .title{
+    position: absolute;
+    left: 508px;
+    top:-10px;
+}
+.index .slide .cont {
+    position: absolute;
+    left: 432px;
+    bottom: 42px;
+    width: 712px;
+    height: 214px;
+    color: #fff;
+    z-index: 3;
+}
+.index .slide .cont .bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #028a80;
+
+}
+.index .slide .cont .box {
+    position: relative;
+    z-index: 2;
+}
+.index .slide .cont .box .tit {
+    font-size: 38px;
+    padding: 44px 0 15px 10px;
+    line-height: 38px;
+    font-weight: bold;
+}
+.index .slide .cont .box .job {
+    display: inline-block;
+    vertical-align: text-bottom;
+    font-weight: normal;
+    font-size: 18px;
+    padding-left: 20px;
+}
+.index .slide .cont .box .intr {
+    font-size: 14px;
+    color: #e4fdfb;
+    line-height: 24px;
+    padding: 0 40px;
+    max-height: 100px;
+    overflow: hidden;
+}
+.index .slide .dot {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 0;
+    text-align: center;
+}
+.index .slide .dot>i {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #CBCBCB;
+    margin: 0 3px;
+    cursor: pointer;
+}
+.index .slide .dot .cur {
+    background: #6A50CD;
+}
+.index .slide .btn .knowledge-ico{
+    position: absolute;
+    top: 110px;
+    width: 14px;
+    height: 38px;
+    line-height: 200px;
+    overflow: hidden;
+}
+.index .slide .btn .next {
+    right: 0;
+}
+.index .slide .btn .prev {
+    left: 0;
+}
+.index .interaction{
+    position: relative;
+    height: 353px;
+    background-color: #028a80;
+}
+.index .interaction:after{
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    margin-left: -108px;
+    width: 0;
+    height: 0;
+    border-left: 108px solid transparent;
+    border-right: 108px solid transparent;
+    border-bottom: 66px solid #106c68;
+}
+.index .interaction .wrap{
+    padding-top: 30px;
+}
+.index .interaction .inner{
+    padding: 0 68px;
+}
+.index .interaction .title{
+    color:#d1fdfa;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+.index .interaction .item{
+    position: relative;
+    float: left;
+    width: 50%;
+    height: 145px;
+}
+.index .interaction .item:first-child{
+    border-right:1px solid #106c68 ;
+    box-sizing: border-box;
+}
+.index .interaction .item .info{
+    position: relative;
+    padding-left:116px;
+}
+.index .interaction .item .tit{
+    font-size: 22px;
+    color:#fff;
+}
+.index .interaction .item .intr{
+    font-size: 14px;
+    color:#ebfffe;
+    margin: 10px 0 15px;
+}
+.index .interaction .item .group{
+    position: relative;
+    display: block;
+    width: 107px;
+    height: 40px;
+    line-height: 38px;
+    border: 1px solid #fff;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 2px;
+    cursor: pointer;
+}
+.index .interaction .item .group .btn{
+    color:#fff;
+}
+.index .interaction .item  span{
+    font-weight: bold;
+    font-size: 16px;
+    font-family: \5b8b\4f53;
+}
+.index .interaction .item .group:hover{
+    border-color:#A891FF;
+}
+.index .interaction .item .group:hover .btn{
+    color:#A891FF;
+}
+.index .interaction .item .group:hover .weixin{
+    display: block;
+}
+.index .interaction .item .icon{
+    position: absolute;
+    top: 0;
+    left: 32px;
+}
+.index .interaction .item .ico1{
+    background-position: -176px -75px;
+    width: 73px;
+    height: 66px;
+    left: 20px;
+}
+.index .interaction .item .ico2{
+    background-position: -184px 0;
+    width: 66px;
+    height: 66px;
+}
+.index .interaction .weixin{
+    display: none;
+    position: absolute;
+    bottom:0;
+    left: 130px;
+    width: 135px;
+    height: 134px;
+    background-color: #8C72EE;
+    text-align: center;
+    padding-top: 10px;
+    font-size: 14px;
+    color:#fff;
+}
+.index .interaction .weixin:after{
+    position: absolute;
+    bottom: 15px;
+    left: -7px;
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 7px solid #8C72EE;
+}
+.index .interaction .weixin .add{
+    line-height: 14px;
+    margin-top: 6px;
+}
+.index .interaction .weixin img{
+    width: 107px;
+    height: 107px;
+}
+.index .slide .slide-next{
+    background-position: 0 0;
+    width: 14px;
+    height: 38px;
+}
+.index .slide .slide-prev{
+    background-position: -34px 0;
+    width: 14px;
+    height: 38px;
+}
+.index .info .time-ico{
+    background-position: -106px 0;
+    width: 15px;
+    height: 15px;
+}
+.index .info .purchased_ico{
+    background-position: -36px -96px;
+    width: 16px;
+    height: 14px;
+}
+
+/* ---------------- catalog.shtml(手册目录页) -------------------- */
+.catalog .knowledge-banner .tab{
+    background: url("http://gad.qpic.cn/assets/web/img/community/knowledge/catalog_tabbg.png");
+}
+.catalog .knowledge-banner .tab .bg{
+    position: relative;
+}
+.catalog .knowledge-banner .tab .bg .item:after{
+    display: none;
+    content: "";
+    position: absolute;
+    top: -41px;
+    left: 0;
+    background: url("http://gad.qpic.cn/assets/web/img/community/knowledge/catalog_tabbg_hover.png") no-repeat;
+    width: 262px;
+    height: 91px;
+    z-index: -1;
+}
+.catalog .knowledge-banner .tab .bg:hover .item:after{
+    display: block;
+}
+.catalog .mainlist{
+    position: relative;
+    border-top: 14px solid #4C3C83;
+    margin-top: -300px;
+    z-index: 1;
+}
+.catalog .mainlist:after{
+    content: "";
+    position: absolute;
+    top:0;
+    left: 50%;
+    margin-left: -40px;
+    width: 0;
+    height: 0;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    border-top: 16px solid #4C3C83;
+}
+.catalog .mainlist:before{
+    content: "";
+    position: absolute;
+    top:-16px;
+    left: 50%;
+    margin-left: -40px;
+    width: 0;
+    height: 0;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    border-top: 16px solid #2A224A;
+}
+.catalog .layt-main:after{
+    content: "";
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    height: 300px;
+    width: 14px;
+    background: #4C3C83;
+}
+.catalog .layt-cnt:before{
+    content: "";
+    position: absolute;
+    top: -14px;
+    left: -14px;
+    height: 300px;
+    width: 14px;
+    background: #4C3C83;
+}
+.catalog .ex-layt-col2 .layt-main{
+    width: 755px;
+    border-right: none;
+    margin: 40px 50px 60px 35px;
+    padding: 0;
+}
+.catalog .ex-layt-col2 .layt-side{
+    border-left: none;
+    width: 307px;
+    padding: 0;
+    margin: 50px 0 0 0;
+}
+.catalog .listinner .item{
+    margin-bottom: 40px;
+}
+.catalog .listinner .title{
+    height: 39px;
+    line-height: 39px;
+    margin-bottom:20px;
+    margin-top: 14px;
+}
+.catalog .listinner .title .chapter{
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    background-color:#53a9f9;
+    font-size: 16px;
+    color:#fff;
+    border-radius: 20px;
+    padding: 0 34px 0 20px;
+    vertical-align: top;
+}
+.catalog .listinner .title .chapter:after{
+    content: "";
+    position: absolute;
+    top:0;
+    right: -27px;
+    height: 39px;
+    width: 52px;
+    background-color:#fff;
+    border-radius: 20px;
+}
+.catalog .listinner .title .words{
+    position: relative;
+    display: inline-block;
+    font-size: 20px;
+    color:#333;
+    z-index: 1;
+    width: 420px;
+}
+
+.catalog .listinner .title .time{
+    float: right;
+    font-size: 14px;
+    color:#717171;
+}
+.catalog .listinner .info {
+    padding: 22px 40px;
+    background-color: #F3F2F2;
+}
+.catalog .listinner .info .list .tit{
+    display: inline-block;
+    width:500px;
+    vertical-align: middle;
+}
+.catalog .listinner .info .cont{
+    padding-bottom: 10px;
+    border-bottom: 1px dotted #dedede;
+}
+.catalog .listinner .info .img{
+    position: relative;
+    float: left;
+    width: 191px;
+    height: 88px;
+    margin-right: -191px;
+}
+.catalog .listinner .info .box{
+    float: left;
+    margin-left: 220px;
+    font-size: 14px;
+    color:#717171;
+    width: 70%;
+}
+
+.catalog .listinner .info .whole{
+    display: block;
+    color:#336dbe;
+    margin-top: 12px;
+    cursor: pointer;
+}
+.catalog .listinner .info .intr{
+    max-height: 60px;
+    word-break: break-all;
+}
+.catalog .list{
+    padding: 5px 0;
+}
+.catalog .list .row{
+    position: relative;
+    margin: 20px 0 7px 0;
+    padding-left: 17px;
+    font-size: 16px;
+    line-height: 16px;
+    color: #333;
+}
+.catalog .list .row:after{
+    content: "";
+    position: absolute;
+    top:50%;
+    margin-top: -4.5px;
+    left: 0;
+    width: 9px;
+    height: 9px;
+    background: #DAE1E8;
+    border-radius: 50%;
+}
+
+.catalog .list .knowledge-ico{
+    vertical-align: sub;
+    margin-right: 8px;
+}
+.catalog .list .time{
+    float: right;
+    font-size: 14px;
+    color:#999;
+}
+.catalog .sideinfo .total{
+    width: 307px;
+    height: 91px;
+    background-color: #F3F2F2;
+    padding: 10px 24px;
+    color:#717171;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+.catalog .sideinfo .total .knowledge-ico{
+    margin-right: 5px;
+    vertical-align: sub;
+}
+.catalog .sideinfo .purchase-btn{
+    display:block;
+    margin-bottom: 8px;
+}
+.catalog .sideinfo .title{
+    margin-top: 40px;
+    font-size: 20px;
+    line-height: 20px;
+    color:#333;
+    padding-left: 10px;
+    border-left: 4px solid #53A9F9;
+}
+.catalog .sideinfo .lecturer .cont{
+    margin-top: 10px;
+}
+.catalog .sideinfo .lecturer .img{
+    position: relative;
+    float: left;
+    width: 60px;
+    margin: 10px -60px 10px 0;
+}
+.catalog .sideinfo .lecturer .img .f-circle{
+    width: 60px;
+    height: 60px;
+}
+.catalog .sideinfo .lecturer .tips{
+    float: left;
+    margin-left: 70px;
+    color:#999;
+    font-size: 12px;
+}
+.catalog .sideinfo .lecturer .name{
+    display: block;
+    font-size: 16px;
+    color: #333333;
+    margin-top:18px;
+}
+.catalog .sideinfo .lecturer .intr{
+    font-size: 14px;
+    color:#717171;
+}
+.catalog .sideinfo .similar .row{
+    font-size: 14px;
+}
+.catalog .sideinfo .similar .f-hide-col-1{
+    width: 60%;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.catalog .purchase_ico{
+    background-position: 0 -96px;
+    width: 16px;
+    height: 14px;
+}
+.catalog .time-ico{
+    background-position: -38px -58px;
+    width: 15px;
+    height: 15px;
+}
+.catalog .article-ico{
+    background-position: -68px 0;
+    width: 18px;
+    height: 18px;
+}
+.catalog .video-ico{
+    background-position: 0 -58px;
+    width: 18px;
+    height: 18px;
+}

@@ -1,0 +1,442 @@
+@charset "utf-8";
+/* =================================================
+    [知识体系] 公共部分
+===================================================*/
+/* ---------------- 页面模板 -------------------- */
+
+/* 尾部 */
+.m-footer{
+    width: 100%;
+    height: 96px;
+    padding-top: 25px;
+    box-sizing: border-box;
+    color:#999999;
+    background-color:#FFFFFF;
+    border-top:1px solid #E4EBF9;
+}
+.m-footer .footer-lkitem, .m-footer .footer-lkitem:hover,.m-footer .footer-copyright{
+    color:#999999;
+    font-family: \5b8b\4f53;
+}
+/* ---------------- 重置------------------------- */
+button,textarea{
+    font-family:"\5FAE\8F6F\96C5\9ED1";
+}
+html,body{
+    width:100%;
+    background-color:#fff;
+}
+.ex-header-sec .header-login .login-portrait{
+    height: 44px;
+}
+/* ---------------- 公用样式和小素材-------------------- */
+.wrap{
+    width: 1180px;
+    margin: 0 auto;
+    padding-top: 50px;
+}
+a.purchase-btn{
+    display: inline-block;
+    width: 259px;
+    height: 46px;
+    line-height: 46px;
+    font-size: 20px;
+    text-align: center;
+    background: #F69C00;
+    color:#fff;
+    border-radius: 2px;
+}
+a.had-purchased{
+    background-color: #ABABAB;
+    color:#fff;
+}
+.free-tips{
+    display: inline-block;
+    font-size: 12px;
+    color:#1479d6;
+    border: 1px solid #1479d6;
+    border-radius: 2px;
+    width: 30px;
+    height: 20px;
+    line-height: 22px;
+    text-align: center;
+    margin-right: 10px;
+}
+.pay-tips{
+    display: inline-block;
+    font-size: 12px;
+    color:#fff;
+    border: 1px solid #F69C00;
+    width: 30px;
+    height: 20px;
+    line-height: 22px;
+    border-radius: 2px;
+
+    background-color:#F69C00;
+    text-align: center;
+    margin-right: 10px;
+}
+.had-purchased-tips{
+    display: inline-block;
+    width: 44px;
+    height: 20px;
+    line-height: 22px;
+    text-align: center;
+    border-radius: 3px;
+    color:#fff;
+    font-size: 12px;
+    background-color: #80B91E;
+    margin-right: 10px;
+}
+.knowledge-ico{
+    display: inline-block;
+    background-image: url("http://gad.qpic.cn/assets/web/img/community/knowledge/knowledge_sprites_ico.png");
+}
+.knowledge-banner{
+    position: relative;
+    height: 930px;
+    width: 100%;
+    overflow: hidden;
+}
+.knowledge-banner .tab{
+    position: absolute;
+    top:510px;
+    left: 50%;
+    margin-left: -260px;
+    width: 524px;
+    height: 91px;
+    z-index: 11;
+}
+.knowledge-banner .tab .item{
+    display: inline-block;
+    width: 153px;
+    font-size: 22px;
+    color:#264043;
+    margin-top: 15px;
+    height: 60px;
+    line-height: 60px;
+    outline: none;
+}
+.knowledge-banner .tab .bg .item{
+    margin-left: 87px;
+    text-align: right;
+    padding-right: 20px;
+    cursor: pointer;
+    z-index: 5;
+}
+.knowledge-banner .tab .list .item{
+    padding-left: 17px;
+}
+.knowledge-banner .tab .item.curr{
+    color:#fff;
+}
+.knowledge-img{
+    position: absolute;
+    width: 1920px;
+    top: 0;
+    left: 50%;
+    margin-left: -960px;
+}
+.knowledge-banner .content{
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    margin-left: -960px;
+    width: 0;
+    height: 0;
+    border-right: 960px solid rgb(38, 64, 67);
+    border-top: 167px solid transparent;
+    border-left: 960px solid rgb(38, 64, 67);
+    border-bottom: 330px solid rgb(38, 64, 67);
+}
+.showmore{
+    display: none;
+    width: 675px;
+    height: 35px;
+    line-height: 35px;
+    background-color: #E3E6E8;
+    color:#3c69aa;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.showmore .arrow{
+    display: inline-block;
+    background: url("http://gad.qpic.cn/assets/web/img/community/knowledge/catalog_arrow.png") no-repeat;
+    width: 12px;
+    height: 5px;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+.showmore.more-open .showmore-open .arrow{
+    background-position: 0 0;
+}
+.showmore.more-collect .showmore-collect .arrow{
+    background-position: 0 -5px;
+}
+.showmore .showmore-open,
+.showmore .showmore-collect{
+    display: none;
+}
+.showmore.more-open,.showmore.more-collect{
+    display:block;
+}
+.showmore.more-open .showmore-open,
+.showmore.more-collect .showmore-collect{
+    display:inline-block;
+}
+/* =================================================
+    [知识体系] 私有页面
+===================================================*/
+/* ---------------- article_detail.shtml & video_detail.shtml -------------------- */
+.artmain .layt-top{
+    margin: 35px 0 30px;
+}
+.artmain .layt-side{
+    padding: 0 0 40px 30px;
+}
+.artmain .layt-main{
+    padding: 0 50px 60px 0;
+}
+.artmain .tit-head{
+    border-bottom: 1px dotted #DFDFDF;
+}
+.artmain .tit-head .title{
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+.artmain .tit-head .umetadata-main .umetadata-li{
+    height: 18px;
+    vertical-align: middle;
+}
+.artmain .tit-head .umetadata-main .link{
+    color:#999;
+    font-family: Arial, "Microsoft YaHei";
+    max-width: 200px;
+    display: inline-block;
+}
+.artmain .tit-head .umetadata-time{
+    display: inline-block;
+    margin-left: 18px;
+    color:#999;
+}
+.artmain .content{
+    padding: 20px 0;
+    font-size: 16px;
+}
+.artmain .content img{
+    max-width: 100%;
+    padding: 10px 0;
+}
+.artmain .content .test{
+    text-indent: 2em;
+}
+
+.artmain .detailinfo{
+    margin-top: 80px;
+}
+.artmain .detailinfo .tag{
+    float: left;
+    height: 25px;
+    line-height: 25px;
+}
+.artmain .detailinfo .tag .tit{
+    display: inline-block;
+    float: left;
+    color:#999;
+}
+.artmain .detailinfo .tag .m-label{
+    margin-right: 5px;
+}
+
+.artmain .recommend .ucol-title{
+    border-color: #2F74FF;
+    width: 90%;
+    height: 24px;
+    line-height: 20px;
+}
+.artmain .recommend .item{
+    position: relative;
+    padding-left:20px;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+.artmain .recommend .item:after{
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 9px;
+    height: 9px;
+    background: #DAE1E8;
+    border-radius: 50%;
+}
+.artmain .recommend .contact{
+    font-size: 14px;
+    color:#717171;
+}
+.artmain .recommend .contact>a{
+  color:#336dbe;
+}
+.artmain .recommend .contact .qq .ico{
+    float: left;
+    margin-top: 1px;
+    margin-right: 7px;
+    background:url("http://gad.qpic.cn/assets/web/img/community/knowledge/detail_qqico.png") no-repeat;
+    width: 15px;
+    height: 18px;
+}
+.artmain .purchase-tips{
+    display: inline-block;
+    padding: 1px 3px;
+    background-color: #80B91E;
+    color:#fff;
+    font-size: 12px;
+    border-radius: 2px;
+    margin-left: 10px;
+    vertical-align: middle;
+    margin-top: -6px;
+}
+.artmain .not-purchased{
+    text-align: center;
+}
+.artmain .not-purchased .tips{
+    font-size: 14px;
+    color:#40adf3;
+    margin: 10px 0;
+}
+
+/* ---------------- article_detail.shtml(文章详情页) -------------------- */
+
+
+
+/* ---------------- video_detail.shtml(视频详情页) -------------------- */
+.detail-video  .no-purchase-tips{
+    float: right;
+    background: #FF9125;
+    margin-top: 1px;
+}
+.detail-video .msmodvideo{
+    margin-top: 30px;
+}
+.detail-video .msmodvideo .modplayer {
+    position: relative;
+    float: left;
+    width: 843px;
+    height: 540px;
+    background-color: #000;
+}
+.detail-video .msmodvideo .videoalbum{
+    float: right;
+    width: 241px;
+    height: 500px;
+    background: #2E2E2E;
+    color:#fff;
+    padding: 20px 15px 20px 20px;
+}
+.detail-video .videoalbum .playingvideo .tit{
+    color:#fff;
+    font-size: 18px;
+    margin-bottom: 8px;
+    display: block;
+}
+.detail-video .videoalbum .pvcontent .pvimg{
+    position: relative;
+    float: left;
+    width: 40px;
+    margin-right: -40px;
+}
+.detail-video .videoalbum .pvcontent .pvinfo{
+    float: left;
+    margin-left: 50px;
+}
+.detail-video .videoalbum .pvcontent .pvinfo .lecture{
+    display: inline-block;
+    font-size: 14px;
+    color:#777;
+    margin-top: 10px;
+}
+.detail-video .videoalbum .videols .videolsdata{
+    padding:15px 0;
+    height: 286px;
+    overflow-y: auto;
+}
+.detail-video .videoalbum .videols .uscrollbar::-webkit-scrollbar-track{
+    background:#1b1b1b;
+}
+.detail-video .videoalbum .videols .uscrollbar::-webkit-scrollbar-thumb{
+    background: #4f4f4f;
+}
+.detail-video .videoalbum .videols .videolsdata .item{
+    margin-bottom: 10px;
+}
+.detail-video .videoalbum .videols .videolsdata .item .entry{
+    color:#777;
+    font-size: 14px;
+    display: inline-block;
+    width: 83%;
+}
+.detail-video .videoalbum .videols .videolsdata .item.curr .entry{
+    color:#fff;
+}
+.detail-video .videoalbum .videobtn{
+    text-align: center;
+    padding: 15px 0;
+}
+.detail-video .videoalbum .videobtn .purchase-btn{
+    width: 225px;
+    height: 38px;
+    line-height: 38px;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+
+
+/*视频弹窗*/
+.videopop{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+}
+.videopop:after{
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.6);
+    filter: alpha(opacity=60);
+}
+.videopop .video-wrap{
+    box-sizing: border-box;
+    width: 870px;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    margin-left: -435px;
+    background-color: #FFFFFF;
+    z-index: 1;
+}
+.videopop .video-head{
+    position: absolute;
+    top: 0;
+    right: -36px;
+    width: 36px;
+    height: 45px;
+    background: #000;
+    text-align: center;
+}
+.videopop .video-head .video-close{
+    font-family: "\5b8b\4f53";
+    font-size: 30px;
+    color: #fff;
+    cursor: pointer;
+    margin-right: 3px;
+}
