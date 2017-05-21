@@ -94,13 +94,13 @@ a.had-purchased{
 }
 .knowledge-banner{
     position: relative;
-    height: 930px;
+    height: 830px;
     width: 100%;
     overflow: hidden;
 }
 .knowledge-banner .tab{
     position: absolute;
-    top:510px;
+    top:410px;
     left: 50%;
     margin-left: -260px;
     width: 524px;
@@ -111,7 +111,7 @@ a.had-purchased{
     display: inline-block;
     width: 153px;
     font-size: 22px;
-    color:#264043;
+    color:#7c5afe;
     margin-top: 15px;
     height: 60px;
     line-height: 60px;
@@ -144,10 +144,10 @@ a.had-purchased{
     margin-left: -960px;
     width: 0;
     height: 0;
-    border-right: 960px solid rgb(38, 64, 67);
+    border-right: 960px solid rgb(42, 34, 74);
     border-top: 167px solid transparent;
-    border-left: 960px solid rgb(38, 64, 67);
-    border-bottom: 330px solid rgb(38, 64, 67);
+    border-left: 960px solid rgb(42, 34, 74);
+    border-bottom: 330px solid rgb(42, 34, 74);
 }
 .showmore{
     display: none;
