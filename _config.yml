@@ -1,9 +1,9 @@
 
 # Site settings
-title: SSS
-brief-intro: Welcome SSS'blog
+title: SSS'blog
+brief-intro: ""
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://WangXianSong.github.io" # the base hostname & protocol for your site
+url: "https://xsong.wang" # the base hostname & protocol for your site
 
 permalink: /:year/:month/:day/:title/
 
