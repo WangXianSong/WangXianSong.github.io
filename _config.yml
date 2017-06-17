@@ -1,9 +1,9 @@
 
 # Site settings
-title:xSong'blog
-brief-intro: ""
+title: SSS
+brief-intro: Welcome SSS'blog
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://xsong.wang" # the base hostname & protocol for your site
+url: "https://WangXianSong.github.io" # the base hostname & protocol for your site
 
 permalink: /:year/:month/:day/:title/
 
@@ -17,7 +17,7 @@ zhihu_username: ""
 linkedIn_username: ""
 dribbble_username: ""
 
-description_footer:""
+description_footer: Thank for your ready！
 
 # comments
 # two ways to comment, only choose one, and use your own short name
