@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "第一篇写博客"
+title:  "第一篇博客"
 date:  2017-7-10 21:40:05
 categories: Record
 tags: Record
