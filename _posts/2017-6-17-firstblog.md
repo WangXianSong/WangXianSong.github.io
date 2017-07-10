@@ -1,16 +1,14 @@
 ---
 layout: post
 title:  "第一篇写博客"
-date:   2017-7-6
+date:  2017-7-10 21:40:05
 categories: Record
 tags: Record
 ---
 * content
 {:toc}
 
-关于写倒计时大家可能都都比较熟悉，使用 setTimeout 或 setInterval 就可以搞定。几秒钟或者几分钟的倒计时这样写没有问题，但是如果是长时间的倒计时，这样写就会不准确。如果用户修改了他的设备时间，这样的倒计时就没有意义了。今天就说说写一个精确的倒计时的方法。
-
-![](https://img.alicdn.com/tfs/TB18QnlOpXXXXcVXpXXXXXXXXXX-388-256.png)
+这两个星期都在折腾这博客，从一开始的陌生，慢慢到开始认识，再到迟点的熟悉，都是一种学习。我相信每个人所踏出的每一步都会有所收获，只要敢于尝试。
 
 
 
@@ -44,7 +42,8 @@ tags: Record
 ![](http://image.jiantuku.com/17-7-10/5346710.jpg?attname=file_1499664867328_d896.jpg&e=1499665210&token=el7kgPgYzpJoB23jrChWJ2gV3HpRl0VCzFn8rKKv:kiIoEK82BEBrGJ2MPQuCwECYezg=)
 
 
-如果哪位同学还没有制作自己的博客，具体细节可以参考此链接：[傻瓜都可以利用github pages建博客 | Cyzus' Blog]( http://www.jianshu.com/p/d658ba3b4351) 
+如果哪位同学还没有制作自己的博客，具体细节可以参考此链接：
+[傻瓜都可以利用github pages建博客 | Cyzus' Blog]( http://www.jianshu.com/p/d658ba3b4351) 
 
 
 博客已经搭建起来了，为了让大家更好的记住我的博客，那域名也要符合我的名字才行，然后在阿里云看到了带有.wang后缀的域名，虽说本意是“网”，但也同“王”同音，正好符合我姓氏。经过一番挑选，最后决定我的博客域名是：[xsong.wang](xsong.wang)。
