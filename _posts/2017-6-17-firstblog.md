@@ -27,7 +27,7 @@ tags: Record
 
 那就开始接受一下我的博客吧，这是Github Pages+Jekyll搭建的独立博客，之前也有用过第三方的博客系统，虽然使用起来简单，但是有地方不尽人意。于是，我在网上寻觅到了合乎我心意的方法：[傻瓜都可以利用github pages建博客 | Cyzus' Blog]( http://cyzus.github.io/2015/06/21/github-build-blog/)
 (具体搭建过程可以参考此文)。
-
+![](http://image.jiantuku.com/17-7-10/32873159.jpg?attname=file_1499663141352_152cc.jpg&e=1499664010&token=el7kgPgYzpJoB23jrChWJ2gV3HpRl0VCzFn8rKKv:LWVKzSBkyoAmHnfv5Q921XSqFCg=)
 
 博客已经搭建起来了，为了让大家更好的记住我的博客，那域名也要符合我的名字才行，然后在阿里云看到了带有.wang后缀的域名，虽说本意是“网”，但也同“王”同音，正好符合我姓氏。最后决定了域名是：[xsong.wang](xsong.wang)。
 
