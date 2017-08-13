@@ -39,7 +39,7 @@ tags: Record
 - 最后根据自身需要用文本编辑器来修改内容，同时同步到仓库就完成了。
 
 
-![](http://image.jiantuku.com/17-7-10/5346710.jpg?attname=file_1499664867328_d896.jpg&e=1499665210&token=el7kgPgYzpJoB23jrChWJ2gV3HpRl0VCzFn8rKKv:kiIoEK82BEBrGJ2MPQuCwECYezg=)
+![](http://i.imgur.com/akkTe81.jpg)
 
 
 如果哪位同学还没有制作自己的博客，具体细节可以参考此链接：
