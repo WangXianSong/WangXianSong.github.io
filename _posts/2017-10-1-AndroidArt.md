@@ -29,11 +29,11 @@ tags: Android
 第1章的内容比较少，主要以Activit的生命周期、启动模式为主的知识点。个人觉得是书作者为了给读者的过渡：
 
 - 1.Activity的生命周期解析
- - 1.1 一般情况下的生命周期分析
- - 1.2 异常情况下的生命周期分析
+  - 1.1 一般情况下的生命周期分析
+  - 1.2 异常情况下的生命周期分析
 - 2.Activity的启动模式
- - 2.1 Activity的四种LaunchMode
- - 2.2 Activity的Flags
+  - 2.1 Activity的四种LaunchMode
+  - 2.2 Activity的Flags
 - 3.IntentFilter的匹配规则
 
 **1.1 一般情况下的生命周期分析**
@@ -52,7 +52,7 @@ tags: Android
 
 onDestroy：表示Activity即将被销毁，可以做一些回收工作和最终资源释放。
 
-onRestart：表示Activity正在重新启动
+onRestart：表示Activity正在重新启动，
 
 
 
