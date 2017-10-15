@@ -40,24 +40,26 @@ tags: Android
 
 关于Activity生命周期这个知识点，虽然在刚开始学习Android的时候就有接触，而且也专门对Activity生命周期作了总结，但是由于接触层面比较浅，印象并没有那么深刻[(当时的学习总结)](http://blog.csdn.net/qq_26849491/article/details/51241356)。通过这次的学习，使这知识点在我脑海里更深刻了些，同时也让我清楚在哪个环节应该做些什么后台处理。
 
-**onCreate**：表示Activity正在被创建，可以做一些初始化的工作。
+　　**onCreate**：表示Activity正在被创建，可以做一些初始化的工作。
 
-**onStart**：表示Activity正在被启动，Activity已经可见了，但仍在后台。
+　　**onStart**：表示Activity正在被启动，Activity已经可见了，但仍在后台。
 
-**onResume**：表示Activity已经可见了，并且出现在前台，并开始活动。
+　　**onResume**：表示Activity已经可见了，并且出现在前台，并开始活动。
 
-**onPause**：表示Activity正在停止，正常情况下，紧接着onStop就会被调用。在特殊情况下，如果快速回到当前Activity，那么onResume会被调用，所以此时可以做一些存储数据、停止动画等工作。(不能做耗时操作)
+　　**onPause**：表示Activity正在停止，正常情况下，紧接着onStop就会被调用。在特殊情况下，如果快速回到当前Activity，那么onResume会被调用，所以此时可以做一些存储数据、停止动画等工作。(不能做耗时操作)
 
-**onStop**：表示Activity即将停止，可以做一些稍微重量级的回收工作。(尽量不要太耗时)
+　　**onStop**：表示Activity即将停止，可以做一些稍微重量级的回收工作。(尽量不要太耗时)
 
-**onDestroy**：表示Activity即将被销毁，可以做一些回收工作和最终资源释放。
+　　**onDestroy**：表示Activity即将被销毁，可以做一些回收工作和最终资源释放。
 
-**onRestart**：表示Activity正在重新启动，当当前Activity从不可见重新变为可见状态时就会调用onRestart，切换过程为：onPause->onStop->(用户返回原Activity)->onRestart。
+　　**onRestart**：表示Activity正在重新启动，当当前Activity从不可见重新变为可见状态时就会调用onRestart，切换过程为：onPause->onStop->(用户返回原Activity)->onRestart。
 
 
 **重要笔记：**
 
-1、当两个Activity进行相互跳转时，旧Activity的onPause先调用，然后才启动新的Activity的onCreate。当
+　　1、当两个Activity进行相互跳转时，旧Activity的onPause先调用，然后才启动新的Activity的onCreate，所以不能在onPause执行耗时操作。
+
+　　2、如果新Activity采用了透明主题，那么当前Activity的onStop方法不会被调用；
 
 
 
