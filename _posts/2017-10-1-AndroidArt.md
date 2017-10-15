@@ -12,9 +12,11 @@ tags: Android
 
 
 
-## 《Android开发艺术探索》是一本怎么样的书？
+
 
 ![](https://i.imgur.com/kXgxhal.jpg)
+
+## 《Android开发艺术探索》是一本怎么样的书？
 
 > 《Android开发艺术探索》是一本Android进阶类书籍，采用理论、源码和实践相结合的方式来阐述高水准的Android应用开发要点。《Android开发艺术探索》从三个方面来组织内容。第一，介绍Android开发者不容易掌握的一些知识点；第二，结合Android源代码和应用层开发过程，融会贯通，介绍一些比较深入的知识点；第三，介绍一些核心技术和Android的性能优化思想。
 
@@ -25,8 +27,6 @@ tags: Android
 这是来自[百度百科](https://baike.baidu.com/item/Android%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2/18526051?fr=aladdin)的介绍，在我眼中已经不单是进阶书籍那么简单，而是突破我目前的樽颈位的学习阶段。为了更好的学习，我会在边学习边总结，将知识点整理出来，方便以后的复习。
 
 ## 第1章 Activity的生命周期和启动模式
-
-第1章的内容比较少，主要以Activit的生命周期、启动模式为主的知识点。个人觉得是书作者为了给读者的过渡：
 
 - 1.Activity的生命周期解析
   - 1.1 一般情况下的生命周期分析
@@ -46,14 +46,18 @@ tags: Android
 
 **onResume**：表示Activity已经可见了，并且出现在前台，并开始活动。
 
-**onPause**：表示Activity正在停止，正常情况下，紧接着onStop就会被调用。(在特殊情况下，如果快速回到当前Activity，那么onResume会被调用，所以此时可以做一些存储数据、停止动画等工作)。
+**onPause**：表示Activity正在停止，正常情况下，紧接着onStop就会被调用。在特殊情况下，如果快速回到当前Activity，那么onResume会被调用，所以此时可以做一些存储数据、停止动画等工作。(不能做耗时操作)
 
 **onStop**：表示Activity即将停止，可以做一些稍微重量级的回收工作。(尽量不要太耗时)
 
-onDestroy：表示Activity即将被销毁，可以做一些回收工作和最终资源释放。
+**onDestroy**：表示Activity即将被销毁，可以做一些回收工作和最终资源释放。
 
-onRestart：表示Activity正在重新启动，
+**onRestart**：表示Activity正在重新启动，当当前Activity从不可见重新变为可见状态时就会调用onRestart，切换过程为：onPause->onStop->(用户返回原Activity)->onRestart。
 
+
+**重要笔记：**
+
+1、当两个Activity进行相互跳转时，旧Activity的onPause先调用，然后才启动新的Activity的onCreate。当
 
 
 
