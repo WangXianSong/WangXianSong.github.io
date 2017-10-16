@@ -28,13 +28,13 @@ tags: Android
 
 ## 第1章 Activity的生命周期和启动模式
 
-- 1.Activity的生命周期解析
-  - 1.1 一般情况下的生命周期分析
-  - 1.2 异常情况下的生命周期分析
-- 2.Activity的启动模式
-  - 2.1 Activity的四种LaunchMode
-  - 2.2 Activity的Flags
-- 3.IntentFilter的匹配规则
+- 1.1 Activity的生命周期解析
+  - 1.1.1 一般情况下的生命周期分析
+  - 1.1.2 异常情况下的生命周期分析
+- 1.2 Activity的启动模式
+  - 1.2.1 Activity的四种LaunchMode
+  - 1.2.2 Activity的Flags
+- 1.3 IntentFilter的匹配规则
 
 ### 1.1 一般情况下的生命周期分析
 
@@ -47,6 +47,7 @@ tags: Android
 　　**onStop**：表示Activity即将停止，可以做一些稍微重量级的回收工作。(尽量不要太耗时) <br />
 　　**onDestroy**：表示Activity即将被销毁，可以做一些回收工作和最终资源释放。 <br />
 　　**onRestart**：表示Activity正在重新启动，当当前Activity从不可见重新变为可见状态时就会调用onRestart，切换过程为：onPause->onStop->(用户返回原Activity)->onRestart。 <br />
+
 
 
 **重要笔记：**
@@ -74,7 +75,23 @@ tags: Android
 
 　　１、onSavedInstanceState和onRestoreInstanceState只会在Activity被异常终止的情况下被调用，正常情况下系统不会回调这两个方法，并且onRestoreInstanceState一旦被调用，其参数bundle必定为非空，不需要在方法内做空值判断； <br />
 　　2、如果当系统配置中某项发生改变时，我们不想系统重新创建Activity，可以在AndroidManifest.xml中对应Activity标签声明时加上
-`android:configChanges="orientation|screenSize"`<br />
+`android:configChanges="orientation|screenSize"` 即可。同时还可以onConfigurationChanged方法做一些自己的特殊处理。<br />
+
+
+### 1.2 Activity的启动模式
+
+　　Android有四种启动模式：standard、singleTop、singleTask和singleInstance。
+
+　　定义方法：
+	```XML
+	<activity
+            android:name=".MainActivity3"
+            android:launchMode="singlelnstance">
+        </activity>
+	```
+hhhhh
+
+
 
 
 
