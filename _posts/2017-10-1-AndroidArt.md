@@ -40,25 +40,18 @@ tags: Android
 
 关于Activity生命周期这个知识点，虽然在刚开始学习Android的时候就有接触，而且也专门对Activity生命周期作了总结，但是由于接触层面比较浅，印象并没有那么深刻[(当时的学习总结)](http://blog.csdn.net/qq_26849491/article/details/51241356)。通过这次的学习，使这知识点在我脑海里更深刻了些，同时也让我清楚在哪个环节应该做些什么后台处理。
 
-　　**onCreate**：表示Activity正在被创建，可以做一些初始化的工作。
-
-　　**onStart**：表示Activity正在被启动，Activity已经可见了，但仍在后台。
-
-　　**onResume**：表示Activity已经可见了，并且出现在前台，并开始活动。
-
-　　**onPause**：表示Activity正在停止，正常情况下，紧接着onStop就会被调用。在特殊情况下，如果快速回到当前Activity，那么onResume会被调用，所以此时可以做一些存储数据、停止动画等工作。(不能做耗时操作)
-
-　　**onStop**：表示Activity即将停止，可以做一些稍微重量级的回收工作。(尽量不要太耗时)
-
-　　**onDestroy**：表示Activity即将被销毁，可以做一些回收工作和最终资源释放。
-
+　　**onCreate**：表示Activity正在被创建，可以做一些初始化的工作。</br>
+　　**onStart**：表示Activity正在被启动，Activity已经可见了，但仍在后台。</br>
+　　**onResume**：表示Activity已经可见了，并且出现在前台，并开始活动。</br>
+　　**onPause**：表示Activity正在停止，正常情况下，紧接着onStop就会被调用。在特殊情况下，如果快速回到当前Activity，那么onResume会被调用，所以此时可以做一些存储数据、停止动画等工作。(不能做耗时操作)</br>
+　　**onStop**：表示Activity即将停止，可以做一些稍微重量级的回收工作。(尽量不要太耗时)</br>
+　　**onDestroy**：表示Activity即将被销毁，可以做一些回收工作和最终资源释放。</br>
 　　**onRestart**：表示Activity正在重新启动，当当前Activity从不可见重新变为可见状态时就会调用onRestart，切换过程为：onPause->onStop->(用户返回原Activity)->onRestart。
 
 
 **重要笔记：**
 
-　　1、当两个Activity进行相互跳转时，旧Activity的onPause先调用，然后才启动新的Activity的onCreate，所以不能在onPause执行耗时操作。
-
+　　1、当两个Activity进行相互跳转时，旧Activity的onPause先调用，然后才启动新的Activity的onCreate，所以不能在onPause执行耗时操作。</br>
 　　2、如果新Activity采用了透明主题，那么当前Activity的onStop方法不会被调用；
 
 
@@ -67,20 +60,15 @@ tags: Android
 
 　　**情况1：资源相关的系统配置发生变化导致Activity被杀死并重新创建。**
 
-　　(1)Activity在异常情况下被回收时，系统会调用onSaveInstanceState方法来保存当前Activity的状态，调用时机是在onStop之前。
-
+　　(1)Activity在异常情况下被回收时，系统会调用onSaveInstanceState方法来保存当前Activity的状态，调用时机是在onStop之前。</br>
 　　(2)Activity被重新创建后，系统会调用onRestoreInstanceState，并且把Activity销毁时onSaveInstanceState方法所保存的Bundle对象作为参数同时传给onRestoreInstanceState和onCreate方法。
 
 
 　　**情况2：资源内存不足导致低优先级的Activity被杀死。**
 
-　　(1)前台Activity——正在和用户交互的Activity优先级最高；
-
-　　(2)可见但非前台Activity——比如Activity弹出的对话框；
-
-　　(3)后台Activity——已经被暂停的Activity，比如执行了onStop，优先级最低；
-
-
+　　(1)前台Activity——正在和用户交互的Activity优先级最高；</br>
+　　(2)可见但非前台Activity——比如Activity弹出的对话框；</br>
+　　(3)后台Activity——已经被暂停的Activity，比如执行了onStop，优先级最低；</br>
 
 **重要笔记：**
 
