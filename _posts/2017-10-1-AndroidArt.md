@@ -8,8 +8,6 @@ tags: Android
 * content
 {:toc}
 
-　
-
 最近学完Android开发的入门书籍《第一行代码》，为了更好的掌握知识点，接下来开始学习Android的进阶知识书籍《Android开发艺术探索》。
 
 
