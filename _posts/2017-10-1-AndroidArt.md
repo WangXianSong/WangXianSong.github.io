@@ -60,19 +60,22 @@ tags: Android
 
 　　**情况1：资源相关的系统配置发生变化导致Activity被杀死并重新创建。**
 
-　　(1)Activity在异常情况下被回收时，系统会调用onSaveInstanceState方法来保存当前Activity的状态，调用时机是在onStop之前。</br>
+　　(1)Activity在异常情况下被回收时，系统会调用onSaveInstanceState方法来保存当前Activity的状态，调用时机是在onStop之前。  
+
 　　(2)Activity被重新创建后，系统会调用onRestoreInstanceState，并且把Activity销毁时onSaveInstanceState方法所保存的Bundle对象作为参数同时传给onRestoreInstanceState和onCreate方法。
 
 
 　　**情况2：资源内存不足导致低优先级的Activity被杀死。**
 
-　　(1)前台Activity——正在和用户交互的Activity优先级最高；</br>
-　　(2)可见但非前台Activity——比如Activity弹出的对话框；</br>
-　　(3)后台Activity——已经被暂停的Activity，比如执行了onStop，优先级最低；</br>
+　　(1)前台Activity——正在和用户交互的Activity优先级最高；  
+
+　　(2)可见但非前台Activity——比如Activity弹出的对话框； </br>
+　　(3)后台Activity——已经被暂停的Activity，比如执行了onStop，优先级最低； </br>
 
 **重要笔记：**
 
-　　１、onSavedInstanceState和onRestoreInstanceState只会在Activity被异常终止的情况下被调用，正常情况下系统不会回调这两个方法，并且onRestoreInstanceState一旦被调用，其参数bundle必定为非空，不需要在方法内做空值判断；
+　　１、onSavedInstanceState和onRestoreInstanceState只会在Activity被异常终止的情况下被调用，正常情况下系统不会回调这两个方法，并且onRestoreInstanceState一旦被调用，其参数bundle必定为非空，不需要在方法内做空值判断；</br>
+　　2、如果当系统配置中某项发生改变时，我们不想系统重新创建Activity，可以在AndroidManifest.xml中对应Activity标签声明时加上“android:configChanges="orientation|screenSize"”即可；
 
 
 
