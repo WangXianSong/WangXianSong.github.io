@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "学习《Android开发艺术探索》"
+title:  "学习《Android开发艺术探索》的知识总结"
 date:  2017-10-11 17:08:56
 categories: Android
 tags: Android
@@ -36,7 +36,7 @@ tags: Android
   - 2.2 Activity的Flags
 - 3.IntentFilter的匹配规则
 
-**1.1 一般情况下的生命周期分析**
+### 1.1 一般情况下的生命周期分析
 
 关于Activity生命周期这个知识点，虽然在刚开始学习Android的时候就有接触，而且也专门对Activity生命周期作了总结，但是由于接触层面比较浅，印象并没有那么深刻[(当时的学习总结)](http://blog.csdn.net/qq_26849491/article/details/51241356)。通过这次的学习，使这知识点在我脑海里更深刻了些，同时也让我清楚在哪个环节应该做些什么后台处理。
 
@@ -62,14 +62,25 @@ tags: Android
 　　2、如果新Activity采用了透明主题，那么当前Activity的onStop方法不会被调用；
 
 
-**1.2 异常情况下的生命周期分析**
+### 1.2 异常情况下的生命周期分析
 
 
-　　情况1：资源相关的系统配置发生变化导致Activity被杀死并重新创建。
+　　**情况1：资源相关的系统配置发生变化导致Activity被杀死并重新创建。**
 
 　　(1)Activity在异常情况下被回收时，系统会调用onSaveInstanceState方法来保存当前Activity的状态，调用时机是在onStop之前。
 
 　　(2)Activity被重新创建后，系统会调用onRestoreInstanceState，并且把Activity销毁时onSaveInstanceState方法所保存的Bundle对象作为参数同时传给onRestoreInstanceState和onCreate方法。
+
+
+　　**情况2：资源内存不足导致低优先级的Activity被杀死。**
+
+　　(1)前台Activity——正在和用户交互的Activity优先级最高；
+
+　　(2)可见但非前台Activity——比如Activity弹出的对话框；
+
+　　(3)后台Activity——已经被暂停的Activity，比如执行了onStop，优先级最低；
+
+
 
 **重要笔记：**
 
