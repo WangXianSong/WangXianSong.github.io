@@ -16,7 +16,7 @@ tags: Android
 
 ![](https://i.imgur.com/kXgxhal.jpg)
 
-## 《Android开发艺术探索》是一本怎么样的书？
+**《Android开发艺术探索》是一本怎么样的书？**
 
 > 《Android开发艺术探索》是一本Android进阶类书籍，采用理论、源码和实践相结合的方式来阐述高水准的Android应用开发要点。《Android开发艺术探索》从三个方面来组织内容。第一，介绍Android开发者不容易掌握的一些知识点；第二，结合Android源代码和应用层开发过程，融会贯通，介绍一些比较深入的知识点；第三，介绍一些核心技术和Android的性能优化思想。
 
