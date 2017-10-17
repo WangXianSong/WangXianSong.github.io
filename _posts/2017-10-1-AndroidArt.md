@@ -82,6 +82,14 @@ tags: Android
             android:launchMode="singlelnstance">
         `</activity> `
 	</pre>
+
+
+ <pre> 
+public void class hahah{
+
+hhahhahaha
+}
+</pre> 
 #### 1.2.2 Activity的Flags
 
 ### 1.3 IntentFilter的匹配规则
