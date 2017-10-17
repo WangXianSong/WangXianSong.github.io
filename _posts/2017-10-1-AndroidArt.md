@@ -28,15 +28,9 @@ tags: Android
 
 ## 第1章 Activity的生命周期和启动模式
 
-- 1.1 Activity的生命周期解析
-  - 1.1.1 一般情况下的生命周期分析
-  - 1.1.2 异常情况下的生命周期分析
-- 1.2 Activity的启动模式
-  - 1.2.1 Activity的四种LaunchMode
-  - 1.2.2 Activity的Flags
-- 1.3 IntentFilter的匹配规则
+### 1.1  Activity的生命周期解析
 
-### 1.1 一般情况下的生命周期分析
+####  1.1.1一般情况下的生命周期分析
 
 关于Activity生命周期这个知识点，虽然在刚开始学习Android的时候就有接触，而且也专门对Activity生命周期作了总结，但是由于接触层面比较浅，印象并没有那么深刻[(当时的学习总结)](http://blog.csdn.net/qq_26849491/article/details/51241356)。通过这次的学习，使这知识点在我脑海里更深刻了些，同时也让我清楚在哪个环节应该做些什么后台处理。
 
@@ -56,13 +50,13 @@ tags: Android
 　　2、如果新Activity采用了透明主题，那么当前Activity的onStop方法不会被调用； <br />
 
 
-### 1.2 异常情况下的生命周期分析
+####  1.1.2 异常情况下的生命周期分析
 
 
 　　**情况1：资源相关的系统配置发生变化导致Activity被杀死并重新创建。**
 
 　　(1)Activity在异常情况下被回收时，系统会调用onSaveInstanceState方法来保存当前Activity的状态，调用时机是在onStop之前。  <br />
-　　(2)Activity被重新创建后，系统会调用onRestoreInstanceState，并且把Activity销毁时onSaveInstanceState方法所保存的Bundle对象作为参数同时传给onRestoreInstanceState和onCreate方法。<br />
+　　(2)Activity被重新创建后，系统会调用onRestoreInstanceState，并且把Activity销毁时onSaveInstanceState方法所保存的Bundle对象作为参数同时传给onRestoreInstanceState和onCreate方法。
 
 
 　　**情况2：资源内存不足导致低优先级的Activity被杀死。**
@@ -80,6 +74,10 @@ tags: Android
 
 ### 1.2 Activity的启动模式
 
+#### 1.2.1 Activity的四种LaunchMode
+
+#### 1.2.2 Activity的Flags
+
 　　Android有四种启动模式：standard、singleTop、singleTask和singleInstance。
 
 　　定义方法：
@@ -90,7 +88,7 @@ tags: Android
         </activity>
 	```
 
-
+### 1.3 IntentFilter的匹配规则
 
 
 
