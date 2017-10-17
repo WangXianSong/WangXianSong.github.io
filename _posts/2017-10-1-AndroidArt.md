@@ -90,7 +90,7 @@ tags: Android
 
 　　**standard**：标准模式，这也是系统的默认模式。每次启动一个Activity都会重新创建一个新的实例，不管这个实例是否已经存在；
 <br />
-　　**singleTop**：栈顶复用模式。<font color="#ee1">(1)</font> 如果新Activity已经位于任务栈的栈顶，那么此Activity不会被重新创建，同时它的onNewIntent方法会被回调，通过此方法的参数我们可以取出当前的请求信息。<font color=red>(2)</font> 需要注意的是，这个Activity的onCreate、onStart不会被系统调用，因为它并没有发生改变。<font color=red>(3)</font> 如果新的Activity的实例已经存在但不是位于栈顶，那么新的Activity仍然会重新创建； 
+　　**singleTop**：栈顶复用模式。<font color="#dd0000">(1)</font> 如果新Activity已经位于任务栈的栈顶，那么此Activity不会被重新创建，同时它的onNewIntent方法会被回调，通过此方法的参数我们可以取出当前的请求信息。<font color="#dd0000">(2)</font> 需要注意的是，这个Activity的onCreate、onStart不会被系统调用，因为它并没有发生改变。<font color="#dd0000">(3)</font> 如果新的Activity的实例已经存在但不是位于栈顶，那么新的Activity仍然会重新创建； 
 <br />
 　　**singleTask**：栈内复用模式。这是一种单实例模式，在这种情况下，只要Activity在一个栈中存在，那么多次启动此Activity都不会重新创建实例，和singleTop一样，系统也会回调其onNewIntent；
 <br />
