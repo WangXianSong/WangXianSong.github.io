@@ -40,18 +40,14 @@ tags: Android
 　　**onPause**：表示Activity正在停止，正常情况下，紧接着onStop就会被调用。在特殊情况下，如果快速回到当前Activity，那么onResume会被调用，所以此时可以做一些存储数据、停止动画等工作。(不能做耗时操作) <br />
 　　**onStop**：表示Activity即将停止，可以做一些稍微重量级的回收工作。(尽量不要太耗时) <br />
 　　**onDestroy**：表示Activity即将被销毁，可以做一些回收工作和最终资源释放。 <br />
-　　**onRestart**：表示Activity正在重新启动，当当前Activity从不可见重新变为可见状态时就会调用onRestart，切换过程为：onPause->onStop->(用户返回原Activity)->onRestart。 <br />
-
-
+　　**onRestart**：表示Activity正在重新启动，当当前Activity从不可见重新变为可见状态时就会调用onRestart，切换过程为：onPause->onStop->(用户返回原Activity)->onRestart。
 
 **重要笔记：**
 
 　　1、当两个Activity进行相互跳转时，旧Activity的onPause先调用，然后才启动新的Activity的onCreate，所以不能在onPause执行耗时操作。 <br />
-　　2、如果新Activity采用了透明主题，那么当前Activity的onStop方法不会被调用； <br />
-
+　　2、如果新Activity采用了透明主题，那么当前Activity的onStop方法不会被调用； 
 
 ####  1.1.2 异常情况下的生命周期分析
-
 
 　　**情况1：资源相关的系统配置发生变化导致Activity被杀死并重新创建。**
 
@@ -63,13 +59,13 @@ tags: Android
 
 　　(1)前台Activity——正在和用户交互的Activity优先级最高； <br />
 　　(2)可见但非前台Activity——比如Activity弹出的对话框； <br />
-　　(3)后台Activity——已经被暂停的Activity，比如执行了onStop，优先级最低； <br />
+　　(3)后台Activity——已经被暂停的Activity，比如执行了onStop，优先级最低； 
 
 **重要笔记：**
 
 　　１、onSavedInstanceState和onRestoreInstanceState只会在Activity被异常终止的情况下被调用，正常情况下系统不会回调这两个方法，并且onRestoreInstanceState一旦被调用，其参数bundle必定为非空，不需要在方法内做空值判断； <br />
 　　2、如果当系统配置中某项发生改变时，我们不想系统重新创建Activity，可以在AndroidManifest.xml中对应Activity标签声明时加上
-`android:configChanges="orientation|screenSize"` 即可。同时还可以onConfigurationChanged方法做一些自己的特殊处理。<br />
+`android:configChanges="orientation|screenSize"` 即可。同时还可以onConfigurationChanged方法做一些自己的特殊处理。
 
 
 ### 1.2 Activity的启动模式
