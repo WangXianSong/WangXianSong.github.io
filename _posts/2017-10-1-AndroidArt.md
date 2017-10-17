@@ -76,20 +76,12 @@ tags: Android
 　　Android有四种启动模式：standard、singleTop、singleTask和singleInstance。
 
 　　定义方法：
-	<pre>
+
 	 <activity
             android:name=".MainActivity3"
             android:launchMode="singlelnstance">
-        `</activity> `
-	</pre>
+        </activity>   
 
-
- <pre> 
-public void class hahah{
-
-hhahhahaha
-}
-</pre> 
 #### 1.2.2 Activity的Flags
 
 ### 1.3 IntentFilter的匹配规则
