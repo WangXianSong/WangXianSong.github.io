@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "学习《Android开发艺术探索》的知识总结"
+title:  "学习《Android开发艺术探索》知识总结"
 date:  2017-10-11 17:08:56
 categories: Android
 tags: Android
@@ -76,15 +76,12 @@ tags: Android
 　　Android有四种启动模式：standard、singleTop、singleTask和singleInstance。
 
 　　定义方法：
-
-
+	<pre>
 	 <activity
             android:name=".MainActivity3"
             android:launchMode="singlelnstance">
-        </activity> 
-
-
-
+        `</activity> `
+	</pre>
 #### 1.2.2 Activity的Flags
 
 ### 1.3 IntentFilter的匹配规则
