@@ -89,7 +89,7 @@ tags: Android
             android:launchMode="singlelnstance">
         </activity>
 	```
-hhhhh
+
 
 
 
