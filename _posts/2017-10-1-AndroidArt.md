@@ -64,7 +64,7 @@ tags: Android
 
 　　１、onSavedInstanceState和onRestoreInstanceState只会在Activity被异常终止的情况下被调用，正常情况下系统不会回调这两个方法，并且onRestoreInstanceState一旦被调用，其参数bundle必定为非空，不需要在方法内做空值判断； <br />
 　　2、如果当系统配置中某项发生改变时，我们不想系统重新创建Activity，可以在AndroidManifest.xml中对应Activity标签声明时加上
-`android:configChanges="orientation|screenSize"` 即可。同时还可以onConfigurationChanged方法做一些自己的特殊处理。
+```xml android:configChanges="orientation|screenSize"```即可。同时还可以onConfigurationChanged方法做一些自己的特殊处理。
 
 
 ### 1.2 Activity的启动模式
@@ -79,8 +79,8 @@ tags: Android
 
 ```xml
 <activity
-　　android:name=".MainActivity3"
-　　android:launchMode="singlelnstance">
+       android:name=".MainActivity3"
+       android:launchMode="singlelnstance">
 </activity>   
 ```
 
