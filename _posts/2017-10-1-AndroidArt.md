@@ -33,6 +33,7 @@ tags: Android
 
 关于Activity生命周期这个知识点，虽然在刚开始学习Android的时候就有接触，而且也专门对Activity生命周期作了总结，但是由于接触层面比较浅，印象并没有那么深刻[(当时的学习总结)](http://blog.csdn.net/qq_26849491/article/details/51241356)。通过这次的学习，使这知识点在我脑海里更深刻了些，同时也让我清楚在哪个环节应该做些什么后台处理。
 
+
 　　**onCreate**：表示Activity正在被创建，可以做一些初始化的工作。<br />
 　　**onStart**：表示Activity正在被启动，Activity已经可见了，但仍在后台。<br />
 　　**onResume**：表示Activity已经可见了，并且出现在前台，并开始活动。<br />
@@ -41,10 +42,13 @@ tags: Android
 　　**onDestroy**：表示Activity即将被销毁，可以做一些回收工作和最终资源释放。 <br />
 　　**onRestart**：表示Activity正在重新启动，当当前Activity从不可见重新变为可见状态时就会调用onRestart，切换过程为：onPause->onStop->(用户返回原Activity)->onRestart。
 
+
 **重要笔记：**
 
 　　1、当两个Activity进行相互跳转时，旧Activity的onPause先调用，然后才启动新的Activity的onCreate，所以不能在onPause执行耗时操作。 <br />
 　　2、如果新Activity采用了透明主题，那么当前Activity的onStop方法不会被调用； 
+
+
 
 ####  1.1.2 异常情况下的生命周期分析
 
@@ -67,11 +71,11 @@ tags: Android
 ` android:configChanges="orientation|screenSize"`即可。同时还可以onConfigurationChanged方法做一些自己的特殊处理。
 
 
+
+
 ### 1.2 Activity的启动模式
 
 #### 1.2.1 Activity的四种LaunchMode
-
-
 
 　　Android有四种启动模式：standard、singleTop、singleTask和singleInstance。
 
@@ -84,9 +88,12 @@ tags: Android
 </activity>   
 ```
 
-**standard**：标准模式，这也是系统的默认模式。每次启动一个Activity都会重新创建一个新的实例，不管这个实例是否已经存在；<br />
-**singleTop**：栈顶复用模式。<font color=red>**(1)**</font> 如果新Activity已经位于任务栈的栈顶，那么此Activity不会被重新创建，同时它的onNewIntent方法会被回调，通过此方法的参数我们可以取出当前的请求信息。
-
+**standard：**标准模式，这也是系统的默认模式。每次启动一个Activity都会重新创建一个新的实例，不管这个实例是否已经存在；<br />
+**singleTop：**栈顶复用模式。<font color=red>**(1)**</font> 如果新Activity已经位于任务栈的**栈顶**，那么此Activity不会被重新创建，同时它的onNewIntent方法会被回调，通过此方法的参数我们可以取出当前的请求信息。<font color=red> **(2)** </font> 需要注意的是，这个Activity的onCreate、onStart不会被系统调用，因为它并没有发生改变。<font color=red>**(3)**</font>如果新的Activity的实例已经存在但**不是位于栈顶**，那么新的Activity仍然会重新创建； 
+<br />
+**singleTask：**栈内复用模式。这是一种单实例模式，在这种情况下，只要Activity在一个栈中存在，那么多次启动此Activity都不会重新创建实例，和singleTop一样，系统也会回调其onNewIntent；
+<br />
+**singleInstance：**单实例模式，这是一种加强的singleTask模式，它除了具有singleTask模式的所有特性外，还加强一点，那就是具有此种模式的Activity只能单独地位于一个任务栈中。
 
 #### 1.2.2 Activity的Flags
 
