@@ -77,10 +77,12 @@ tags: Android
 
 　　定义方法：
 
-	 <activity
-            android:name=".MainActivity3"
-            android:launchMode="singlelnstance">
-        </activity>   
+```xml
+<activity
+android:name=".MainActivity3"
+android:launchMode="singlelnstance">
+</activity>   
+```
 
 #### 1.2.2 Activity的Flags
 
