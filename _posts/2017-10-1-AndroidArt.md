@@ -99,7 +99,16 @@ tags: Android
 
 #### 1.2.2 Activity的Flags
 
+　　**FLAG_ACTIVITY_NEW_TASK：**这个标记位的作用是为Activity指定"singleTask"启动模式，其效果和在XML中指定该启动模式相同；<br />
+　　**FLAG_ACTIVITY_SINGLE_TOP：**这个标记位的作用是为Activity指定"singleTop"启动模式，其效果和在XML中指定该启动模式相同； <br />
+　　**FLAG_ACTIVITY_CLEAR_TOP：**具有此标记位的Activity，当它启动时，在同一个任务栈中所有位于它上面的Activity都要出栈； <br />
+　　**FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS：**具有这个标记的Activity不会出现在历史Activity的列表中，当某些情况下我们不希望用户通过历史列表回到我们的Activity的时候这个标记比较有用。它等同于在XML中指定Activity的属性"android:excludeFromRecents="true""。
+
 ### 1.3 IntentFilter的匹配规则
+
+　　**action匹配规则：**要求intent中的action 存在 且 必须和过滤规则中的其中一个相同 区分大小写； <br />
+　　**category匹配规则：**系统会默认加上一个android.intent.category.DEAFAULT，所以intent中可以不存在category，但如果存在就必须匹配其中一个； <br />
+　　**data匹配规则：**data由两部分组成，mimeType和URI，要求和action相似。如果没有指定URI，URI但默认值为content和file（schema）
 
 
 
