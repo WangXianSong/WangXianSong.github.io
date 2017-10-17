@@ -88,13 +88,13 @@ tags: Android
 </activity>   
 ```
 
-**standard**：标准模式，这也是系统的默认模式。每次启动一个Activity都会重新创建一个新的实例，不管这个实例是否已经存在；
+　　**standard**：标准模式，这也是系统的默认模式。每次启动一个Activity都会重新创建一个新的实例，不管这个实例是否已经存在；
 <br />
-**singleTop**：栈顶复用模式。<font color=red>(1)</font>如果新Activity已经位于任务栈的栈顶，那么此Activity不会被重新创建，同时它的onNewIntent方法会被回调，通过此方法的参数我们可以取出当前的请求信息。<font color=red>(2)</font>需要注意的是，这个Activity的onCreate、onStart不会被系统调用，因为它并没有发生改变。<font color=red>(3)</font>如果新的Activity的实例已经存在但不是位于栈顶，那么新的Activity仍然会重新创建； 
+　　**singleTop**：栈顶复用模式。<font color="#ee1">(1)</font> 如果新Activity已经位于任务栈的栈顶，那么此Activity不会被重新创建，同时它的onNewIntent方法会被回调，通过此方法的参数我们可以取出当前的请求信息。<font color=red>(2)</font> 需要注意的是，这个Activity的onCreate、onStart不会被系统调用，因为它并没有发生改变。<font color=red>(3)</font> 如果新的Activity的实例已经存在但不是位于栈顶，那么新的Activity仍然会重新创建； 
 <br />
-**singleTask**：栈内复用模式。这是一种单实例模式，在这种情况下，只要Activity在一个栈中存在，那么多次启动此Activity都不会重新创建实例，和singleTop一样，系统也会回调其onNewIntent；
+　　**singleTask**：栈内复用模式。这是一种单实例模式，在这种情况下，只要Activity在一个栈中存在，那么多次启动此Activity都不会重新创建实例，和singleTop一样，系统也会回调其onNewIntent；
 <br />
-**singleInstance**：单实例模式，这是一种加强的singleTask模式，它除了具有singleTask模式的所有特性外，还加强一点，那就是具有此种模式的Activity只能单独地位于一个任务栈中。
+　　**singleInstance**：单实例模式，这是一种加强的singleTask模式，它除了具有singleTask模式的所有特性外，还加强一点，那就是具有此种模式的Activity只能单独地位于一个任务栈中。
 
 
 #### 1.2.2 Activity的Flags
