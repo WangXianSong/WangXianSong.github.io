@@ -79,8 +79,8 @@ tags: Android
 
 ```xml
 <activity
-android:name=".MainActivity3"
-android:launchMode="singlelnstance">
+　　android:name=".MainActivity3"
+　　android:launchMode="singlelnstance">
 </activity>   
 ```
 
