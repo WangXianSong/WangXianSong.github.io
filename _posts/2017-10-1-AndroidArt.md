@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "学习《Android开发艺术探索》知识总结"
+title:  "学习《Android开发艺术探索》第一章总结"
 date:  2017-10-11 17:08:56
 categories: Android
 tags: Android
