@@ -80,7 +80,9 @@ intent.putExtras(mBundle);
 
 startActivity(intent);  ```
 
+
 - 目标Activity解析数据
+
 
 ```java
 Bundle bundle = getIntent().getExtras(); //得到传过来的bundle
