@@ -68,6 +68,7 @@ Bundle、文件共享、Messenger、AIDL、ContentProvider、Socket
 - 装载数据：
 
 ```java
+
 Bundle mBundle = new Bundle();
 
 mBundle.putString("DataTag", "要传过去的数据");
@@ -78,16 +79,20 @@ intent.setClass(MainActivity.this, Destion.class);
 
 intent.putExtras(mBundle);
 
-startActivity(intent);  ```
+startActivity(intent); 
+
+ ```
 
 
 - 目标Activity解析数据
 
 
 ```java
+
 Bundle bundle = getIntent().getExtras(); //得到传过来的bundle
 
 String data = bundle.getString("DataTag");//读出数据
+
 ```
 
 
