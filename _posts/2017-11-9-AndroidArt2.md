@@ -8,14 +8,22 @@ tags: Android
 * content
 {:toc}
 
+
+
+
 在上一章[《Android开发艺术探索》第二章总结](http://xsong.wang/2017/10/11/AndroidArt/)学习了Activity的生命周期以及启动模式的知识点，这一次我们就开始学习Android中的IPC机制，也就是进程间通信。
+
 
 
 
 
 # 第1章 Activity中的 IPC机制
 
+
+
+
 ## 1、Android IPC 简单理解
+
 IPC是Inter-Process Communication的首字母缩写，也就是进程间通信，指的是两个进程之间进行数据交换的过程。
 
 ### 使用场景：
@@ -23,7 +31,6 @@ IPC是Inter-Process Communication的首字母缩写，也就是进程间通信�
 
 ## 2、Android 中的多进程模式
 在 Android 中使用多进程只有一种方法，那就是给四大组件 ( Activity、Service、Receiver、ContentProvider ) 在 AndroidMenifest 中指定 android : process 属性，除此之外没有其他办法。
-
 
   ![](https://i.imgur.com/xVk0n4q.jpg)
 
@@ -59,7 +66,7 @@ Bundle、文件共享、Messenger、AIDL、ContentProvider、Socket
 
 ### 用法：
 - 装载数据：
-- 
+
 ```java
 Bundle mBundle = new Bundle();
 
@@ -71,8 +78,7 @@ intent.setClass(MainActivity.this, Destion.class);
 
 intent.putExtras(mBundle);
 
-startActivity(intent);  
-```
+startActivity(intent);  ```
 
 - 目标Activity解析数据
 
