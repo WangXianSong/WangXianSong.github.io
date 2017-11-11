@@ -30,8 +30,24 @@ tags: Android
 ## 2、Android 中的多进程模式
 　　在 Android 中使用多进程只有一种方法，那就是给四大组件 ( Activity、Service、Receiver、ContentProvider ) 在 AndroidMenifest 中指定 android : process 属性，除此之外没有其他办法。
 <br />
-<br />
-  ![](https://i.imgur.com/xVk0n4q.jpg)
+
+```XML
+
+        <activity
+            android:name=".MainActivity"
+            android:process=":remote">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SecondActivity"
+            android:process="songsong.com.ipctest_2.remote">
+        </activity>
+
+```
 
 <br />
 **如何在Android中创建多进程：**
@@ -56,8 +72,10 @@ tags: Android
 
 <br /><br />
 
-## 3、IPC 基础概念介绍(3个方面内容)：
-Serializable 接口、Parcelable 接口、Binder ( Binder 的工作机制 )
+## 3、IPC 基础概念介绍：
+### Serializable 接口：
+### Parcelable 接口：
+### Binder ( Binder 的工作机制 )：
 
 <br /><br />
 
