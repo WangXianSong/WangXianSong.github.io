@@ -32,7 +32,6 @@ tags: Android
 <br />
 
 ```XML
-
         <activity
             android:name=".MainActivity"
             android:process=":remote">
@@ -46,7 +45,6 @@ tags: Android
             android:name=".SecondActivity"
             android:process="songsong.com.ipctest_2.remote">
         </activity>
-
 ```
 
 <br />
