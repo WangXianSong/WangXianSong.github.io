@@ -54,46 +54,38 @@ tags: Android
 
 　　在多进程模式中，不同进程的组件的确会拥有独立的虚拟机、Application 以及内存空间，这会给实际开发带来很多困扰，是尤其需要注意。
 
-<br />
+<br /><br />
 
 ## 3、IPC 基础概念介绍(3个方面内容)：
 Serializable 接口、Parcelable 接口、Binder ( Binder 的工作机制 )
 
+<br /><br />
 
-<br />
+
 ## 4、Android 中的 IPC 的方式：
 
 ### 4.1 Bundle：
 
-　四大组件中的三大组件(Activity、Service、Receiver)都是支持在Intent中传递Bundle数据的，由于Bundle实现了Parcelable接口，所以它可以方便地在不同的进程间传输。
+　四大组件中的三大组件( Activity、Service、Receiver )都是支持在Intent中传递 Bundle 数据的，由于 Bundle 实现了 Parcelable 接口，所以它可以方便地在不同的进程间传输。
 
-### 用法：
+**使用方法：**
+
 - 装载数据：
 
 ```java
-
 Bundle mBundle = new Bundle();
-
 mBundle.putString("DataTag", "要传过去的数据");
-
 Intent intent = new Intent();
-
 intent.setClass(MainActivity.this, Destion.class);
-
 intent.putExtras(mBundle);
-
 startActivity(intent); 
-
  ```
 
-- 目标Activity解析数据
+- 目标 Activity 解析数据
 
 ```java
-
 Bundle bundle = getIntent().getExtras(); //得到传过来的bundle
-
 String data = bundle.getString("DataTag");//读出数据
-
 ```
 
 
