@@ -29,7 +29,7 @@ tags: Android
 ## 2、Android 中的多进程模式
 　　在 Android 中使用多进程只有一种方法，那就是给四大组件 ( Activity、Service、Receiver、ContentProvider ) 在 AndroidMenifest 中指定 android : process 属性，除此之外没有其他办法。
 <br />
-
+<br />
   ![](https://i.imgur.com/xVk0n4q.jpg)
 
 #### 如何在Android中创建多进程：
