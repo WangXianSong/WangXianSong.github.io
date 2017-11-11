@@ -11,32 +11,28 @@ tags: Android
 
 
 
-　　在上一章[《Android开发艺术探索》第二章总结](http://xsong.wang/2017/10/11/AndroidArt/)学习了Activity的生命周期以及启动模式的知识点，这一次我们就开始学习Android中的IPC机制，也就是进程间通信。
+　　在上一章[《Android开发艺术探索》第一章总结](http://xsong.wang/2017/10/11/AndroidArt/)学习了Activity的生命周期以及启动模式的知识点，这一次我们就开始学习Android中的IPC机制，也就是进程间通信。
 
-
-
-
-
+<br />
+<br />
 # 第1章 Activity中的 IPC机制
-
-
-
 
 ## 1、Android IPC 简单理解
 
 　　IPC是Inter-Process Communication的首字母缩写，也就是进程间通信，指的是两个进程之间进行数据交换的过程。
 
-### 使用场景：
-　　由于某些原因应用自身需要采用多进程模式来实现，或者为了加大一个应用可使用的内存，因为Android对当个应用可使用的最大内存做了限制。
+　　使用场景：由于某些原因应用自身需要采用多进程模式来实现，或者为了加大一个应用可使用的内存，因为Android对当个应用可使用的最大内存做了限制。
 
+<br />
 <br />
 
 ## 2、Android 中的多进程模式
 　　在 Android 中使用多进程只有一种方法，那就是给四大组件 ( Activity、Service、Receiver、ContentProvider ) 在 AndroidMenifest 中指定 android : process 属性，除此之外没有其他办法。
+<br />
 
   ![](https://i.imgur.com/xVk0n4q.jpg)
 
-### 如何在Android中创建多进程：
+#### 如何在Android中创建多进程：
 
  - 进程名以 " : " 开头的进程前面自动加上包名，是一种简写的命名方式，是属于当前应用的**私有进程**，其他应用的组件不可以和它跑在同一个进程中。
  - 不以 "："  开头的进程名属于**全局进程**，是一种完整的命名方式，其他应用通过shareUID方式可以和他跑在同一个进程中。
