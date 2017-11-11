@@ -31,7 +31,7 @@ tags: Android
 　　在 Android 中使用多进程只有一种方法，那就是给四大组件 ( Activity、Service、Receiver、ContentProvider ) 在 AndroidMenifest 中指定 android : process 属性，除此之外没有其他办法。
 <br />
 
-```XML
+```xml
         <activity
             android:name=".MainActivity"
             android:process=":remote">
