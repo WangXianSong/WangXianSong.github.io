@@ -34,19 +34,19 @@ tags: Android
 <br />
 
 ```xml
-　<activity
-　　android:name=".MainActivity"
-　　android:process=":remote">
-　　<intent-filter>
-　　　<action android:name="android.intent.action.MAIN" />
+    <activity
+           android:name=".MainActivity"
+            android:process=":remote">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-　　　<category android:name="android.intent.category.LAUNCHER" />
-　　</intent-filter>
-　</activity>
-　<activity
-　　android:name=".SecondActivity"
-　　android:process="songsong.com.ipctest_2.remote">
-　</activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SecondActivity"
+            android:process="songsong.com.ipctest_2.remote">
+        </activity>
 ```
 
 <br />
