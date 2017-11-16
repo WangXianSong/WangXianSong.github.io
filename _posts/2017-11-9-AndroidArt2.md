@@ -127,13 +127,17 @@ String data = bundle.getString("DataTag");   //读出数据
 　　2.**客户端进程**：首先，绑定服务端的 Service，绑定成功后用服务端返回的 IBinder 对象创建一个 Messenger，通过这个 Messenger 就可以向服务器发送消息了，消息类型为 Message 对象。如果需要服务端能够回应客户端，就和服务端一样，我们还需要创建一个 Handler 并创建新的 Messenger，并把这个 Messenger 对象通过 Message 的 replyTo 参数传递给服务器，服务器通过这个 replyTo 参数就可以回应客户端。
 
 　　**注意：**
+
 　　Messenger 是以串行的方式处理客户端发来的消息，如果大量的消息同时发送到服务端，服务端仍然只能一个个处理，如果有大量的并发请求，那么用 Messenger 就不太适合了。
 
 　　M**essenger 的工作原理：**
+
 <br />
 ![](https://i.imgur.com/IayPy4M.jpg)
+
 <br />
 <br />
+
 
 ### 4.4 AIDL
 
