@@ -9,9 +9,9 @@ tags: Android
 {:toc}
 
 
+<br />
 
-
-　　在上一章[《 Android 开发艺术探索》第一章总结](http://xsong.wang/2017/10/11/AndroidArt/)学习了 Activity 的生命周期以及启动模式的知识点，这一次我们就开始学习 Android 中的 IPC 机制，也就是进程间通信。
+> 在上一章[《 Android 开发艺术探索》第一章总结](http://xsong.wang/2017/10/11/AndroidArt/)学习了 Activity 的生命周期以及启动模式的知识点，这一次我们就开始学习 Android 中的 IPC 机制，也就是进程间通信。
 
 <br />
 
@@ -21,17 +21,21 @@ tags: Android
 ## 1、Android IPC 简单理解
 
 　　IPC 是 Inter-Process Communication 的首字母缩写，也就是进程间通信，指的是两个进程之间进行数据交换的过程。
-
 <br />
-
-　　**使用场景：**由于某些原因应用 **自身需要** 采用多进程模式来实现，或者为了加大一个应用可使用的 **内存**，因为 Android 对当个应用可使用的最大内存做了限制。
-
+　　**使用场景：** 由于某些原因应用<font color="#dd0000">自身需要</font>采用多进程模式来实现，或者为了<font color="#dd0000">加大一个应用可使用的内存</font>，因为 Android 对当个应用可使用的最大内存做了限制。
 <br />
 <br />
-
 ## 2、Android 中的多进程模式
-　　在 Android 中使用多进程只有一种方法，那就是给四大组件 ( Activity、Service、Receiver、ContentProvider ) 在 AndroidMenifest 中指定 android : process 属性，除此之外没有其他办法。
+
+**2.1 如何在Android中创建多进程：**
+
+　在 Android 中使用多进程只有一种方法，那就是给四大组件 ( Activity、Service、Receiver、ContentProvider ) 在 AndroidMenifest 中指定 android : process 属性，除此之外没有其他办法。
 <br />
+
+ - 进程名以 " : " 开头的进程前面自动加上包名，是一种简写的命名方式，是属于当前应用的**私有进程**，其他应用的组件不可以和它跑在同一个进程中。
+ - 不以 "："  开头的进程名属于**全局进程**，是一种完整的命名方式，其他应用通过shareUID 方式可以和他跑在同一个进程中。
+<br />
+　
 
 ```xml
     <activity
@@ -50,13 +54,8 @@ tags: Android
 ```
 
 <br />
-**如何在Android中创建多进程：**
 
- - 进程名以 " : " 开头的进程前面自动加上包名，是一种简写的命名方式，是属于当前应用的**私有进程**，其他应用的组件不可以和它跑在同一个进程中。
- - 不以 "："  开头的进程名属于**全局进程**，是一种完整的命名方式，其他应用通过shareUID 方式可以和他跑在同一个进程中。
-<br />
-
-**使用多进程会造成如下几个方面的问题：**
+**2.2 使用多进程会造成如下几个方面的问题：**
 
 　　所有运行在不同进程中的四大组件，只要它们之间需要通过内存来共享数据，都会共享失败。使用多进程会造成如下几个方面的影响：
 
@@ -66,12 +65,11 @@ tags: Android
 - Application 会多次创建。
 <br />
 
-**注意：**
+**2.3 注意：**
 
 　　在多进程模式中，不同进程的组件的确会拥有独立的虚拟机、Application 以及内存空间，这会给实际开发带来很多困扰，是尤其需要注意。
-
-<br /><br />
-
+<br />
+<br />
 ## 3、IPC 基础概念介绍：
 ### Serializable 接口：
 ### Parcelable 接口：
