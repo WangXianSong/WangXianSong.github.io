@@ -74,6 +74,7 @@ tags: Android
 ### Serializable 接口：
 ### Parcelable 接口：
 ### Binder ( Binder 的工作机制 )：
+ 　　<font color="#dd0000">(待完善...)</font>
 
 <br /><br />
 
@@ -117,9 +118,9 @@ String data = bundle.getString("DataTag");   //读出数据
 
 **4.3.1 实现的步骤：**
 
-　　1.**服务端进程**：首先，创建 Service 来处理客户端的连接请求，同时创建 Handler 并通过它来创建 Messenger 对象，然后在 Service 的onBind 中返回这个 Messenger 对象底层的 Binder即可；
+　　**服务端进程：**首先，创建 Service 来处理客户端的连接请求，同时创建 Handler 并通过它来创建 Messenger 对象，然后在 Service 的onBind 中返回这个 Messenger 对象底层的 Binder即可；
 
-　　2.**客户端进程**：首先，绑定服务端的 Service，绑定成功后用服务端返回的 IBinder 对象创建一个 Messenger，通过这个 Messenger 就可以向服务器发送消息了，消息类型为 Message 对象。如果需要服务端能够回应客户端，就和服务端一样，我们还需要创建一个 Handler 并创建新的 Messenger，并把这个 Messenger 对象通过 Message 的 replyTo 参数传递给服务器，服务器通过这个 replyTo 参数就可以回应客户端。
+　　**客户端进程：**首先，绑定服务端的 Service，绑定成功后用服务端返回的 IBinder 对象创建一个 Messenger，通过这个 Messenger 就可以向服务器发送消息了，消息类型为 Message 对象。如果需要服务端能够回应客户端，就和服务端一样，我们还需要创建一个 Handler 并创建新的 Messenger，并把这个 Messenger 对象通过 Message 的 replyTo 参数传递给服务器，服务器通过这个 replyTo 参数就可以回应客户端。
 
 **4.3.2 注意：**
 
@@ -130,6 +131,27 @@ String data = bundle.getString("DataTag");   //读出数据
 <br />
 <br />
 ### 4.4 AIDL
+
+**4.4.1 "感性"的实现过程：**
+
+　　**服务端**首先创建一个Service用来监听客户端的连接请求，然后创建一个AIDL文件，将暴露给客户端的接口在AIDL文件中声明，最后在Service中实现这个AIDL接口即可。
+
+　　**客户端**首先绑定服务端的Service，绑定成功后，将服务端返回的Binder对象转化成AIDL接口所属的类型，调用相对应的AIDL中的方法。
+
+　　<font color="#dd0000">之所以说是感性的实现过程是因为在实际过程中远不止这么简单，对于目前的我来说，暂时还是弄不清楚的。所以我决定先把这个知识点放在这里，回头再来学习。</font>
+
+**4.4.2 AIDL支持的数据类型：**
+
+- 基本数据类型（int、long、char、boolean、double）；
+- String、CharSequence；
+- List：只支持 ArrayList ，里面的元素必须都能被 AIDL 所支持；
+- Map：只支持HashMap，里面的元素（key 和 value）必须都能被 AIDL 所支持；Parcelable 所有实现了 Parcelable 接口的对象；
+- AIDL：所有 AIDL 接口本身也可以在 AIDL 文件中使用。
+
+　　以上 6 种数据类型就是 AIDL 所支持的所有类型，其中，自定义的 Parcelable 对象和 AIDL 对象必须要显式 import 进来（即使在同一个包）。
+
+ 　　<font color="#dd0000">(待完善...)</font>
+
 
 ### 4.5 ContentProvider
 
