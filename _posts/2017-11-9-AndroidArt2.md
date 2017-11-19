@@ -153,7 +153,43 @@ String data = bundle.getString("DataTag");   //读出数据
  　　<font color="#dd0000">(待完善...)</font>
 
 
-### 4.5 ContentProvider
+### 4.5 ContentProvider （内容提供器）
+
+　　ContentProvider 是Android专门用于不同应用之间进行数据共享的方式，天生适合跨进程通讯，底层同样采用Binder实现。
+
+　　ContentProvider的用法一般两种，一种是现有的内容提供器来读取操作相应程序中的；另一种是创建自己的内容提供器给我们程序的数据提供外部的访问接口。
+
+　　**4.5.1 读取联系人：**
+
+```java
+Cursor cursor = getContentResolver.query{
+Uri,
+projection,
+selection,
+selectionArgs,
+sortOrder};
+
+if(cursor!=null){
+while (cursor.moveToNext(){
+String column1 = cursor.getString(cursor.getColumnIndex("column1"));
+int column2 = cursor.getInt(cursor.getColumnIndex("column2"));
+}
+cursor.close();
+}
+
+ContentValues values = new ContentValues();
+values.put("column1","text");
+values.put("column2","1");
+getContentResolver().insert(uri,values)
+
+```
+
+　　**4.5.1 创建自己的内容提供器：**
+
+
+
+　　
+
 
 ### 4.5 Socket
 
