@@ -205,7 +205,7 @@ getContentResolver().insert(uri,values)
 
 　　接着需要注册这个 ContentProvider，其中  android:authorities 是 ContentProvider 的唯一标识，通过这个属性外部应用可以访问我们的 ContentProvider ，因此  android:authorities 必须是唯一的，这里建议在命名的时候加上包名前缀。
 
-```XML
+```xml
         <provider
             android:name=".MyContentProvider"
             android:authorities="com.songsong.MyContentProvider"
