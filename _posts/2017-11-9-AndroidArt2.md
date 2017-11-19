@@ -151,8 +151,8 @@ String data = bundle.getString("DataTag");   //读出数据
 　　以上 6 种数据类型就是 AIDL 所支持的所有类型，其中，自定义的 Parcelable 对象和 AIDL 对象必须要显式 import 进来（即使在同一个包）。
 
  　　<font color="#dd0000">(待完善...)</font>
-
-
+<br />
+<br />
 ### 4.5 ContentProvider 
 
 　　ContentProvider （内容提供器）是 Android 专门用于不同应用之间进行数据共享的方式，天生适合跨进程通讯，底层同样采用 Binder 实现。
@@ -221,12 +221,11 @@ getContentResolver().insert(uri,values)
 - update( Uri uri , ContentValues values ,  String where , String[] selectionArgs):
 - query(Uri uri , ContentValues values ,  String where , String[] selectionArgs,String sortOrder):
 
-
-
-　　
-
-
+<br />
+<br />
 ### 4.5 Socket
+　　Socket称为“套接字”，是**网络通信**中的概念，它分为“流式套接字”和“用户数据报套接字”两种，分别对应网络的传输控制层中的 TCP 和 UDP 协议。
+- TCP 协议是面向连接的协议，提供稳定的双向通信功能，TCP 连接的建立需要经过“三次握手”才能完成，为了提供稳定的数据传输功能，其本身提供了超时重传机制，因此具有很高的稳定性。
 
 ## 5、Binder连接池
 
