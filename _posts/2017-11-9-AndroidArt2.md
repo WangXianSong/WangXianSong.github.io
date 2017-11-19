@@ -153,15 +153,16 @@ String data = bundle.getString("DataTag");   //读出数据
  　　<font color="#dd0000">(待完善...)</font>
 
 
-### 4.5 ContentProvider （内容提供器）
+### 4.5 ContentProvider 
 
-　　ContentProvider 是Android专门用于不同应用之间进行数据共享的方式，天生适合跨进程通讯，底层同样采用Binder实现。
+　　ContentProvider （内容提供器）是 Android 专门用于不同应用之间进行数据共享的方式，天生适合跨进程通讯，底层同样采用 Binder 实现。
 
-　　ContentProvider的用法一般两种，一种是现有的内容提供器来读取操作相应程序中的；另一种是创建自己的内容提供器给我们程序的数据提供外部的访问接口。
+　　ContentProvider 的用法一般两种，一种是现有的内容提供器来读取操作相应程序中的；另一种是创建自己的内容提供器给我们程序的数据提供外部的访问接口。
 
-　　**4.5.1 读取联系人：**
+　　**4.5.1 读取系统联系人：**
 
 ```java
+
 Cursor cursor = getContentResolver.query{
 Uri,
 projection,
@@ -170,12 +171,13 @@ selectionArgs,
 sortOrder};
 
 if(cursor!=null){
-while (cursor.moveToNext(){
-String column1 = cursor.getString(cursor.getColumnIndex("column1"));
-int column2 = cursor.getInt(cursor.getColumnIndex("column2"));
+	while (cursor.moveToNext(){
+	String column1 = cursor.getString(cursor.getColumnIndex("column1"));
+	int column2 = cursor.getInt(cursor.getColumnIndex("column2"));	
+	}
+	cursor.close();
 }
-cursor.close();
-}
+
 
 ContentValues values = new ContentValues();
 values.put("column1","text");
@@ -185,6 +187,39 @@ getContentResolver().insert(uri,values)
 ```
 
 　　**4.5.1 创建自己的内容提供器：**
+
+　　自定义 ContentProvider 很简单，只需要继承 ContentProvider 类并实现六个抽象方法即可。
+
+```java
+    public boolean onCreate()
+    public Uri insert(Uri uri, ContentValues values) 
+    public int delete(Uri uri, String selection, String[] selectionArgs)
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) 
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) 
+    public String getType(Uri uri)
+```
+
+- onCreate： 代表 ContentProvider 的创建，一般可以做一些初始化的工作。除了 onCreate 由系统回调并运行在主线程里，其余五个方法都由外界回调并运行在 Binder 线程池中。
+- getType：用来返回一个 Uri 请求所对应的 MIME 类型(媒体类型)，比如图片、视频等。
+
+
+　　接着需要注册这个 ContentProvider，其中  android:authorities 是 ContentProvider 的唯一标识，通过这个属性外部应用可以访问我们的 ContentProvider ，因此  android:authorities 必须是唯一的，这里建议在命名的时候加上包名前缀。
+
+```XML
+        <provider
+            android:name=".MyContentProvider"
+            android:authorities="com.songsong.MyContentProvider"
+            android:enabled="true"
+            android:exported="true"></provider>
+```
+　　其他的应用程序通过 ContentResolver 来操作 ContentProvider 所暴露的数据：
+
+　　getContentResolver()：一旦在程序中获得 ContentResolver 对象之后，接下来就可调用 ContentResolver 的如下方法来操作数据：
+
+- insert(Uri uri ,ContentValues values ):
+- delete(Uri uri , String where , String[] selectionArgs):
+- update( Uri uri , ContentValues values ,  String where , String[] selectionArgs):
+- query(Uri uri , ContentValues values ,  String where , String[] selectionArgs,String sortOrder):
 
 
 
