@@ -210,7 +210,8 @@ getContentResolver().insert(uri,values)
             android:name=".MyContentProvider"
             android:authorities="com.songsong.MyContentProvider"
             android:enabled="true"
-            android:exported="true"></provider>
+            android:exported="true">
+        </provider>
 ```
 　　其他的应用程序通过 ContentResolver 来操作 ContentProvider 所暴露的数据：
 
@@ -223,10 +224,45 @@ getContentResolver().insert(uri,values)
 
 <br />
 <br />
-### 4.5 Socket
-　　Socket称为“套接字”，是**网络通信**中的概念，它分为“流式套接字”和“用户数据报套接字”两种，分别对应网络的传输控制层中的 TCP 和 UDP 协议。
+### 4.6 Socket
+
+参考网站：[https://www.cnblogs.com/mq0036/p/3812755.html](https://www.cnblogs.com/mq0036/p/3812755.html)
+
+　　Socket 称为“套接字”，是**网络通信**中的概念，它分为“流式套接字”和“用户数据报套接字”两种，分别对应网络的传输控制层中的 TCP 和 UDP 协议。
+
 - TCP 协议是面向连接的协议，提供稳定的双向通信功能，TCP 连接的建立需要经过“三次握手”才能完成，为了提供稳定的数据传输功能，其本身提供了超时重传机制，因此具有很高的稳定性。
+- UDP 协议是无连接的，提供不稳定的单向通信功能，虽然 UDP 也可以实现双向通信功能。它的缺点是不保证数据一定能够正确传输，尤其是在网络赌堵塞的情况下。
+
+
+
+**4.6.1使用 TCP 协议通讯的 Socket 的主要流程：**
+
+![](https://i.imgur.com/bGuJIFE.png)
+
+
+**4.6.2 TCP 协议通过三次握手建立一个可靠的连接：**
+
+![](https://i.imgur.com/vcjM2qs.jpg)
+
+- 第一次握手：客户端尝试连接服务器，向服务器发送 syn 包（同步序列编号 Synchronize Sequence Numbers），syn = j，客户端进入 SYN_SEND 状态等待服务器确认
+
+- 第二次握手：服务器接收客户端 syn 包并确认（ack = j +1），同时向客户端发送一个 SYN 包（syn = k），即 SYN + ACK 包，此时服务器进入 SYN_RECV 状态
+
+- 第三次握手：第三次握手：客户端收到服务器的 SYN +ACK 包，向服务器发送确认包 ACK( ack = k + 1），此包发送完毕，客户端和服务器进入 ESTABLISHED 状态，完成三次握手
+
+**4.6.3 服务器 Socket 与客户端 Socket 建立连接的部分其实就是大名鼎鼎的三次握手**
+
+![](https://i.imgur.com/xjuvsGu.png)
 
 ## 5、Binder连接池
 
+　　通过 BinderPool 的方式将 Binder 的控制与Service 本身解耦，同时只需要维护一份 Service 即可。这里用到了 CountDownLatch，大概解释下用意：线程在 await 后等待，直到 CountDownLatch 的计数为 0，BinderPoo l里使用它的目的是为了保证 Activity 获取 BinderPool 的时候 Service 已确定 bind 完成
+
+
 ## 6、选择合适的IPC方式
+
+![](https://i.imgur.com/3JCtdoM.png)
+
+## 7、总结
+
+　　说实话，刚学完第一章比较基础的知识，突然急转弯来到进程间通信 IPC ( 知识点的小高坡 )，难免会有点吃不消的感觉。虽然难，但也学到很多以往没注意到知识。希望，在接下来的 View 事件的学习能吸收得更好！
