@@ -12,8 +12,10 @@ tags: Android
 <br />
 
 > 第一章我们学习了 [Activity 的生命周期以及启动模式](http://xsong.wang/2017/10/01/AndroidArt/)的知识点，第二章学习了 [Android 中的 IPC 机制](http://xsong.wang/2017/10/03/AndroidArt2/)，明显第二章比第一章要吃力多了，那接下来就要学习 View 的事件体系。
+> 
 > 参考的文章：
 > [http://www.jianshu.com/p/7d2c88ca24fc](http://www.jianshu.com/p/7d2c88ca24fc)
+> 
 > 参考的书籍：
 > 《Android开发艺术探索》
 > 《Android进阶之光》
@@ -48,7 +50,10 @@ x 和 y 是 View 左上角的坐标，translationX 和 translationY 是 View 左
 
 **TouchSlop**
 
-TouchSlop 是系统所能识别出的被认为是滑动的最小距离。获取这个常量：ViewConfiguration.get(getContext()).getScaledTouchSlop();
+TouchSlop 是系统所能识别出的被认为是滑动的最小距离。获取这个常量：
+```java
+    ViewConfiguration.get(getContext()).getScaledTouchSlop();
+```
 
 ### 3.1.4 VellocityTracker、GestureDetector 和 Scroller
 
@@ -127,10 +132,10 @@ public void computeScroll() {
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android"
 android:fillAfter="true" >
-<translate
-android:duration="1000"
-android:fromXDelta="0"
-android:toXDelta="300" />
+    <translate
+        android:duration="1000"
+        android:fromXDelta="0"
+        android:toXDelta="300" />
 </set>
  ```
 
@@ -149,9 +154,9 @@ ObjectAnimator.ofFloat(mCustomView,"translationX",0,300) .setDuration(1000).star
 
 ```java
 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) getLayoutParams();
-params.leftMargin = getLeft () + offsetX;
-params.topMargin = getTop () + ofrrsetY 
-setLayoutParams ( layoutParams );
+    params.leftMargin = getLeft () + offsetX;
+    params.topMargin = getTop () + ofrrsetY 
+    setLayoutParams ( layoutParams );
 ```
 
 ### 3.2.4 各种滑动方式的对比
@@ -205,17 +210,29 @@ public boolean dispatchTouchEvent(MotionEvent ev){
 ```
 >1、对于一个根 ViewGroup，点击事件产生后，首先会传递给它，这时他的dispatchTouchEvent会调用，如果它的 onInterceptTouchEvent 返回 true 表示要拦截当前事件，接下来事件会交给这个 ViewGroup 处理，它的 onTouchEvent 就会被调用。如果这个 ViewGroup 的 onInterceptTouchEvent 返回 false，则事件会继续传递给子元素，子元素的 dispatchTouchEvent 会调用，如此反复直到事件被处理。
 ![](https://i.imgur.com/xdbI13t.jpg)
+
 >2、当一个 View 需要处理事件时，如果设置了 OnTouchListener，那么 OnTouchListener 的 onTouch 方法会回调，如果 onTouch 返回 false，则当前 View 的 onTouchEvent 方法会被调用；如果返回 true，那么 onTouchEvent 方法将不会调用。由此可见，OnTouchListener 优先级高于 onTouchEvent。OnClickListener 优先级处在事件传递的尾端。
+>
 >3、一个点击事件产生后，传递顺序：Activity->Window->View；如果一个View的onTouchEvent返回false,那么它的父容器的onTouchEvent会被调用，以此类推，所有元素都不处理该事件，最终将传递给Activity处理，即Activity的onTouchEvent会被调用。
+>
 >4、“同一个事件序列”是指从手指接触屏幕的那一刻起，到手指离开屏幕的那一刻结束( down -> move ... move -> up )。
+>
 >5、一个事件序列只能被一个 View 拦截且消耗，如果通过特殊手段可以将本该自己处理的事件通过 onTouchEvent 强行传递给其他 View 处理。
+>
 >6、当一个 View 决定拦截一个事件后，那么系统会把同一个事件序列内的其他方法都直接交给它来处理，因此就不用再调用这个 View 的 onInterceptTouchEvent 去询问它是否要拦截了。
+>
 >7、事件一旦交给一个 View 处理，那么它必须消耗掉，否则同一个事件序列中剩下的事件就不会再交给它来处理了。
+>
 >8、如果某个 View 不消耗除 ACTION_DOWN 以外的其他事件，那么这个点击事件会消失，此时父元素的 onTouchEvent 并不会被调用，并且当前 View 可以收到后续事件，最终这些消失的点击事件会传递给Activity处理。(个人理解：有点像手机轻轻点了一下屏幕，并没有什么实际操作)
+>
 >9、ViewGroup 默认不拦截任何事件，ViewGroup 的 onInterceptTouchEvent 方法默认返回 false。
+>
 >10、View 没有 onInterceptTouchEvent 方法，一旦有事件传递给它，那么它的 onTouchEvent 方法就会被调用。
+>
 >11、View 的onTouchEvent 方法默认消耗事件（返回true），除非他是不可点击的（clickable 和longClickable 同时为false）。View 的 longClickable 属性默认都为 false，clickable 属性分情况，Button 默认为 true，TextView 默认为 false。
+>
 >12、onClick 发生的前提是 View 可点击，并且它收到了 down 和 up 事件。
+>
 >13、事件传递过程是由内而外，事件总是先传递给父元素，然后在由父元素分发给子 View，通过 requestDisallowInterceptTouchEvent 方法可以在子元素干预父元素的事件分发过程，但 ACTION_DOWN 事件除外。
 
 ### 3.4.2 事件分发的源码解析
