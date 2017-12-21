@@ -22,17 +22,22 @@ tags: Android
 <br />
 
 
+
 # 第 6 章 Android的Drawable
+
 ## Drawable 简介
-是什么
 
+- drawable 表示可以在 canvas（画布）中进行绘制的抽象概念，是个抽象类。
 
+- 在 res/drawable/ 目录下新建 XML 文件，使用自定义 drawable 对应标签创建 drawable。
+
+- 也可以直接通过代码创建 drawable 对象，但这方式使用起来比较复杂。
 
 ## Drawable 分类
 
 ### 1、BitmapDrawable
 
-这是最简单的Drawable，它表示的是一张图片。
+这是最简单的Drawable，它表示的是一张**图片**。
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -50,20 +55,15 @@ tags: Android
 - **android:src :** 图片资源 id 。
 
 - **android:antialias：**是否开启图片抗锯齿功能，开启后图片会变得平滑，也会轻微降低图片清晰度，建议开启。
-
 - **android:dither：**是否开启抖动效果，防止失真，建议开启。
-
 - **android:filter：**是否开启过滤效果，当图片尺寸被拉伸或压缩时，可以保持较好的显示效果，建议开启。
-
 - **android:gravity：**对图片进行定位，用“|”来组合使用(top、bottom、left、right、center_vertical等等)。
-
 - **android:mipMap：**是种图像相关的处理技术“纹理映射”，默认不开启。
-
-- **android:titleMode：**平铺模式，有这几个选项["disabled" | "repeat" | "mirror" | "clamp"]。                                   
-  - **disabled** 表示关闭平铺模式(默认值)，开启后 gravity 属性失效；
-  - **repeat** 表示简单的水平和竖直方向上的平铺效果；
-  - **mirror** 表示水平和竖直方向上的镜面投影效果；
-  - **clamp**  表示图片四周的像素会扩展到周围区域。
+- **android:titleMode：**平铺模式，有这几个选项["disabled" | "repeat" | "mirror" | "clamp"]。                                  
+ - **disabled** 表示关闭平铺模式(默认值)，开启后 gravity 属性失效；
+ - **repeat** 表示简单的水平和竖直方向上的平铺效果；
+ - **mirror** 表示水平和竖直方向上的镜面投影效果；
+ - **clamp**  表示图片四周的像素会扩展到周围区域。
 
 
 
@@ -72,7 +72,7 @@ tags: Android
 
 
 ### 2、NinePatchDrawable
-它表示的是一张.9格式的图片，可以自动地根据所需的宽/高进行相应的缩放并保证不失真。与BitmapDrawable都是表示一张图片，所以和BitmapDrawable的对应属性的含义是相同的。
+它表示的是一张.9格式的**图片**，可以自动地根据所需的宽/高进行相应的缩放并保证不失真。与BitmapDrawable都是表示一张图片，所以和BitmapDrawable的对应属性的含义是相同的。
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -86,7 +86,7 @@ tags: Android
 
 ### 3、ShapeDrawable
 
-它既可以是纯色的图形，也可以是具有渐变效果的图形。
+它既可以是**纯色的图形**，也可以是具有**渐变效果的图形**。
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -124,9 +124,9 @@ tags: Android
         android:dashWidth="50dp" />
 </shape>
 ```
-**android:shape**：表示图形的形状，有四个选项：rectangle(矩形)、oval(椭圆)、line(横线)、ring(圆形)。
 
-- **< corners >**：表示shape的四个角度，只用于矩形shape，这里的角度是指圆角的程度。
+- **android:shape**：表示图形的形状，有四个选项：rectangle(矩形)、oval(椭圆)、line(横线)、ring(圆形)。
+-  **< corners >**：表示shape的四个角度，只用于矩形shape，这里的角度是指圆角的程度。
  - android:radius：为四个角同时设定相同的角度，优先级比单向设定要低一点点。
  - android:topLeftRadius：设定左上角的角度；
  - android:topRightRadius：设定右上角的角度；
@@ -134,27 +134,26 @@ tags: Android
  - android:bottomLeftRadius：设定左下角的角度；
 
 - **< gradient >**：表示渐变的效果，与< soild > 标签相互排斥的，其中 solid 表示纯色填充。
- -  android:angle：渐变的角度，默认是0，其值必须是45的倍数，0表示从左到右，90表示从上到下。
- -   android:centerX：渐变的中心点的横坐标。
- -   android:centerY：渐变的中心点的纵坐标。
- -   android:startColor：渐变的起始色。
- -   android:centerColor：渐变的中间色。
- -   android:endColor：渐变的结束色。
- -   android:gradientRadius：渐变半径，当android:type="radial"时有效。
- -   android:type：渐变的类别，有linear(默认线性渐变)、radial(径向渐变)、sweep(扫描线渐变)三者。
+ - android:angle：渐变的角度，默认是0，其值必须是45的倍数，0表示从左到右，90表示从上到下。
+ - android:centerX：渐变的中心点的横坐标。
+ - android:centerY：渐变的中心点的纵坐标。
+ - android:startColor：渐变的起始色。
+ - android:centerColor：渐变的中间色。
+ - android:endColor：渐变的结束色。
+ - android:gradientRadius：渐变半径，当android:type="radial"时有效。
+ - android:type：渐变的类别，有linear(默认线性渐变)、radial(径向渐变)、sweep(扫描线渐变)三者。
 
-- **< solid >**：
-这个标签表示纯色填充，通过 android:color 指定 shape 中填充的颜色。
+- **< solid >**：这个标签表示纯色填充，通过 android:color 指定 shape 中填充的颜色。
 
 - **< stroke >**：表示 shape 的秒边。
- -  android:width：描边的宽度。
- -  android:color：描边的颜色。
- -  android:dashWidth：组成虚线的线段的宽度。
- -  android:dashGap：组成虚线的线段之间的间隔，越大则虚线空隙越大。
+ - android:width：描边的宽度。
+ - android:color：描边的颜色。
+ - android:dashWidth：组成虚线的线段的宽度。
+ - android:dashGap：组成虚线的线段之间的间隔，越大则虚线空隙越大。
 
-**< padding >**：空白
+- **< padding >**：空白
 
-**< size >**：shape的大小。
+- **< size >**：shape的大小。
 
 
 
@@ -163,7 +162,7 @@ tags: Android
 
 ### LayerDrawable
 
-- 它对应XML标签是<layer-list>，他表示层次化的Drawable集合，也就是叠加效果。
+- 它对应XML标签是<layer-list>，他表示层次化的Drawable集合，也就是**叠加**效果。
 - 在一个layer-list中可以包含多个item，每个item表示一个Drawable。
 - 常用属性android:top、bottom、left、right表示Drawable相对View的上下左右的偏移量。
 - Layes-list 有层次感的概念，下面的item会覆盖在上面的item，可以实现一些叠加效果。
@@ -190,12 +189,13 @@ tags: Android
 ```
 
 ### StateListDrawable
-StateListDrawable对应于 <selector> 标签，它也表示 Drawable 集合，每个 Drawable 都对应着一种 View 的一种状态。(主要用于设置可单击的 View 的背景：比如 Button)
+
+StateListDrawable对应于 <selector> 标签，它也表示 Drawable 集合，每个 Drawable 都对应着一种 View 的一种**状态**。(主要用于设置可单击的 View 的背景：比如 Button)
 
 - **android:constantSize**：StateListDrawable的固有大小是否不随着其状态的改变而改变，默认false。
 - **android:dither**：是否开启抖动效果，默认true。
 - **android:variablePadding**：StateListDrawable的padding表示是否随着其状态的改变而改变。
-- 每个item表示的都是一种**状态**下的Drawable信息：
+- 每个item表示的都是一种状态下的Drawable信息：
  - android:state_pressed：按下，未松开；
  - android:state_focused：view获取焦点；
  - android:state_selected：选择了view；
@@ -223,7 +223,7 @@ StateListDrawable对应于 <selector> 标签，它也表示 Drawable 集合，�
 ### LevelListDrawable
 
 
-LevelListDrawable 对应于 <level-list> 标签，集合中的每个 Drawable 都会有一个等级的概念，根据等级不同来切换对于的 Drawable。当它作为 View 的背景时，可以通过 Drawable的setLevel 方法来设置不同的等级从而切换具体的 Drawable。level 的值从 0-10000。
+LevelListDrawable 对应于 <level-list> 标签，集合中的每个 Drawable 都会有一个**等级**的概念，根据等级不同来切换对于的 Drawable。当它作为 View 的背景时，可以通过 Drawable的setLevel 方法来设置不同的等级从而切换具体的 Drawable。level 的值从 0-10000。
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -234,7 +234,7 @@ LevelListDrawable 对应于 <level-list> 标签，集合中的每个 Drawable �
 ```
 
 ### TransitionDrawable
-TransitionDrawable对应于 <transition> 标签，实现两个Drawable 之间的淡入淡出效果。
+TransitionDrawable对应于 <transition> 标签，实现两个Drawable 之间的**淡入淡出**效果。
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
