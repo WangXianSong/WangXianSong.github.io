@@ -57,9 +57,9 @@ tags: Android
 - **android:antialias：**是否开启图片抗锯齿功能，开启后图片会变得平滑，也会轻微降低图片清晰度，建议开启。
 - **android:dither：**是否开启抖动效果，防止失真，建议开启。
 - **android:filter：**是否开启过滤效果，当图片尺寸被拉伸或压缩时，可以保持较好的显示效果，建议开启。
-- **android:gravity：**对图片进行定位，用“ | ”来组合使用(top、bottom、left、right、center_vertical等等)。
+- **android:gravity：**对图片进行定位，用“ ` |` ”来组合使用( top、bottom、left、right、center_vertical等等)。
 - **android:mipMap：**是种图像相关的处理技术“纹理映射”，默认不开启。
-- **android:titleMode：**平铺模式，有这几个选项[" disabled " | " repeat" | "mirror" | "clamp" ]。                                  
+- **android:titleMode：**平铺模式，有这几个选项[" disabled " ` | ` " repeat" ` | ` "mirror " ` | ` "clamp" ]。                                  
  - **disabled** 表示关闭平铺模式(默认值)，开启后 gravity 属性失效；
  - **repeat** 表示简单的水平和竖直方向上的平铺效果；
  - **mirror** 表示水平和竖直方向上的镜面投影效果；
@@ -127,29 +127,29 @@ tags: Android
 
 - **android:shape**：表示图形的形状，有四个选项：rectangle(矩形)、oval(椭圆)、line(横线)、ring(圆形)。
 -  **< corners >**：表示shape的四个角度，只用于矩形shape，这里的角度是指圆角的程度。
- - android:radius：为四个角同时设定相同的角度，优先级比单向设定要低一点点。
- - android:topLeftRadius：设定左上角的角度；
- - android:topRightRadius：设定右上角的角度；
- - android:bottomRightRadius：设定右下角角的角度；
- - android:bottomLeftRadius：设定左下角的角度；
+  - android:radius：为四个角同时设定相同的角度，优先级比单向设定要低一点点。
+  - android:topLeftRadius：设定左上角的角度；
+  - android:topRightRadius：设定右上角的角度；
+  - android:bottomRightRadius：设定右下角角的角度；
+  - android:bottomLeftRadius：设定左下角的角度；
 
 - **< gradient >**：表示渐变的效果，与< soild > 标签相互排斥的，其中 solid 表示纯色填充。
- - android:angle：渐变的角度，默认是0，其值必须是45的倍数，0表示从左到右，90表示从上到下。
- - android:centerX：渐变的中心点的横坐标。
- - android:centerY：渐变的中心点的纵坐标。
- - android:startColor：渐变的起始色。
- - android:centerColor：渐变的中间色。
- - android:endColor：渐变的结束色。
- - android:gradientRadius：渐变半径，当android:type="radial"时有效。
- - android:type：渐变的类别，有linear(默认线性渐变)、radial(径向渐变)、sweep(扫描线渐变)三者。
+  - android:angle：渐变的角度，默认是0，其值必须是45的倍数，0表示从左到右，90表示从上到下。
+  - android:centerX：渐变的中心点的横坐标。
+  - android:centerY：渐变的中心点的纵坐标。
+  - android:startColor：渐变的起始色。
+  - android:centerColor：渐变的中间色。
+  - android:endColor：渐变的结束色。
+  - android:gradientRadius：渐变半径，当android:type="radial"时有效。
+  - android:type：渐变的类别，有linear(默认线性渐变)、radial(径向渐变)、sweep(扫描线渐变)三者。
 
 - **< solid >**：这个标签表示纯色填充，通过 android:color 指定 shape 中填充的颜色。
 
 - **< stroke >**：表示 shape 的秒边。
- - android:width：描边的宽度。
- - android:color：描边的颜色。
- - android:dashWidth：组成虚线的线段的宽度。
- - android:dashGap：组成虚线的线段之间的间隔，越大则虚线空隙越大。
+  - android:width：描边的宽度。
+  - android:color：描边的颜色。
+  - android:dashWidth：组成虚线的线段的宽度。
+  - android:dashGap：组成虚线的线段之间的间隔，越大则虚线空隙越大。
 
 - **< padding >**：空白
 
