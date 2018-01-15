@@ -7,6 +7,7 @@ tags: Android
 ---
 
 
+
 此篇文章为《 Android 开发艺术探索》第四章“ View 的工作原理”的总结，学习后会更好的了解 View 的工作原理以及自定义 View 的方法。内容有：初识 ViewRoot 和 DecorView 、理解 MeasureSpec、View 的工作流程、自定义 View。
 
 
