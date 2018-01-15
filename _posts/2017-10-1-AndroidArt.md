@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "《Android开发艺术探索》第一章总结"
+title:  "第一章 Activity 的生命周期和启动模式"
 date:  2017-10-1 17:08:56
 categories: Android
 tags: Android
@@ -8,7 +8,11 @@ tags: Android
 * content
 {:toc}
 
-最近学完Android开发的入门书籍《第一行代码》，为了更好的掌握知识点，接下来开始学习Android的进阶知识书籍《Android开发艺术探索》。
+
+>最近学完Android开发的入门书籍《第一行代码》，为了更好的掌握知识点，接下来开始学习Android的进阶知识书籍《Android开发艺术探索》。
+
+>此篇文章为《Android开发艺术探索》第一章“Activity 的生命周期和启动模式”的总结，内容比较易懂：Activity的生命周期分析、启动模式、IntentFilter的匹配规则。
+
 
 
 
@@ -23,7 +27,6 @@ tags: Android
 
 > 《Android开发艺术探索》侧重于Android知识的体系化和系统工作机制的分析，通过《Android开发艺术探索》的学习可以极大地提高开发者的Android技术水平，从而更加高效地成为高级开发者。而对于高级开发者来说，仍然可以从《Android开发艺术探索》的知识体系中获益。
 
-这是来自[百度百科](https://baike.baidu.com/item/Android%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2/18526051?fr=aladdin)的介绍，在我眼中已经不单是进阶书籍那么简单，而是突破我目前的樽颈位的学习阶段。为了更好的学习，我会在边学习边总结，将知识点整理出来，方便以后的复习。
 
 ## 第1章 Activity的生命周期和启动模式
 

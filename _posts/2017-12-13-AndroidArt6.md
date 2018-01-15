@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  " Android 的 Drawable"
+title:  "第六章 Android 的 Drawable"
 date:  2017-12-13 21:59:36
 categories: Android
 tags: Android
@@ -9,21 +9,16 @@ tags: Android
 {:toc}
 
 
-<br />
+此篇文章为《 Android 开发艺术探索》第六章“ Android 的 Drawable”的总结，熟悉掌握 Drawable 可以方便我们做出一些特殊的 UI 效果，而且比自定义 View 的成本要低。内容有：Drawable 简介、Drawable 分类、Drawable 自定义。
 
 
-> 参考文章：
-> [http://www.jianshu.com/p/7d2c88ca24fc](http://www.jianshu.com/p/7d2c88ca24fc)
+> 参考文章：[http://www.jianshu.com/p/7d2c88ca24fc](http://www.jianshu.com/p/7d2c88ca24fc)
 
-> 参考书籍：
-> 《Android开发艺术探索》
-> 《Android进阶之光》
+> 参考书籍：《Android开发艺术探索》《Android进阶之光》
 
 <br />
 
 
-
-# 第 6 章 Android的Drawable
 
 ## Drawable 简介
 

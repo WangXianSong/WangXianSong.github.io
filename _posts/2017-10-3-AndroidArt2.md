@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "《Android开发艺术探索》第二章总结"
+title:  "第二章 Activity 中的 IPC 机制"
 date:  2017-10-3 21:59:36
 categories: Android
 tags: Android
@@ -9,14 +9,15 @@ tags: Android
 {:toc}
 
 
-<br />
+>此篇文章为《Android开发艺术探索》第二章“Activity 中的 IPC 机制”的总结，内容比较多，学起来比[第一章](http://xsong.wang/2017/10/11/AndroidArt/)要复杂得多！多很多！
 
-> 在上一章[《 Android 开发艺术探索》第一章总结](http://xsong.wang/2017/10/11/AndroidArt/)学习了 Activity 的生命周期以及启动模式的知识点，这一次我们就开始学习 Android 中的 IPC 机制，也就是进程间通信。
+>本章主要的内容有： IPC 简单介绍、Android 中的多进程模式、IPC 基础概念介绍、Android 中的 IPC 方式、Binder 连接池、选用合适的 IPC 方式。
 
-<br />
+  
 
 
-# 第 2 章 Activity 中的 IPC 机制
+
+
 
 ## 1、Android IPC 简单理解
 

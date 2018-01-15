@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  " View 的事件体系"
+title:  " 第三章 View 的事件体系"
 date:  2017-11-24 21:59:36
 categories: Android
 tags: Android
@@ -8,23 +8,17 @@ tags: Android
 * content
 {:toc}
 
+>此篇文章为《 Android 开发艺术探索》第三章“ View 的事件体系”的总结，本章非常重要，而且比较贴近我们的生活。内容有：View 基础知识、View 的滑动、View 的事件分发机制、View 的滑动冲突。
 
-<br />
+> 参考的文章：[http://www.jianshu.com/p/7d2c88ca24fc](http://www.jianshu.com/p/7d2c88ca24fc)
 
-> 第一章我们学习了 [Activity 的生命周期以及启动模式](http://xsong.wang/2017/10/01/AndroidArt/)的知识点，第二章学习了 [Android 中的 IPC 机制](http://xsong.wang/2017/10/03/AndroidArt2/)，明显第二章比第一章要吃力多了，那接下来就要学习 View 的事件体系。
-> 
->
-> 参考的文章：
-> [http://www.jianshu.com/p/7d2c88ca24fc](http://www.jianshu.com/p/7d2c88ca24fc)
-> 
-> 参考的书籍：
-> 《Android开发艺术探索》
-> 《Android进阶之光》
-
-<br />
+> 参考的书籍：《 Android 开发艺术探索》《 Android 进阶之光》
 
 
-# 第 3 章 View 的事件体系
+
+
+
+
 ## 3.1 View 的基础知识
 ### 3.1.1 什么是 View？
 

@@ -1,26 +1,19 @@
 ---
 layout: post
-title:  " View 的工作原理"
+title:  " 第四章 View 的工作原理"
 date:  2017-10-3 21:59:36
 categories: Android
 tags: Android
 ---
 
 
-> 参考文章：
-> [http://www.jianshu.com/p/7d2c88ca24fc](http://www.jianshu.com/p/7d2c88ca24fc)
-
-> 参考书籍：
-> 《Android开发艺术探索》
-> 《Android进阶之光》
-
-<br />
+此篇文章为《 Android 开发艺术探索》第四章“ View 的工作原理”的总结，学习后会更好的了解 View 的工作原理以及自定义 View 的方法。内容有：初识 ViewRoot 和 DecorView 、理解 MeasureSpec、View 的工作流程、自定义 View。
 
 
-# 第 4 章 View 的工作原理
+> 参考文章： [http://www.jianshu.com/p/7d2c88ca24fc](http://www.jianshu.com/p/7d2c88ca24fc)
 
-> - 理解 View 的工作原理：比如 View 的测量流程、布局流程、绘制流程；
-> - 学习自定义 View 的实现方式：继承自 View 和 ViewGroup 、继承现有的系统控件；
+> 参考书籍：《Android开发艺术探索》 《Android进阶之光》
+
 
 
 ## 4.1 初识 ViewRoot 和 DecorView 
@@ -73,6 +66,7 @@ MeasureSpec 代表一个 32 位的 int 值，高 2 位为 SpecMode，低 30 位�
 <br />
 <br />
 <br />
+
 ## 4.3 View 的工作流程
 
 ### 4.3.1 measure 过程
@@ -170,6 +164,7 @@ View的绘制过程是通过dispatchDraw来实现的，它会遍历所有子元�
 <br />
 <br />
 <br />
+
 ## 4.4 自定义 View
 ### 4.4.1 自定义 View 的分类
 
