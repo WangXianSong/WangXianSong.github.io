@@ -3,8 +3,10 @@ layout: post
 title:  " 第四章 View 的工作原理"
 date:  2017-12-4 21:59:36
 categories: Android
-tags: Android
+tags: Android	
 ---
+* content
+{:toc}
 
 
 
@@ -39,6 +41,7 @@ performTraversals 会依次调用 performMeasure、performLayout 和 performDraw
 <br />
 <br />
 <br />
+
 ## 4.2 理解 MeasureSpec
 
 ### 4.2.1 MeasureSpec
@@ -138,10 +141,6 @@ view.measure(widthMeasureSpec,heightMeasureSpec);
 
 　　
 
-
-
-
-
 ### 4.3.2 layout 的过程
 
 在View的默认实现中，View的测量宽/高和最终宽/高是相等的，测量宽/高形成于View的measure过程，而最终宽/高形成于View的layout过程。
@@ -167,6 +166,7 @@ View的绘制过程是通过dispatchDraw来实现的，它会遍历所有子元�
 <br />
 
 ## 4.4 自定义 View
+
 ### 4.4.1 自定义 View 的分类
 
 1. 继承 View 重写 onDraw 方法；
