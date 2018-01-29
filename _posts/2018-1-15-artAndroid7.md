@@ -43,7 +43,6 @@ tags: Android
 2、**创建动画的 XML 文件**：< set > 标签表示动画集合，对应 **AnimationSet** 类，它可以包含若干个动画，并且他的内部也可以嵌套其他动画集合。
 
 ```xml
-
 <?xml version="l.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android"
  android:interpolator="@[package:]anim/interpolator_resource"
@@ -72,7 +71,6 @@ android:shareInterpolator=[ "true" "false" ] >
 	...
 	</set>
 </set>
-
 ```
 
 - **android:interpolator**：表示动画集合所采用的插值器，作用是影响动画的速度，比如非匀速动画就需要通过插值器来控制，默认加速减速插值器：@android:anim/accelerate_decelerate_interpolator
@@ -87,16 +85,15 @@ android:shareInterpolator=[ "true" "false" ] >
 
 - **< alpha >** 标签为**透明度**动画，对应 AlphaAnimation；
 
+
 - 还有一些常用的属性：
- - **android:duration**：动画持续的时间；
- - **android:fillAfter**：动画结束后是否停留在结束位置；
+  - **android:duration**：动画持续的时间；
+  - **android:fillAfter**：动画结束后是否停留在结束位置；
 
 
-例子：如何去调用这些动画呢
+例子：如何去调用这些动画呢，先定义 XML，然后在 Java 中调用，以下所示是 XML 代码：
 
-XML 内容：
 ```xml
-
 //res/anim/animation_test.xml 
 <?xml version="l.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android" 
@@ -107,14 +104,13 @@ XML 内容：
 		android:fromXDelta="0"
 		android:fromYDelta="0"
 		android:interpolator="@android:anim/linear_interpolator"
-		android: toXDelta="100" 
+		android:toXDelta="100" 
 		android:toYDelta="100"/>
 	<rotate
 		android:duration="400" 
 		android:fromDegrees="0" 
 		android:toDegrees=="90"/>
 </set>
-
 ```
 
 java 代码：
@@ -126,6 +122,7 @@ Animation animation = AnimationUtils.loadAnimation(this,R.anim.animation_test);
 mButton.startAnimation(animation);
 
 ```
+</br>
 
 3、除了XML中定义，还可以通过 **Java 代码来实现应用代码**，以下代码中，创建了一个透明度动画，将一个 Button 在 300ms 内由 0 变为 1。
 
@@ -136,30 +133,30 @@ alphaAnimation.setDuration(300);
 mButton.startAnimation(alphaAnimation);
 ```
 
+</br>
+
 4、另外还可以通过 Animation 的 setAnimationListener 方法可以给 View 动画添加监听。
 
 ```java
-
  public static interface AnimationListener {
 	void onAnimationStart(Animation animation);
 	void onAnimationEnd(Animation animation);
 	void onAnimationRepeat(Animation animation);
 }
-
 ```
-
+</br>
+</br>
 ### 1.2 自定义 View  动画
 
 自定义 View  动画只要继承 Animation 这个抽象类，然会重写它的 initialize 和 applyTransformation 方法即可，在 initialize 方法中做初始化工作，在 applyTransformation 中进行相应的矩阵变换即可。
 
-
-
+</br>
+</br>
 ### 1.3 帧动画 AnimationDrawable
 
 1、帧动画是顺序播放一组预先定义好的图片，类似于电影播放。对应的类是 AnimationDrawable 来使用帧动画。首先通过XML来定义一个 AnimationDrawable。
 
 ```xml
-
 //res/drawable/frame_animation.xml
 <?xml version="l.0" encoding="utf-8"?>
 <animation-List xmlns:android="http://schemas.android.com/apk/res/android"
@@ -168,29 +165,29 @@ mButton.startAnimation(alphaAnimation);
 	<item android:drawable="@drawable/image2" android:duration="500"/>
 	<item android:drawable="@drawable/image3" android:duration="500"/>
 </animation-List>
-
 ```
 
 2、然后通过上面的代码作为 View 的背景并通过 Drawable 来播放动画即可：
 
 ```java
-
 Button mButton = (Button) findViewById(R.id.button);
 mButton.setBackgroudResouce(R.drawable.frame_animation);
 AnimationDrawable drawable = (AnimationDrawable) mButton.getBackground();
 drawable.start();
-
 ```
 
 3、注意的一点是：图片比较多或者图片比较大的情况下容易引起 OOM。
 
 
-
+</br>
+</br>
 ### 1.4 布局动画 LayoutAnimation
 
 为 ViewGroup 指定一个动画，为其子元素出场时会具有这种动画。常常用作 ListView 上，当每个 item 出场都会以一定的动画形式出现。
 
-方法1：通过XML实现为ViewGroup的子元素添加出场动画。
+</br>
+
+方法1：通过XML实现为 ViewGroup 的子元素添加出场动画。
 
 (1)定义LayoutAnimation，并指定子元素出场动画，//res/anim/anim_layout.xml
 
@@ -203,7 +200,7 @@ drawable.start();
     android:delay="0.5" />
 
 ```
-
+</br>
 (2)定义子元素具体的入场动画	//res/anim/anim_item.xml
 
 ```xml
@@ -223,7 +220,7 @@ drawable.start();
 </set>
 
 ```
-
+</br>
 (3)给 ListView 控件指定 LayoutAnimation //activity_main.xml
 
 ```xml
@@ -243,6 +240,8 @@ drawable.start();
 
 ![](https://i.imgur.com/SFBucBR.gif)
 
+</br>
+</br>
 方法2：通过LayoutAnimationController 来实现。
 
 ```java
@@ -255,6 +254,8 @@ drawable.start();
         mListView.setLayoutAnimation(controller);
 
 ```
+</br>
+</br>
 
 ### 2.2 Activity 的切换效果
 
@@ -264,15 +265,14 @@ drawable.start();
  - exitAnim：Actiivity 被暂停时，所需的动画资源id；
 
 ```java
-
         Intent intent = new Intent(MainActivity.this, Main2Activity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.enter_anim, R.anim.exit_anim);
 
 ```
+</br>
 
 ```java
-
     @Override
     public void finish() {
         super.finish();
@@ -280,7 +280,7 @@ drawable.start();
     }
 
 ```
-
+</br>
 2、Fragment 也可以添加切换动画，通过FragmentTransaction 中的 setCustAnimation()方法来添加切换动画。
 
 
@@ -290,7 +290,9 @@ drawable.start();
 
 ## 3. 属性动画
 
-在属性动画中，用得最多的就是 AnimatorSet 和 ObjectAnimator 配合，ObjectAnimator 只控制一个对象的一个属性值，而 AnimatorSet 就是将 ObjectAnimator 组合起来，通过更精细化控制，如setFrameDelay 方法设置动画帧之间的间隙时间，调整时间，减少动画频繁的绘制，从而减少 CPU 资源的损耗。
+在属性动画中，用得最多的就是 AnimatorSet 和 ObjectAnimator 配合，ObjectAnimator 只控制一个对象的一个属性值，而 AnimatorSet 就是将 ObjectAnimator 组合起来，通过更精细化控制，如 setFrameDelay 方法设置动画帧之间的间隙时间，调整时间，减少动画频繁的绘制，从而减少 CPU 资源的损耗。
+
+</br>
 
 属性动画通过调用属性的 get 、set 方法来真实地控制一个 View 的属性值，因此强大的属性动画框架能实现所有的动画效果。没有做不到，只有想不到。666
 
@@ -305,13 +307,14 @@ drawable.start();
                 animator.start();
 ```
 
- ![](https://i.imgur.com/d8Hgi8E.gif) 
-
 通过 ObjectAnimator 的静态工厂方法，创建一个 ObjectAnimator 对象，需要返回三个参数，同时还可以设置显示时长、插值器等属性。
 
 - 第一个参数：需要操控的 View；
 - 第二个参数：要操纵的属性；
 - 第三个参数：可变数组参数；
+
+
+ ![](https://i.imgur.com/d8Hgi8E.gif) 
 
 
 2、常用属性值
@@ -337,7 +340,6 @@ drawable.start();
 第二种的具体如何使用包装类的方法给一个属性增加 get、set 方法，代码如下：
 
 ```java
-
     private static class WrapperView {
         private View mTarget;
 
@@ -354,46 +356,40 @@ drawable.start();
             mTarget.requestLayout();
         }
     }
-
 ```
 
 通过以上代码给一个属性包装了一层，并提供了get、set 方法，接下来是间接去调用即可。
 
 ```java
-
             case R.id.btn_anim_object:
                 WrapperView wrapperView = new WrapperView(btn_Object);
                 ObjectAnimator.ofInt(wrapperView, "width", 1000).setDuration(1000).start();
                 break;
-
 ```
+
 第三种是采用 ValueAnimator 来实现，ValueAnimator 在属性动画中占有非常重要的地位，连 ObjectAnimator 也是继承自 ValueAnimator ，接下来就让我们去学习 ValueAnimator。
 
 ### ValueAnimator
 
 > ValueAnimator 本身不提供任何动画效果，它更像一个数值发生器，用来产生具有一定规律的数字，从而让调用者来控制动画的实现过程。
 
-这句话是来自《Android 群英传》的对 ValueAnimator 的介绍，我认为说得非常对！
-
-通常情况下，在 ValueAnimator 的 AnimatorUpdateListener 中监听数值的转换，从而完成动画的变换，以下是简单地例子：
+这句话是来自《Android 群英传》的对 ValueAnimator 的介绍，我认为说得非常对！通常情况下，在 ValueAnimator 的 AnimatorUpdateListener 中监听数值的转换，从而完成动画的变换，以下是简单地例子：
 
 ```java
-
  ValueAnimator valueAnimator = ValueAnimator.ofInt(0, 400);
                 valueAnimator.setTarget(btn_Value);
                 valueAnimator.setDuration(1000);
                 valueAnimator.addUpdateListener(new AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator valueAnimator) {
-
                         int curValue = (int) valueAnimator.getAnimatedValue();
                         btn_Value.layout(curValue,curValue,curValue+btn_Value.getWidth(),curValue+btn_Value.getHeight());
                     }
                 });
                 valueAnimator.start();
-
 ```
-<center>![](https://i.imgur.com/Z0rwtUm.gif)</center>
+
+![](https://i.imgur.com/Z0rwtUm.gif)
 
 在上面的例子中，它会在 1000ms 内将一个数从 1 到 400，然后动画的每一帧会回调 onAnimationUpdate 方法，可以在其中进行具体的操作。
 
@@ -417,15 +413,15 @@ drawable.start();
 
 这个类用于将一个动画集合按特定的顺序播放。动画可以设置成同时播放、顺序播放或者在一定的延时后播放。
 
-与 PropertyValuesHolder 的区别是 AnimatorSet 能更为精确的顺序来控制动画效果。
+(1)与 PropertyValuesHolder 的区别是 AnimatorSet 能更为精确的顺序来控制动画效果。
 
-与 AnimationSet 的区别是父类不一样，然后是针对属性动画做效果，动画会导致对象的触发位置发生改变。
+(2) AnimationSet 的区别是父类不一样，然后是针对属性动画做效果，动画会导致对象的触发位置发生改变。
 
 在属性动画中，AnimatorSet 正是通过 playTogether()、playSequentially()、AnimatorSet.play().with() 、before()、after()这些方法来控制多个动画的协同工作方式，从而做到对动画播放顺序的精确控制。 
 
 ```java
 
- //第一种写法
+                 //第一种写法
                 AnimatorSet set = new AnimatorSet();
                 set.playTogether(
                         ObjectAnimator.ofFloat(imageView_id, "rotationX", 0, 360),
@@ -448,42 +444,36 @@ drawable.start();
                 set1.play(animator1).with(animator2).before(animator3);
                 set1.setDuration(1000);
                 set1.start();
-
 ```
-
+</br>
+</br>
 
 ### 动画事件的监听
 
 完整的动画具有 Start、Repeat、End、Cancel 四个过程，通过 Android 提供了接口，可以很方便地监听到这四个事件：
 
 ```java
-
 ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view,"alpha",1f, 0, 2f);
                 objectAnimator.addListener(new AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animator) {
                     }
-
                     @Override
                     public void onAnimationEnd(Animator animator) {
                     }
-
                     @Override
                     public void onAnimationCancel(Animator animator) {
                     }
-
                     @Override
                     public void onAnimationRepeat(Animator animator) {
                     }
                 });
-
 ```
 
 更人性化的是，Android 为我们提供了一个 AnimatorListenerAdapter 来让我们选择必要的事件监听，代码如下：
 
 
 ```java
-
                 ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(imageView_id, "alpha", 1f, 0, 2f);
                 objectAnimator.addListener(new AnimatorListenerAdapter() {
                     @Override
@@ -494,7 +484,6 @@ ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view,"alpha",1f, 0, 2f);
                 });
                 objectAnimator.setDuration(1000);
                 objectAnimator.start();
-
 ```
 
 1. **AnimatorListener** 会监听动画的开始、结束、取消以及重复播放。
@@ -503,13 +492,15 @@ ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view,"alpha",1f, 0, 2f);
 
 3. **AnimatorUpdateListener** 会监听整个动画的过程，动画由许多帧组成的，每播放一帧，onAnimationUpdate 就会调用一次。
 
+</br>
+</br>
 
 ### 插值器Interpolator与估值器Evaluator
 
 属性动画中的插值器和估值器很重要，它们是实现非匀速动画的重要手段。
 
  1. **TimeInterpolator 时间插值器**，作用是根据时间流逝的百分比 来计算当前属性值改变的百分比，系统预置的有 LinearInterpolator (线性插值器：匀速动画)、AccelerateDecelerateInterpolator (加速减速插值器：动画两头慢中间快)、DecelerateInterpolator(减速插值器：动画越来越慢)。
-<center>![](https://i.imgur.com/ivj29tO.jpg)</center>
+![](https://i.imgur.com/ivj29tO.jpg)
  2. **TypeEvaluator 类型估值算法**，作用是根据当前属性改变的百分比来计算改变后的属性值，系统预置的有 IntEvaluator (针对整型属性)、FloatEvaluator (针对浮点型属性)、ArgbEvaluator (针对 Color 属性)。
 
  3. 插值器和估值器除了系统提供之外，我们还可以自定义。自定义插值器需要实现 Interpolator 或者 TimeInterpolator；自定义估值器算法需要实现 TypeEvaluator。
