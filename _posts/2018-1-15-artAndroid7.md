@@ -22,7 +22,7 @@ tags: Android
 - **属性动画**：在一定时间间隔内，通过不断对值进行改变，并不断将该值赋给对象的属性，从而实现该对象在该属性上的动画效果，响应点击事件的有效区域也会发生改变。比较常用的几个动画类是：ValueAnimator、ObjectAnimator 和 AnimatorSet，其中 ObjectAnimator 继承自 ValueAnimator，AnimatorSet 是动画集合。
 
 
-<center>   ![](https://i.imgur.com/rWoHIEL.png)   </center>
+   ![](https://i.imgur.com/rWoHIEL.png)   
 
 
 
@@ -238,7 +238,7 @@ drawable.start();
 
 ```
 
-<center>![](https://i.imgur.com/SFBucBR.gif)</center>
+![](https://i.imgur.com/SFBucBR.gif)
 
 方法2：通过LayoutAnimationController 来实现。
 
@@ -302,7 +302,7 @@ drawable.start();
                 animator.start();
 ```
 
-<center> ![](https://i.imgur.com/d8Hgi8E.gif) </center>
+ ![](https://i.imgur.com/d8Hgi8E.gif) 
 
 通过 ObjectAnimator 的静态工厂方法，创建一个 ObjectAnimator 对象，需要返回三个参数，同时还可以设置显示时长、插值器等属性。
 
