@@ -13,13 +13,16 @@ tags: Android
 
 
 ## 前言
-此篇文章是对“Android 动画深入分析”的学习与总结，动画效果一直是人机交互中一个非常重要的部分。在提示、引导类的场景中，合理使用动画能让用户获得更加愉悦的使用体验。在学习过程中，参考资料来源有《Android 艺术开发探索》、《Android 群英传》、慕课网教学视频。
+此篇文章是对“ Android 动画深入分析”的学习与总结，动画效果一直是人机交互中一个非常重要的部分。在提示、引导类的场景中，合理使用动画能让用户获得更加愉悦的使用体验。在学习过程中，参考资料来源有《Android 艺术开发探索》、《Android 群英传》、慕课网教学视频。
+
+</br>
 
 本章的主要内容：
 
-- **View 动画**：定义了透明度、平移、缩放、旋转动画，实现原理是每次绘画视图时，View 所在的 ViewGroup 中的 drawChild 函数获取该 View 的 Animation 的 Transformation 值，然后调用 canvas.concat(transformToApply.getMatrix())，通过矩阵运算完成动画帧。缺点是不具备交互性，当某个元素发生 View 动画后，其响应事件的位置仍然在动画前的地方。
+- **View 动画**：定义了透明度、平移、缩放、旋转动画，**实现原理**：是每次绘画视图时，View 所在的 ViewGroup 中的 drawChild 函数获取该 View 的 Animation 的 Transformation 值，然后调用 canvas.concat(transformToApply.getMatrix())，通过矩阵运算完成动画帧。**缺点**：是不具备交互性，当某个元素发生 View 动画后，其响应事件的位置仍然在动画前的地方。
 
-- **属性动画**：在一定时间间隔内，通过不断对值进行改变，并不断将该值赋给对象的属性，从而实现该对象在该属性上的动画效果，响应点击事件的有效区域也会发生改变。比较常用的几个动画类是：ValueAnimator、ObjectAnimator 和 AnimatorSet，其中 ObjectAnimator 继承自 ValueAnimator，AnimatorSet 是动画集合。
+
+- **属性动画**：在一定时间间隔内，通过不断对值进行改变，并不断将该值赋给对象的属性，从而实现该对象在该属性上的动画效果，**响应点击事件的有效区域也会发生改变**。比较常用的几个动画类是：ValueAnimator、ObjectAnimator 和 AnimatorSet，其中 ObjectAnimator 继承自 ValueAnimator，AnimatorSet 是动画集合。
 
 
    ![](https://i.imgur.com/rWoHIEL.png)   
@@ -44,7 +47,7 @@ tags: Android
 <?xml version="l.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android"
  android:interpolator="@[package:]anim/interpolator_resource"
-android:shareInterpolator=["true" | "false"] >
+android:shareInterpolator=[ "true" "false" ] >
 	<alpha
 		android:fromAlpha="float" 
 		android:toAlpha="float" />
@@ -58,11 +61,11 @@ android:shareInterpolator=["true" | "false"] >
 	<translate
 		android:fromXDelta="float"
 		android:toXDelta="float" 
-		android: fromYDelta="float" 
-		android: toYDelta="float" />
+		android:fromYDelta="float" 
+		android:toYDelta="float" />
 	<rotate
 		android:fromDegrees="float"
-		android: toDegrees=" float" 
+		android:toDegrees=" float" 
 		android:pivotX=" float" 
 		android:pivotY="float" />
 	<set>
