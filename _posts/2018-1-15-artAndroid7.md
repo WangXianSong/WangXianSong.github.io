@@ -15,7 +15,7 @@ tags: Android
 ## 前言
 此篇文章是对“ Android 动画深入分析”的学习与总结，动画效果一直是人机交互中一个非常重要的部分。在提示、引导类的场景中，合理使用动画能让用户获得更加愉悦的使用体验。在学习过程中，参考资料来源有《Android 艺术开发探索》、《Android 群英传》、慕课网教学视频。
 
-</br>
+<br/>
 
 本章的主要内容：
 
@@ -46,7 +46,7 @@ tags: Android
 <?xml version="l.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android"
  android:interpolator="@[package:]anim/interpolator_resource"
-android:shareInterpolator=[ "true" "false" ] >
+android:shareInterpolator=["true"|"false"] >
 	<alpha
 		android:fromAlpha="float" 
 		android:toAlpha="float" />
@@ -116,13 +116,11 @@ android:shareInterpolator=[ "true" "false" ] >
 java 代码：
 
 ```java
-
 Button mButton = (Button) findViewById(R.id.button);
 Animation animation = AnimationUtils.loadAnimation(this,R.anim.animation_test);
 mButton.startAnimation(animation);
-
 ```
-</br>
+<br/>
 
 3、除了XML中定义，还可以通过 **Java 代码来实现应用代码**，以下代码中，创建了一个透明度动画，将一个 Button 在 300ms 内由 0 变为 1。
 
@@ -133,7 +131,7 @@ alphaAnimation.setDuration(300);
 mButton.startAnimation(alphaAnimation);
 ```
 
-</br>
+<br/>
 
 4、另外还可以通过 Animation 的 setAnimationListener 方法可以给 View 动画添加监听。
 
@@ -144,14 +142,14 @@ mButton.startAnimation(alphaAnimation);
 	void onAnimationRepeat(Animation animation);
 }
 ```
-</br>
-</br>
+<br/>
+<br/>
 ### 1.2 自定义 View  动画
 
 自定义 View  动画只要继承 Animation 这个抽象类，然会重写它的 initialize 和 applyTransformation 方法即可，在 initialize 方法中做初始化工作，在 applyTransformation 中进行相应的矩阵变换即可。
 
-</br>
-</br>
+<br/><br/>
+
 ### 1.3 帧动画 AnimationDrawable
 
 1、帧动画是顺序播放一组预先定义好的图片，类似于电影播放。对应的类是 AnimationDrawable 来使用帧动画。首先通过XML来定义一个 AnimationDrawable。
@@ -179,13 +177,13 @@ drawable.start();
 3、注意的一点是：图片比较多或者图片比较大的情况下容易引起 OOM。
 
 
-</br>
-</br>
+<br/><br/>
+
 ### 1.4 布局动画 LayoutAnimation
 
 为 ViewGroup 指定一个动画，为其子元素出场时会具有这种动画。常常用作 ListView 上，当每个 item 出场都会以一定的动画形式出现。
 
-</br>
+<br/>
 
 方法1：通过XML实现为 ViewGroup 的子元素添加出场动画。
 
@@ -200,7 +198,7 @@ drawable.start();
     android:delay="0.5" />
 
 ```
-</br>
+<br/>
 (2)定义子元素具体的入场动画	//res/anim/anim_item.xml
 
 ```xml
@@ -220,7 +218,8 @@ drawable.start();
 </set>
 
 ```
-</br>
+<br/>
+
 (3)给 ListView 控件指定 LayoutAnimation //activity_main.xml
 
 ```xml
@@ -240,8 +239,8 @@ drawable.start();
 
 ![](https://i.imgur.com/SFBucBR.gif)
 
-</br>
-</br>
+<br/><br/>
+
 方法2：通过LayoutAnimationController 来实现。
 
 ```java
@@ -254,8 +253,7 @@ drawable.start();
         mListView.setLayoutAnimation(controller);
 
 ```
-</br>
-</br>
+<br/><br/>
 
 ### 2.2 Activity 的切换效果
 
@@ -270,7 +268,7 @@ drawable.start();
         overridePendingTransition(R.anim.enter_anim, R.anim.exit_anim);
 
 ```
-</br>
+<br/>
 
 ```java
     @Override
@@ -280,7 +278,8 @@ drawable.start();
     }
 
 ```
-</br>
+<br/>
+
 2、Fragment 也可以添加切换动画，通过FragmentTransaction 中的 setCustAnimation()方法来添加切换动画。
 
 
@@ -292,7 +291,7 @@ drawable.start();
 
 在属性动画中，用得最多的就是 AnimatorSet 和 ObjectAnimator 配合，ObjectAnimator 只控制一个对象的一个属性值，而 AnimatorSet 就是将 ObjectAnimator 组合起来，通过更精细化控制，如 setFrameDelay 方法设置动画帧之间的间隙时间，调整时间，减少动画频繁的绘制，从而减少 CPU 资源的损耗。
 
-</br>
+<br/>
 
 属性动画通过调用属性的 get 、set 方法来真实地控制一个 View 的属性值，因此强大的属性动画框架能实现所有的动画效果。没有做不到，只有想不到。666
 
@@ -445,8 +444,7 @@ drawable.start();
                 set1.setDuration(1000);
                 set1.start();
 ```
-</br>
-</br>
+<br/><br/>
 
 ### 动画事件的监听
 
@@ -492,8 +490,7 @@ ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view,"alpha",1f, 0, 2f);
 
 3. **AnimatorUpdateListener** 会监听整个动画的过程，动画由许多帧组成的，每播放一帧，onAnimationUpdate 就会调用一次。
 
-</br>
-</br>
+<br/><br/>
 
 ### 插值器Interpolator与估值器Evaluator
 
