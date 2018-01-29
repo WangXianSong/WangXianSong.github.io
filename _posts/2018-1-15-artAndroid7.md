@@ -22,7 +22,7 @@ tags: Android
 - **属性动画**：在一定时间间隔内，通过不断对值进行改变，并不断将该值赋给对象的属性，从而实现该对象在该属性上的动画效果，响应点击事件的有效区域也会发生改变。比较常用的几个动画类是：ValueAnimator、ObjectAnimator 和 AnimatorSet，其中 ObjectAnimator 继承自 ValueAnimator，AnimatorSet 是动画集合。
 
 
-<center>![](https://i.imgur.com/rWoHIEL.png)</center>
+<center>   ![](https://i.imgur.com/rWoHIEL.png)   </center>
 
 
 
