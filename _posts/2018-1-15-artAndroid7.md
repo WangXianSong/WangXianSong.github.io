@@ -287,7 +287,7 @@ drawable.start();
 
 
 
-## 3. 属性动画
+## 2. 属性动画
 
 在属性动画中，用得最多的就是 AnimatorSet 和 ObjectAnimator 配合，ObjectAnimator 只控制一个对象的一个属性值，而 AnimatorSet 就是将 ObjectAnimator 组合起来，通过更精细化控制，如 setFrameDelay 方法设置动画帧之间的间隙时间，调整时间，减少动画频繁的绘制，从而减少 CPU 资源的损耗。
 
@@ -295,7 +295,7 @@ drawable.start();
 
 属性动画通过调用属性的 get 、set 方法来真实地控制一个 View 的属性值，因此强大的属性动画框架能实现所有的动画效果。没有做不到，只有想不到。666
 
-### 3.1 ObjectAnimator
+### 2.1 ObjectAnimator
 
 1、简单使用方法
 
@@ -398,13 +398,11 @@ drawable.start();
 类似视图动画中的 AnimationSet，对一个对象的多个属性同时作用多种动画。其实，在属性动画中还有一个叫 AnimatorSet 类，相同的操作，但却有更牛逼的功能。
 
 ```java
-
                 PropertyValuesHolder pvh1 = PropertyValuesHolder.ofFloat("translationX", 300f);
                 PropertyValuesHolder pvh2 = PropertyValuesHolder.ofFloat("scaleX", 1f, 2f, 1f);
                 PropertyValuesHolder pvh3 = PropertyValuesHolder.ofFloat("scaleY", 1f, 2f, 1f);
                 ObjectAnimator.ofPropertyValuesHolder(imageView_id, pvh1, pvh2, pvh3)
                         .setDuration(1000).start();
-
 ```
 
 
@@ -419,7 +417,6 @@ drawable.start();
 在属性动画中，AnimatorSet 正是通过 playTogether()、playSequentially()、AnimatorSet.play().with() 、before()、after()这些方法来控制多个动画的协同工作方式，从而做到对动画播放顺序的精确控制。 
 
 ```java
-
                  //第一种写法
                 AnimatorSet set = new AnimatorSet();
                 set.playTogether(
@@ -504,7 +501,7 @@ ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view,"alpha",1f, 0, 2f);
 
 
 
-
+## 3.例子
 
 
 
