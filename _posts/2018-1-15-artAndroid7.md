@@ -255,7 +255,7 @@ drawable.start();
 ```
 <br/><br/>
 
-### 2.2 Activity 的切换效果
+### 1.5 Activity 的切换效果
 
 1、Activity 之间的切换可以通过自定义来设定，主要用到 overridePendingTransition( int enterAnim , int exitAnim ) 这个方法，要用在 startActivity( Intent )，或者 在 finish() 之后被调用才能生效。
 
@@ -368,7 +368,7 @@ drawable.start();
 
 第三种是采用 ValueAnimator 来实现，ValueAnimator 在属性动画中占有非常重要的地位，连 ObjectAnimator 也是继承自 ValueAnimator ，接下来就让我们去学习 ValueAnimator。
 
-### ValueAnimator
+### 2.2 ValueAnimator
 
 > ValueAnimator 本身不提供任何动画效果，它更像一个数值发生器，用来产生具有一定规律的数字，从而让调用者来控制动画的实现过程。
 
@@ -393,7 +393,7 @@ drawable.start();
 在上面的例子中，它会在 1000ms 内将一个数从 1 到 400，然后动画的每一帧会回调 onAnimationUpdate 方法，可以在其中进行具体的操作。
 
 
-### PropertyValuesHolder
+### 2.3 PropertyValuesHolder
 
 类似视图动画中的 AnimationSet，对一个对象的多个属性同时作用多种动画。其实，在属性动画中还有一个叫 AnimatorSet 类，相同的操作，但却有更牛逼的功能。
 
@@ -408,7 +408,7 @@ drawable.start();
 ```
 
 
-### AnimatorSet
+### 2.4 AnimatorSet
 
 这个类用于将一个动画集合按特定的顺序播放。动画可以设置成同时播放、顺序播放或者在一定的延时后播放。
 
@@ -446,7 +446,7 @@ drawable.start();
 ```
 <br/><br/>
 
-### 动画事件的监听
+### 2.5 动画事件的监听
 
 完整的动画具有 Start、Repeat、End、Cancel 四个过程，通过 Android 提供了接口，可以很方便地监听到这四个事件：
 
@@ -492,7 +492,7 @@ ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view,"alpha",1f, 0, 2f);
 
 <br/><br/>
 
-### 插值器Interpolator与估值器Evaluator
+### 2.6 插值器Interpolator与估值器Evaluator
 
 属性动画中的插值器和估值器很重要，它们是实现非匀速动画的重要手段。
 
