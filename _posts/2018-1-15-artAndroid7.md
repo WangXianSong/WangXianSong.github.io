@@ -302,6 +302,7 @@ drawable.start();
 ```java
                 ObjectAnimator animator = ObjectAnimator.ofInt(btn_Object, "width", 1000);
                 animator.setDuration(1000);
+                animator.setFillAfter(true);
                 animator.setInterpolator(new LinearInterpolator());
                 animator.start();
 ```
@@ -487,6 +488,8 @@ ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view,"alpha",1f, 0, 2f);
 
 3. **AnimatorUpdateListener** 会监听整个动画的过程，动画由许多帧组成的，每播放一帧，onAnimationUpdate 就会调用一次。
 
+![](https://i.imgur.com/21SJ4dc.gif)
+
 <br/><br/>
 
 ### 2.6 插值器Interpolator与估值器Evaluator
@@ -503,6 +506,71 @@ ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view,"alpha",1f, 0, 2f);
 
 ## 3.例子
 
+```java
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private int[] res = {R.id.image_a, R.id.image_b, R.id.image_c, R.id.image_d,
+            R.id.image_e, R.id.image_f, R.id.image_g, R.id.image_h};
+
+    private List<ImageView> imageViewList = new ArrayList<ImageView>();
+
+    private boolean flag = true;//用于判断收起
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        //循环实例化每一个Imageview
+        for (int i = 0; i < res.length; i++) {
+            ImageView imageView = findViewById(res[i]);
+            imageView.setOnClickListener(this);
+            imageViewList.add(imageView);
+        }
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.image_a:
+                if (flag) {
+                    staranim();
+                } else {
+                    closeanim();
+                }
+                break;
+            default:
+                Toast.makeText(this, "click" + view.getId(), Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    private void closeanim() {
+        for (int i = 1; i < res.length; i++) {
+            ObjectAnimator object = ObjectAnimator.ofFloat(imageViewList.get(i), "translationY", i * 110, 0F);
+            object.setDuration(500);
+            object.setStartDelay(i * 10);
+//            object.setInterpolator(new BounceInterpolator());
+            object.start();
+            flag = true;
+        }
+    }
+
+    private void staranim() {
+        for (int i = 1; i < res.length; i++) {
+            ObjectAnimator object = ObjectAnimator.ofFloat(imageViewList.get(i), "translationY", 0F, i * 110);
+            object.setDuration(500);
+//            object.setInterpolator(new BounceInterpolator());
+            object.setStartDelay(i * 10);
+            object.start();
+            flag = false;
+        }
+    }
+}
+```
+
+![](https://i.imgur.com/O3bGHuU.gif)
 
 
 
