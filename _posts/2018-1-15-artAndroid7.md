@@ -574,4 +574,130 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+```java
+public class MainActivity extends AppCompatActivity {
+
+    private LinearLayout mHiddenView;//获取布局
+    private float mDensity; //像素密度
+    private int mHiddenViewMeasuredHeight;//布局高度
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        mHiddenView = findViewById(R.id.hidden_view);
+        mDensity = getResources().getDisplayMetrics().density;//获取像素密度
+        mHiddenViewMeasuredHeight = (int) (mDensity * 40 + 0.5);//获取布局的高度
+    }
+
+    public void onclick_1(View view) {
+        if (mHiddenView.getVisibility() == View.GONE) {
+            animOpen(mHiddenView);//打开动画
+        } else
+            animClose(mHiddenView);//关闭动画
+    }
+
+    private void animOpen(final View view) {
+        view.setVisibility(View.VISIBLE);
+        ValueAnimator animator = createDropAnimator(view, 0, mHiddenViewMeasuredHeight);
+        animator.start();
+    }
+
+    private void animClose(final View view) {
+        int origHeight = view.getHeight();
+        ValueAnimator animator = createDropAnimator(view, origHeight, 0);
+        //添加自定义监听器
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                view.setVisibility(View.GONE);
+            }
+        });
+        animator.start();
+    }
+
+    private ValueAnimator createDropAnimator(final View view, int start, int end) {
+        ValueAnimator animator = ValueAnimator.ofInt(start, end);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int value = (int) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+                layoutParams.height = value;
+                view.setLayoutParams(layoutParams);
+            }
+        });
+        return animator;
+    }
+}
+```
+
+xml
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.songsong.animtest.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ccc"
+        android:gravity="center_vertical"
+        android:onClick="onclick_1"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/app_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:text="Click me"
+            android:textSize="30sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/hidden_view"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:visibility="gone"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/tv_hidden"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:text="I'm hidden"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
+```
+
+![](https://i.imgur.com/8GRplrf.gif)
 
