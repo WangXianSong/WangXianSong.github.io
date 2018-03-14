@@ -12,6 +12,18 @@
     box-sizing: border-box;
     margin: 0 auto;
     // word-break: break-all;
+    .left_about{
+        width:25%;
+        float:left;
+        background-color: #5d5d93;
+        font-size: 14px;
+
+    }
+    .right_about{
+        float: left;
+        width: 25%;
+        background-color: #FFF;
+    }
     .left {
         width: 75%;
         float: left;
