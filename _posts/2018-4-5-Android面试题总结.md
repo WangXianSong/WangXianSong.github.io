@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Android面试题笔记"
-date:  2018-4-1 19:58:15
+date:  2018-4-5 19:58:15
 categories: 面试
 tags: 面试
 
@@ -40,21 +40,13 @@ tags: 面试
 
 ### Android 四大组件是什么
 
-- **Activity 活动 :**
+- **Activity 活动**：Activity用于显示界面，它上面可以显示控件、监听控件并处理用户的事件做出响应。
 
-Activity用于显示界面，它上面可以显示控件、监听控件并处理用户的事件做出响应。
+- **Service 服务**：是Android 中实现程序后台运行的解决方案，适合不需要和用户交互而且还要求长期运行的任务。依赖于创建服务的程序，程序被杀掉，服务也停止运行。服务不会自动开启线程，需要服务内部创建子线程。
 
-- **Service 服务：**
+- **Broadcast Receiver 广播接收器**：应用程序可以使用它对外部事件进行过滤只对感兴趣的外部事件(如当电话呼入时，或者数据网络可用时)进行接收并做出响应。广播接收器没有用户界面。然而，它们可以启动一个 Activity 或 Serice 来响应它们收到的信息，或者用NotificationManager 来通知用户。通知可以用很多种方式来吸引用户的注意力──闪动背灯、震动、播放声音等。
 
-是Android 中实现程序后台运行的解决方案，适合不需要和用户交互而且还要求长期运行的任务。依赖于创建服务的程序，程序被杀掉，服务也停止运行。服务不会自动开启线程，需要服务内部创建子线程。
-
-- **Broadcast Receiver 广播接收器:**
-
-应用程序可以使用它对外部事件进行过滤只对感兴趣的外部事件(如当电话呼入时，或者数据网络可用时)进行接收并做出响应。广播接收器没有用户界面。然而，它们可以启动一个 Activity 或 Serice 来响应它们收到的信息，或者用NotificationManager 来通知用户。通知可以用很多种方式来吸引用户的注意力──闪动背灯、震动、播放声音等。
-
-- **Content Provider内容提供者 :**
-
-内容提供器主要用于在不同的应用程序之间实现数据共享的功能，允许一个程序访问另一个程序中的数据，同时还能保证被访问数据的安全性。
+- **Content Provider内容提供者**：内容提供器主要用于在不同的应用程序之间实现数据共享的功能，允许一个程序访问另一个程序中的数据，同时还能保证被访问数据的安全性。
 
 ### Android平台的framework的层次结构？
 
@@ -80,18 +72,22 @@ Activity用于显示界面，它上面可以显示控件、监听控件并处理
 
 **(1) 视图动画**：定义了透明度、平移、缩放、旋转动画。实现原理：是每次绘画视图时，View 所在的 ViewGroup 中的 drawChild 函数获取该 View 的 Animation 的 Transformation 值，然后调用 canvas.concat(transformToApply.getMatrix())，通过矩阵运算完成动画帧。缺点：是不具备交互性，当某个元素发生 View 动画后，其响应事件的位置仍然在动画前的地方。
 
+
 **(2) 属性动画**：在一定时间间隔内，通过不断对值进行改变，并不断将该值赋给对象的属性，从而实现该对象在该属性上的动画效果，响应点击事件的有效区域也会发生改变。比较常用的几个动画类是：**ValueAnimator**(注重过程)、**ObjectAnimator**(具体操作) 和 **AnimatorSet**(组合)，其中 ObjectAnimator 继承自 ValueAnimator，AnimatorSet 是动画集合。
 
 ### Drawable
 
 ### Android 中有哪几种解析 xml的类？
+
 官方推荐哪种？以及它们的原理和区别。
 
-Android 提供了三种解析XML的方式：**SAX(Simple API XML)** , **DOM(Document Object Model)**, **Pull解析** 
+Android 提供了三种解析XML的方式：**SAX(Simple API XML)** ，**DOM(Document Object Model)**， **Pull解析** 
 
-**SAX解析方式**：(Simple API for XML)解析器是一种基于事件的解析器，事件驱动的流式解析方式是，从文件的开始顺序解析到文档的结束，不可暂停或倒退。 
+- **SAX解析方式**：(Simple API for XML)解析器是一种基于事件的解析器，事件驱动的流式解析方式是，从文件的开始顺序解析到文档的结束，不可暂停或倒退。 
 
-**Pull解析方式**：
+- **DOM解析方式**：
+
+- **Pull解析方式**：
 
 
 
@@ -138,11 +134,11 @@ Android 提供了三种解析XML的方式：**SAX(Simple API XML)** , **DOM(Docu
 
 ### 5、横竖屏切换时Activity的生命周期；如何将横竖屏切换对应的影响降至最低？
 
-1、不设置Activity的android:configChanges时，切屏会重新调用各个生命周期，切横屏时会执行一次，切竖屏时会执行两次。
+1、不设置 Activity的android:configChanges 时，切屏会重新调用各个生命周期，切横屏时会执行一次，切竖屏时会执行两次。
 
 2、设置Activity的android:configChanges="orientation"时，切屏还是会重新调用各个生命周期，切横、竖屏时只会执行一次。
 
-3、设置 Activity的 android:configChanges="orientation  |  keyboardHidden" 时，切屏不会重新调用各个生命周期，只会执行onConfigurationChanged 方法。
+3、设置 Activity的 android:configChanges="orientation|keyboardHidden" 时，切屏不会重新调用各个生命周期，只会执行 onConfigurationChanged 方法。
 
 ### 6、Activity与Fragment之间生命周期比较
 
@@ -161,7 +157,10 @@ Android 提供了三种解析XML的方式：**SAX(Simple API XML)** , **DOM(Docu
 
 - **standard**：标准模式，这也是系统的默认模式。每次启动一个Activity都会重新创建一个新的实例，不管这个实例是否已经存在；
 
-- **singleTop**：栈顶复用模式。(1) 如果新Activity已经位于任务栈的栈顶，那么此Activity不会被重新创建，同时它的**onNewIntent**方法会被回调。(2) 需要注意的是，这个Activity的onCreate、onStart不会被系统调用，因为它并没有发生改变。(3) 如果新的Activity的实例已经存在但不是位于栈顶，那么新的Activity仍然会重新创建；
+- **singleTop**：栈顶复用模式。
+ - (1) 如果新Activity已经位于任务栈的栈顶，那么此Activity不会被重新创建，同时它的**onNewIntent**方法会被回调；
+ - (2) 需要注意的是，这个Activity的onCreate、onStart不会被系统调用，因为它并没有发生改变；
+ - (3) 如果新的Activity的实例已经存在但不是位于栈顶，那么新的Activity仍然会重新创建；
 
 - **singleTask**：栈内复用模式。这是一种单实例模式，在这种情况下，只要Activity在一个栈中存在，那么多次启动此Activity都不会重新创建实例，和singleTop一样，系统也会回调其onNewIntent；
 
@@ -169,7 +168,7 @@ Android 提供了三种解析XML的方式：**SAX(Simple API XML)** , **DOM(Docu
 
 ### 9、scheme 跳转协议
 
-是一种页面跳转协议，是一种非常好的实现机制，通过定义自己的scheme协议，可以非常方便跳转app的各个页面；通过scheme 协议，服务器可以定制化告诉App跳转哪个页面，可以通过通知栏消息定制化跳转页面，可以通过H5页面跳转页面。
+scheme 是一种页面跳转协议，是一种非常好的实现机制，通过定义自己的scheme协议，可以非常方便跳转app的各个页面；通过scheme 协议，服务器可以定制化告诉App跳转哪个页面，可以通过通知栏消息定制化跳转页面，可以通过H5页面跳转页面。
 
 - 1.服务端下发url，客户端根据url跳转到相应的页面。
 - 2.H5跳转到App相应的Activity。
@@ -196,13 +195,15 @@ Activity中提供了一个onSaveInstanceState()回调方法，只要在代码中
 
 ## 三、Fragment面试详解
 
+### Fragment 是什么？
+
 碎片是一种可以嵌入在Activity当中的UI片段，它能让程序更加合理和充分地利用在大屏幕的空间，因而在平板上应用非常广泛，是Android自3.0版本开始引入的。
 
 ### Fragment 为什么被称为 第五大组件
 
-(1) 首先在使用频率上，Fragment是不属于四大组件的范畴，他有自己的生命周期。
-(2) 同时它可以灵活动态加载到 Activity 当中去。
-(3 )而且 Fragment 并不像 Activity 那样独立的，虽然有自己的生命周期，但需要依附Activity。
+- (1)首先在使用频率上，Fragment是不属于四大组件的范畴，他有自己的生命周期。
+- (2) 同时它可以灵活动态加载到 Activity 当中去。
+- (3 )而且 Fragment 并不像 Activity 那样独立的，虽然有自己的生命周期，但需要依附Activity。
 
 ### Fragment 加载到Activity的两种方式
 
@@ -225,9 +226,9 @@ transaction.commit();
 
 ### FragmentPagerAdapter 与 FragmentStatePagerAdaper 区别：
 
-**FragmentPagerAdapter** ：FragmentPagerAdapter 在切换 ViewPager 的时候，只是把 Fragment的UI 与 Activity的UI 脱离开来，并不回收内存。所以它适用页面**减少**的情况。(在其源码 DestroyItem 方法中的最后一行，mCurTransaction.**detach** 可知)
+- **FragmentPagerAdapter** ：FragmentPagerAdapter 在切换 ViewPager 的时候，只是把 Fragment的UI 与 Activity的UI 脱离开来，并不回收内存。所以它适用页面**减少**的情况。(在其源码 DestroyItem 方法中的最后一行，mCurTransaction.**detach** 可知)
 
-**FragmentStatePagerAdaper** ：由于 FragmentStatePagerAdaper 在每次切换 ViewPager 的时候，它是回收内存的。又因为在页面较多的情况下会更耗内存，所以它适合页面**较多**的情况。(在源码 DestroyItem 方法中的最后一行，mCurTransaction.**remove** 可知 )
+- **FragmentStatePagerAdaper** ：由于 FragmentStatePagerAdaper 在每次切换 ViewPager 的时候，它是回收内存的。又因为在页面较多的情况下会更耗内存，所以它适合页面**较多**的情况。(在源码 DestroyItem 方法中的最后一行，mCurTransaction.**remove** 可知 )
 
 ### Fragment 的生命周期
 
@@ -325,31 +326,25 @@ Service 是一种可以在后台执行长时间运行操作而没有用户界面
 都是运行在主线程当中，都不能做长时间的耗时操作。
 
 ### Service 和 Thread 的区别
-- 定义: 
-
-Thread 是程序执行的最小单元，它是分配CPU的最小单位。可以执行异步操作，是相对**独立**的。
+- **定义**：Thread 是程序执行的最小单元，它是分配CPU的最小单位。可以执行异步操作，是相对**独立**的。
 Service 是Android的一种特殊机制，Service是运行在主线程当中的，是**依托于**所在的主线程。是由系统进程托管，也是一种轻量级IPC通信方式(Activity 和 Service 绑定，然后数据通信，并处于不同进程。 )
 
-- 关系:
+- **关系**：Service 和 Thread 之间并没有什么关联，Service 翻译成中文是服务，同时服务可以理解为后台。Thread 是开启子线程执行耗时操作，而 Service 是在主线程中执行，但总被认为可以在后台处理耗时任务，容易混淆了两者之间的概念。
 
-Service 和 Thread 之间并没有什么关联，Service 翻译成中文是服务，同时服务可以理解为后台。Thread 是开启子线程执行耗时操作，而 Service 是在主线程中执行，但总被认为可以在后台处理耗时任务，容易混淆了两者之间的概念。
+- **实际开发中**：在Android系统当中，线程一般指的是工作线程，主线程主要负责UI绘制，而Service 就是运行在主线程当中的。
 
-- 实际开发中:
+- **应用场景**：
 
-在Android系统当中，线程一般指的是工作线程，主线程主要负责UI绘制，而Service 就是运行在主线程当中的。
+ - 当需要耗时的操作，比如网络请求，图片加载等等都应该使用工作线程。
+ - 当需要在后台播放音乐、开启定位、数据统计等等应该使用Service。
 
-- 应用场景
+- **区分**
 
-当需要耗时的操作，比如网络请求，图片加载等等都应该使用工作线程。
-当需要在后台播放音乐、开启定位、数据统计等等应该使用Service。
-
-- 区分
-
-1.不要把后台和子线程联系在一起；
-2.服务和后台是不同的概念；
-3.Android的后台是指它的运行不依赖与UI线程，即使程序被销毁了、程序被关闭了，服务进程仍然在后台进行计算、统计等等。
-4.如果在 Service 执行耗时，也需要创建子线程，然后去做耗时逻辑。
-5.Service是为了弥补 Activity 被销毁之后，无法获取之前所创建的子线程实例，并对后台进行控制的情况而产生的。
+ - 1.不要把后台和子线程联系在一起；
+ - 2.服务和后台是不同的概念；
+ - 3.Android的后台是指它的运行不依赖与UI线程，即使程序被销毁了、程序被关闭了，服务进程仍然在后台进行计算、统计等等。
+ - 4.如果在 Service 执行耗时，也需要创建子线程，然后去做耗时逻辑。
+ - 5.Service是为了弥补 Activity 被销毁之后，无法获取之前所创建的子线程实例，并对后台进行控制的情况而产生的。
 
 ### 开启 Service 的两种方式以及区别
 
@@ -359,11 +354,6 @@ Service 和 Thread 之间并没有什么关联，Service 翻译成中文是服�
 2.在Manifest.xml文件中配置该 Service
 3.使用Context的startService(Intent)方法启动Service
 4.不再使用时，调用 stopService(Intent) 方法停止该服务。
-
-onBind
-onCreated
-onStartCommand：
-onDestroy：不再使用服务，资源回收。
 
 - **bindService**:
 
@@ -375,11 +365,11 @@ onDestroy：不再使用服务，资源回收。
 
 ### Service 的生命周期
 
-**StartService** ：onCreat -> onStartCommand -> running -> stopService/stopSelf -> onDestroy
+- **StartService** ：onCreat -> onStartCommand -> running -> stopService/stopSelf -> onDestroy
 
 如果这个服务之前没有创建过，onCreate方法会先于 onStartCommand 方法执行，服务启动后一直保持运行状态，直到 stopService 或 stopSelf() 方法被调用。
 
-**bindService**：onCreat -> onBind ->onUnBind -> onDestroy
+- **bindService**：onCreat -> onBind ->onUnBind -> onDestroy
 
 如果这个服务之前没有创建过，onCreate方法会先于 onBind 方法执行，服务启动后一直保持运行状态，直到 unBindService 方法被调用。
 
