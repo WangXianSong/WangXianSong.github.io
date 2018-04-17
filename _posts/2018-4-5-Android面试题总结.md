@@ -48,7 +48,7 @@ tags: 面试
 
 - **Content Provider内容提供者**：内容提供器主要用于在不同的应用程序之间实现数据共享的功能，允许一个程序访问另一个程序中的数据，同时还能保证被访问数据的安全性。
 
-### Android平台的framework的层次结构？
+### Android平台的framework的层次结构
 
 - Linux Kernel(**Linux内核**)
 - Hardware Abstraction Layer(**硬件抽象层**)
@@ -56,7 +56,7 @@ tags: 面试
 - Application Framework(**开发框架包** )
 - Applications(**核心应用程序**)
 
-### 请介绍下Android中常用的布局。
+### Android中常用的布局。
 
 答：常用四种布局方式，分别是：FrameLayout（帧布局），LinearLayout （线性布局），AbsoluteLayout（绝对布局），RelativeLayout（相对布局）。
 
@@ -77,7 +77,7 @@ tags: 面试
 
 ### Drawable
 
-### Android 中有哪几种解析 xml的类？
+### Android 中有哪几种解析xml的类
 
 官方推荐哪种？以及它们的原理和区别。
 
@@ -138,12 +138,12 @@ Android 提供了三种解析XML的方式：**SAX(Simple API XML)** ，**DOM(Doc
 
 2、设置Activity的android:configChanges="orientation"时，切屏还是会重新调用各个生命周期，切横、竖屏时只会执行一次。
 
-3、设置 Activity的 android:configChanges="orientation|keyboardHidden" 时，切屏不会重新调用各个生命周期，只会执行 onConfigurationChanged 方法。
+3、设置 Activity的 android:configChanges="orientation'|'keyboardHidden" 时，切屏不会重新调用各个生命周期，只会执行 onConfigurationChanged 方法。
 
 ### 6、Activity与Fragment之间生命周期比较
 
-- Activity——onCreate->onStart->onResume->onPause->onStop->onDestroy
-- Fragment——onAttach->onCreate->onCreateView->onActivityCreated->onStart->onResume ->onPause->onStop->onDestroyView->  onDestroy->onDetach
+- **Activity**——onCreate->onStart->onResume->onPause->onStop->onDestroy
+- **Fragment**——onAttach->onCreate->onCreateView->onActivityCreated->onStart->onResume ->onPause->onStop->onDestroyView->  onDestroy->onDetach
 
 ### 7、Activity 进程优先级
 
@@ -158,9 +158,9 @@ Android 提供了三种解析XML的方式：**SAX(Simple API XML)** ，**DOM(Doc
 - **standard**：标准模式，这也是系统的默认模式。每次启动一个Activity都会重新创建一个新的实例，不管这个实例是否已经存在；
 
 - **singleTop**：栈顶复用模式。
- - (1) 如果新Activity已经位于任务栈的栈顶，那么此Activity不会被重新创建，同时它的**onNewIntent**方法会被回调；
- - (2) 需要注意的是，这个Activity的onCreate、onStart不会被系统调用，因为它并没有发生改变；
- - (3) 如果新的Activity的实例已经存在但不是位于栈顶，那么新的Activity仍然会重新创建；
+  - (1) 如果新Activity已经位于任务栈的栈顶，那么此Activity不会被重新创建，同时它的**onNewIntent**方法会被回调；
+  - (2) 需要注意的是，这个Activity的onCreate、onStart不会被系统调用，因为它并没有发生改变；
+  - (3) 如果新的Activity的实例已经存在但不是位于栈顶，那么新的Activity仍然会重新创建；
 
 - **singleTask**：栈内复用模式。这是一种单实例模式，在这种情况下，只要Activity在一个栈中存在，那么多次启动此Activity都不会重新创建实例，和singleTop一样，系统也会回调其onNewIntent；
 
@@ -201,9 +201,9 @@ Activity中提供了一个onSaveInstanceState()回调方法，只要在代码中
 
 ### Fragment 为什么被称为 第五大组件
 
-- (1)首先在使用频率上，Fragment是不属于四大组件的范畴，他有自己的生命周期。
-- (2) 同时它可以灵活动态加载到 Activity 当中去。
-- (3 )而且 Fragment 并不像 Activity 那样独立的，虽然有自己的生命周期，但需要依附Activity。
+- 首先在使用频率上，Fragment是不属于四大组件的范畴，他有自己的生命周期。
+- 同时它可以灵活动态加载到 Activity 当中去。
+- 而且 Fragment 并不像 Activity 那样独立的，虽然有自己的生命周期，但需要依附Activity。
 
 ### Fragment 加载到Activity的两种方式
 
@@ -335,16 +335,16 @@ Service 是Android的一种特殊机制，Service是运行在主线程当中的�
 
 - **应用场景**：
 
- - 当需要耗时的操作，比如网络请求，图片加载等等都应该使用工作线程。
- - 当需要在后台播放音乐、开启定位、数据统计等等应该使用Service。
+  - 当需要耗时的操作，比如网络请求，图片加载等等都应该使用工作线程。
+  - 当需要在后台播放音乐、开启定位、数据统计等等应该使用Service。
 
 - **区分**
 
- - 1.不要把后台和子线程联系在一起；
- - 2.服务和后台是不同的概念；
- - 3.Android的后台是指它的运行不依赖与UI线程，即使程序被销毁了、程序被关闭了，服务进程仍然在后台进行计算、统计等等。
- - 4.如果在 Service 执行耗时，也需要创建子线程，然后去做耗时逻辑。
- - 5.Service是为了弥补 Activity 被销毁之后，无法获取之前所创建的子线程实例，并对后台进行控制的情况而产生的。
+  - 1.不要把后台和子线程联系在一起；
+  - 2.服务和后台是不同的概念；
+  - 3.Android的后台是指它的运行不依赖与UI线程，即使程序被销毁了、程序被关闭了，服务进程仍然在后台进行计算、统计等等。
+  - 4.如果在 Service 执行耗时，也需要创建子线程，然后去做耗时逻辑。
+  - 5.Service是为了弥补 Activity 被销毁之后，无法获取之前所创建的子线程实例，并对后台进行控制的情况而产生的。
 
 ### 开启 Service 的两种方式以及区别
 
@@ -412,12 +412,34 @@ Service 是Android的一种特殊机制，Service是运行在主线程当中的�
 
 ### 实现广播 Receiver
 
-有两种方法实现广播 Receiver: 静态注册、动态注册。
+有两种方法实现广播 Receiver：静态注册、动态注册。
 
 - **静态注册** : 将广播写在 AndroidMainifest.xml 文件当中，特点是:Activity 销毁了或进程被杀死了，仍然能接收广播，**注册完成就一直运行**。
 
+```java
+//首先创建 Broadcast Receiver文件，Exported属性表示是否允许这个广播接收本程序以外的广播，Enabled属性表示是否启用用这个广播接收器。
+public class MyReceiver extends BroadcastReceiver {
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Toast.makeText(context, "boot complete", Toast.LENGTH_SHORT).show();
+    }
+}
+```
+在AndroidMainifest.xml中进行修改：
+```xml
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+<receiver
+    android:name=".MyReceiver"
+    android:enabled="true"
+    android:exported="true">
+    <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+    </intent-filter>
+</receiver>
+```
 
 - **动态注册** : 在代码中调用 registerReceiver() 注册来进行广播的注册。必须在 onDestroy 中调用 unregisterReceiver() 方法，否则会引起内存泄露，**生命周期是跟随Activity的生命周期**。
 
