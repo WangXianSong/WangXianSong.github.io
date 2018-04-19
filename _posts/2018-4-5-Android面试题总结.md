@@ -138,7 +138,7 @@ Android 提供了三种解析XML的方式：**SAX(Simple API XML)** ，**DOM(Doc
 
 2、设置Activity的android:configChanges="orientation"时，切屏还是会重新调用各个生命周期，切横、竖屏时只会执行一次。
 
-3、设置 Activity的 android:configChanges="orientation'|'keyboardHidden" 时，切屏不会重新调用各个生命周期，只会执行 onConfigurationChanged 方法。
+3、设置 Activity的 android:configChanges="orientation\|keyboardHidden" 时，切屏不会重新调用各个生命周期，只会执行 onConfigurationChanged 方法。
 
 ### 6、Activity与Fragment之间生命周期比较
 
@@ -393,26 +393,24 @@ Service 是Android的一种特殊机制，Service是运行在主线程当中的�
 ## 五、Broadcast Receiver
 ### 广播的定义
 
-在 Android 中，Broadcast 是一种广泛运用的在应用程序之间传输信息的机制，Android 中我们要发送的广播内容是一个 Intent，这个 Intent 中可以携带我们要传送的数据。
+- 在 Android 中，Broadcast 是一种广泛运用的在应用程序之间传输信息的机制，Android 中我们要发送的广播内容是一个 Intent，这个 Intent 中可以携带我们要传送的数据。
 
-广播实现了不同程序之间的**信息传输与共享**，只要和发送广播的 action 相同的接收者，都能接收到这个广播。还可以作为**通知**的作用，发送消息给service来更新UI。
+- 广播实现了不同程序之间的**信息传输与共享**，只要和发送广播的 action 相同的接收者，都能接收到这个广播。还可以作为**通知**的作用，发送消息给service来更新UI。
 
-类似设计模式中的“观察者模式”，当被观察者数据发生变化的时候，会去相应的通知观察者做相应的数据处理。
+- 类似设计模式中的“观察者模式”，当被观察者数据发生变化的时候，会去相应的通知观察者做相应的数据处理。
 
 ### 广播的场景
 
-- 同一个App具有多个进程的不同组件之间的消息通信。
-- 不同App之间的组件之间消息通信。
+- 同一个 App 具有多个进程的不同组件之间的消息通信。
+- 不同 App 之间的组件之间消息通信。
 
 ### 广播的种类
 
-- **标准广播 Normal Broadcast **：一种完全异步执行的广播，所有接受者在同一时刻收到这条广播消息。效率高，没有先后顺序，无法截断。
+- **标准广播 Normal Broadcast**：一种完全异步执行的广播，所有接受者在同一时刻收到这条广播消息。效率高，没有先后顺序，无法截断。
 - **有序广播 Ordered Broadcast**：一种同步执行的广播，同一时刻只会有一个广播接收器能够接收到这条广播消息。先后顺序，优先级，可截断。
 - **本地广播**：系统内置了许多系统级别的广播，可以通过在应用程序中监听这些广播来得到各种系统的状态信息。比如手机开完机会发出一条广播，网络状态、电量和短信等等。
 
-### 实现广播 Receiver
-
-有两种方法实现广播 Receiver：静态注册、动态注册。
+### 实现广播 Receiver：静态、动态注册
 
 - **静态注册** : 将广播写在 AndroidMainifest.xml 文件当中，特点是:Activity 销毁了或进程被杀死了，仍然能接收广播，**注册完成就一直运行**。
 
@@ -460,8 +458,8 @@ public class Main2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
         intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        NetworkChangeReceiver networkChangeReceiver = new NetworkChangeReceiver();
-        registerReceiver(networkChangeReceiver, intentFilter);
+        NetworkChangeReceiver ChangeReceiver = new NetworkChangeReceiver();
+        registerReceiver(ChangeReceiver, intentFilter);
     }
 
     //在onDestroy()中要取消注册，否则会引起内存泄漏。
@@ -473,8 +471,8 @@ public class Main2Activity extends AppCompatActivity {
     //新建类 NetworkChangeReceiver,先继承自BroadcastReceiver，然后重写onReceive，才可以执行。
     public class NetworkChangeReceiver extends BroadcastReceiver {
         public void onReceive(Context context, Intent intent) {
-            ConnectivityManager connectionManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfo = connectionManager.getActiveNetworkInfo();
+            ConnectivityManager cManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = cManager.getActiveNetworkInfo();
             if (networkInfo != null && networkInfo.isAvailable()) {
                 Toast.makeText(context, "network is available", Toast.LENGTH_SHORT).show();
             } else
@@ -547,10 +545,127 @@ GC/回收算法／堆栈／、反射／编译时vs运行时、注解（结合and
 
 Android中有5种数据存储方式，分别为文件存储、SQLite数据库、SharedPreferences、ContentProvider、网络。每种存储方式的特点如下：
 
-- 1）**文件存储**：文件存储方式是一种较常用的方法，在Android中读取/写入文件的方法，与Java中实现I/O的程序是完全一样的，提供openFileInput()和openFileOutput()方法来读取设备上的文件。
+- 1）**文件存储/SD卡**：文件存储方式是一种较常用的方法，在Android中读取/写入文件的方法，与Java中实现I/O的程序是完全一样的，提供openFileInput()和openFileOutput()方法来读取设备上的文件。
+
+   - 将数据存储到文件中：
+
+```java
+String data = "data to save";
+FileOutputStream out = openFileOutput("文件名", 覆盖:MODE_PRIVATE 追加:MODE_APPEND);
+BufferedWriter writer = new BufferedWriter(new OutputStreamWriter());
+writer.write(文件名);
+writer.close();
+```
+
+   - 将数据存储到文件中：
+
+```java
+FileInputStream in = openFileInput("文件名");
+BufferedReader reader = new BufferedReader(new InputStreamReader());
+StringBuffer content = new StringBuffer();
+String line = "";
+while ((line.reader.readLine()) != null) {
+    content.append(line);
+}
+reader.close();
+return content.toString();
+```
+
+
 - 2）**SQLite数据库**：SQLite是Android所集成的一个轻量级的嵌入式数据库，它不仅可以使用Andorid API操作，同时它也支持SQL语句进行增删改查等操作。
+
+```java
+
+public class MyDatabaseHelper extends SQLiteOpenHelper {
+    private Context mContext;
+    public static final String CREATE_BOOK = "create table Book(" +
+            "id integer primary key autoincrement," +
+            "author text," +
+            "price readl," +
+            "price integer," +
+            "name text)";
+    public MyDatabaseHelper(Context context, String name,
+                            SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, name, factory, version);
+        mContext = context;
+    }
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_BOOK);
+    }
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        //升级数据库的话先修改版本号
+        //drop删除表，delete是删除数据
+        db.execSQL("drop table if exists Book");
+        onCreate(db);
+    }
+}
+
+public class Main2Activity extends AppCompatActivity {
+    private MyDatabaseHelper dbHepler;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        dbHepler = new MyDatabaseHelper(this, "BookStore.db", null, 1);
+        //都是打开和创建，区别在于空间满的情况w是出现异常，R是只读
+        //dbHepler.getWritableDatabase();
+        dbHepler.getReadableDatabase();
+
+        //添加
+        SQLiteDatabase db = dbHepler.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("name", "tom");
+        values.put("pages", 464);
+        values.put("price", 14.23);
+        db.insert("Book", null, values);
+        //更新
+        SQLiteDatabase db = dbHepler.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("name", "HHH");
+        db.update("Book", values, "price>?", new String[]{"10"});
+        //删除
+        //查询
+    }
+}
+
+
+
+```
+
+
+
+
+
 - 3）**SharedPreferences**：是Android提供的用于存储一些简单配置信息的一种机制，采用了XML格式将数据存储到设备中。不仅可以在同一个包下使用，还可以访问其他应用程序的数据，但是由于SharedPreferences的局限性，在实际操作中很少用来读取其他应用程序的数据。
-- 4）**ContentProvider**：主要用于不同应用程序之间共享数据，ContentProvider更好的提供了数据共享接口的统一性，使不同应用共享数据更规范和安全。
+
+   - 将数据存储到SharedPreferences：
+
+	1）Context类中的getSharedPreferences()方法：第一个参数是文件名，第二个参数是操作模式 MODE_PRIVATE只有当前程序才能读写。
+	2）Activity类中的getPreferences()方法：自动将当期活动类名作为SharedPreferences的文件名。
+	3）PreferenceManager类中的getDefaulSharedPreferences()方法：当前程序的包名作为前缀来命名SharedPreferences文件。
+	步骤：
+	1）调用SharedPreferences对象的edit()方法来获取SharedPreferences.Editor对象。
+	2）向 SharedPreferences.Editor 对象中添加数据，比如putBoolean、putInt、putString
+	3）调用apply方法提交数据。
+
+```java
+SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
+editor.putString("name", "Tom");
+editor.putInt("age", 28);
+editor.putBoolean("married", false);
+```
+
+   - 从SharedPreferences中读取数据：
+
+```java
+SharedPreferences pref  = getSharedPreferences("data",MODE_PRIVATE);
+String name = pref.getString("name","默认值");
+int age = pref.getInt("age",0);
+boolean married = pref.getBoolean("married",false);
+```
+
+
+
+- 4）**ContentProvider**：主要用于不同应用程序之间共享数据，ContentProvider 更好的提供了数据共享接口的统一性，使不同应用共享数据更规范和安全。
 - 5）**网络存储数据**：通过网络上提供的存储空间来上传(存储)或下载(获取)我们存储在网络空间中的数据信息
 
 ### 共享数据的方式
