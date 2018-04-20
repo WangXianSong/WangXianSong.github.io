@@ -119,11 +119,11 @@ Android 提供了三种解析XML的方式：**SAX(Simple API XML)** ，**DOM(Doc
 
 - 1)在Intent跳转时携带数据 
 - 2)借助类的静态变量
-- 3)借助全局变量/Application
+- 3)借助全局变量 Application
 - 4)借助外部存储来实现通讯
-  - 借助SharedPreference 
-  - 使用Android数据库SQLite 
-  - 赤裸裸的使用File 
+  - 借助 SharedPreference 
+  - 使用Android数据库 SQLite 
+  - 赤裸裸的使用 File 
 - 5)借助Service
 
 ### 4、Activity上有 Dialog 时按Home键的生命周期
@@ -168,7 +168,7 @@ Android 提供了三种解析XML的方式：**SAX(Simple API XML)** ，**DOM(Doc
 
 ### 9、scheme 跳转协议
 
-scheme 是一种页面跳转协议，是一种非常好的实现机制，通过定义自己的scheme协议，可以非常方便跳转app的各个页面；通过scheme 协议，服务器可以定制化告诉App跳转哪个页面，可以通过通知栏消息定制化跳转页面，可以通过H5页面跳转页面。
+**scheme** 是一种页面跳转协议，是一种非常好的实现机制，通过定义自己的scheme协议，可以非常方便跳转app的各个页面；通过scheme 协议，服务器可以定制化告诉App跳转哪个页面，可以通过通知栏消息定制化跳转页面，可以通过H5页面跳转页面。
 
 - 1.服务端下发url，客户端根据url跳转到相应的页面。
 - 2.H5跳转到App相应的Activity。
@@ -317,6 +317,7 @@ ViewPager + Fragment
 
 
 ## 三、Service面试详解
+
 ### Service 是什么？
 
 Service 是一种可以在后台执行长时间运行操作而没有用户界面的应用组件。(Service 不能做耗时操作)
@@ -391,7 +392,8 @@ Service 是Android的一种特殊机制，Service是运行在主线程当中的�
 
 
 ## 五、Broadcast Receiver
-### 广播的定义
+
+### 1、广播的定义
 
 - 在 Android 中，Broadcast 是一种广泛运用的在应用程序之间传输信息的机制，Android 中我们要发送的广播内容是一个 Intent，这个 Intent 中可以携带我们要传送的数据。
 
@@ -399,26 +401,75 @@ Service 是Android的一种特殊机制，Service是运行在主线程当中的�
 
 - 类似设计模式中的“观察者模式”，当被观察者数据发生变化的时候，会去相应的通知观察者做相应的数据处理。
 
-### 广播的场景
+### 2、广播的场景
 
 - 同一个 App 具有多个进程的不同组件之间的消息通信。
 - 不同 App 之间的组件之间消息通信。
 
-### 广播的种类
+### 3、广播的种类
 
-- **标准广播 Normal Broadcast**：一种完全异步执行的广播，所有接受者在同一时刻收到这条广播消息。效率高，没有先后顺序，无法截断。
+- **标准广播 Normal Broadcast**：一种异步执行的广播，所有接受者在同一时刻收到这条广播消息。效率高，没有先后顺序，无法截断。
+
+```xml
+    <intent-filter>
+        <action android:name="com.example.broadcasttest.LOCAL_BROADCAST" />
+    </intent-filter>
+```
+```java
+//通过sendBroadcast发送标准合家欢广播
+sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
+```
+
 - **有序广播 Ordered Broadcast**：一种同步执行的广播，同一时刻只会有一个广播接收器能够接收到这条广播消息。先后顺序，优先级，可截断。
-- **本地广播**：系统内置了许多系统级别的广播，可以通过在应用程序中监听这些广播来得到各种系统的状态信息。比如手机开完机会发出一条广播，网络状态、电量和短信等等。
+
+(1)给广播接收器设置优先级：
+```xml
+    <intent-filter android:priority="100">
+        <action android:name="com.example.broadcasttest.LOCAL_BROADCAST" />
+    </intent-filter>
+```
+(2)广播接收器截断：
+```java
+public void onReceive(Context context, Intent intent) {
+    abortBroadcast();
+}
+```
+(3)发送广播：
+```java
+//通过sendOrderedBroadcast发送传递广播
+sendOrderedBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"),null);
+```
+
+- **本地广播 LocalBroadcastManager**：系统内置了许多系统级别的广播，可以通过在应用程序中监听这些广播来得到各种系统的状态信息。比如手机开完机会发出一条广播，网络状态、电量和短信等等。
+
+```java
+//获取LocalBroadcastManager实例
+LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+//注册本地广播监听器(接收广播,intent)，以下是简介版
+lbm.registerReceiver(new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Toast.makeText(Main2Activity.this, "本地广播简介版", Toast.LENGTH_SHORT).show();
+    }
+}, new IntentFilter("com.example.broadcasttest.LOCAL_BROADCAST"));
+//通过sendBroadcast来发送广播
+lbm.sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
+```
+
+
+
 
 ### 实现广播 Receiver：静态、动态注册
 
 - **静态注册** : 将广播写在 AndroidMainifest.xml 文件当中，特点是:Activity 销毁了或进程被杀死了，仍然能接收广播，**注册完成就一直运行**。
 
 ```java
-//首先创建 Broadcast Receiver文件，Exported属性表示是否允许这个广播接收本程序以外的广播，Enabled属性表示是否启用用这个广播接收器。
+//首先创建 Broadcast Receiver文件，Exported 属性表示是否允许这个广播接收本程序以外的广播，Enabled 属
+
+性表示是否启用用这个广播接收器。
 public class MyReceiver extends BroadcastReceiver {
 
-    @Override
+        //onReceive 不能做过多的耗时操作，因为它不能开启子线程。
     public void onReceive(Context context, Intent intent) {
         Toast.makeText(context, "boot complete", Toast.LENGTH_SHORT).show();
     }
@@ -447,12 +498,6 @@ public class Main2Activity extends AppCompatActivity {
     public NetworkChangeReceiver networkChangeReceiver;
     public IntentFilter intentFilter;
 
-    /*
-     * main函数中 ,创建IntentFilter 实例,添加一个action
-     * 当网络状态发生变化的时候,系统发出的正是一条"android.net.conn.CONNECTIVITY_CHANGE"的广播.
-     * 在这里添加的action就是要监听这类的广播,然后实例NetworkChangeReceiver.
-     * 调用registerReceiver方法进行注册，将 networkChangeReceiver，intentFilter 传进去。
-     * */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
@@ -468,7 +513,7 @@ public class Main2Activity extends AppCompatActivity {
         unregisterReceiver(networkChangeReceiver);
     }
 
-    //新建类 NetworkChangeReceiver,先继承自BroadcastReceiver，然后重写onReceive，才可以执行。
+    //新建类 NetworkChangeReceiver,先继承自BroadcastReceiver，然后重写 onReceive，才可以执行。
     public class NetworkChangeReceiver extends BroadcastReceiver {
         public void onReceive(Context context, Intent intent) {
             ConnectivityManager cManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -483,12 +528,22 @@ public class Main2Activity extends AppCompatActivity {
 ```
 
 ### 广播实现机制
+
 ### LocalBroadcastManager详解
+
 ### 请描述一下广播Broadcast Receiver的理解
 ### 广播的分类
 ### 广播使用的方式和场景
-### 在manifest 和代码中如何注册和使用BroadcastReceiver?
 ### 本地广播和全局广播有什么差别？
+
+全局广播：针对应用间、应用与系统间、应用内部进行通信的一种方式。
+
+本地广播：
+ - 发送的广播只能够在自己 App 的内部传递，不会泄露给其他 App，确保隐私数据不会泄露；
+ - 广播接收器只能接收来自本 App 发出的广播；
+ - 其他App也无法向你的App发送该广播，不用担心其他App会来搞破坏；
+
+
 ### BroadcastReceiver，LocalBroadcastReceiver 区别
 
 
@@ -553,7 +608,7 @@ Android中有5种数据存储方式，分别为文件存储、SQLite数据库、
 String data = "data to save";
 FileOutputStream out = openFileOutput("文件名", 覆盖:MODE_PRIVATE 追加:MODE_APPEND);
 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter());
-writer.write(文件名);
+writer.write(data);
 writer.close();
 ```
 
@@ -626,26 +681,25 @@ public class Main2Activity extends AppCompatActivity {
         //查询
     }
 }
-
-
-
 ```
-
-
-
-
 
 - 3）**SharedPreferences**：是Android提供的用于存储一些简单配置信息的一种机制，采用了XML格式将数据存储到设备中。不仅可以在同一个包下使用，还可以访问其他应用程序的数据，但是由于SharedPreferences的局限性，在实际操作中很少用来读取其他应用程序的数据。
 
-   - 将数据存储到SharedPreferences：
+	3.1 将数据存储到SharedPreferences：
 
-	1）Context类中的getSharedPreferences()方法：第一个参数是文件名，第二个参数是操作模式 MODE_PRIVATE只有当前程序才能读写。
-	2）Activity类中的getPreferences()方法：自动将当期活动类名作为SharedPreferences的文件名。
-	3）PreferenceManager类中的getDefaulSharedPreferences()方法：当前程序的包名作为前缀来命名SharedPreferences文件。
+	(1)Context类中的getSharedPreferences()方法：第一个参数是文件名，第二个参数是操作模式 MODE_PRIVATE只有当前程序才能读写。
+
+	(2)Activity类中的getPreferences()方法：自动将当期活动类名作为SharedPreferences的文件名。
+
+	(3)PreferenceManager类中的getDefaulSharedPreferences()方法：当前程序的包名作为前缀来命名SharedPreferences文件。
+
 	步骤：
-	1）调用SharedPreferences对象的edit()方法来获取SharedPreferences.Editor对象。
-	2）向 SharedPreferences.Editor 对象中添加数据，比如putBoolean、putInt、putString
-	3）调用apply方法提交数据。
+
+	(1)调用SharedPreferences对象的edit()方法来获取SharedPreferences.Editor对象。
+
+	(2)向 SharedPreferences.Editor 对象中添加数据，比如putBoolean、putInt、putString
+
+	(3)调用apply方法提交数据。
 
 ```java
 SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
@@ -654,7 +708,7 @@ editor.putInt("age", 28);
 editor.putBoolean("married", false);
 ```
 
-   - 从SharedPreferences中读取数据：
+	3.2从SharedPreferences中读取数据：
 
 ```java
 SharedPreferences pref  = getSharedPreferences("data",MODE_PRIVATE);
@@ -688,11 +742,11 @@ boolean married = pref.getBoolean("married",false);
 
 ### ANR
 
-**什么是ANR**： 在Android中，如果应用程序有一段时间响应不够灵敏，系统会向用户显示**应用程序无响应**（ANR：Application Not Responding）对话框。用户可以选择让程序继续运行或者关闭程序。
+ - **什么是ANR**： 在Android中，如果应用程序有一段时间响应不够灵敏，系统会向用户显示**应用程序无响应**（ANR：Application Not Responding）对话框。用户可以选择让程序继续运行或者关闭程序。
 
-**ANR产生的原因**：ANR产生的根本原因是APP阻塞了UI线程，不同的组件发生ANR 的时间不一样，主线程 Activity 是 5 秒，Service是 20 秒，BroadCastReceiver 是 10 秒。AsyncTask是5秒，Handler也是5秒。
+ - **ANR产生的原因**：ANR产生的根本原因是APP阻塞了UI线程，不同的组件发生ANR 的时间不一样，主线程 Activity 是 5 秒，Service是 20 秒，BroadCastReceiver 是 10 秒。AsyncTask是5秒，Handler也是5秒。
 
-**怎样避免ANR**：让耗时的工作（比如数据库操作，I/O，连接网络或者别的有可能阻碍UI线程的操作）把它放入单独的线程处理。
+ - **怎样避免ANR**：让耗时的工作（比如数据库操作，I/O，连接网络或者别的有可能阻碍UI线程的操作）把它放入单独的线程处理。
 
 
 ### Java GC 原理
