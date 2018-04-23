@@ -44,9 +44,9 @@ tags: 面试
 
 - **Service 服务**：是Android 中实现程序后台运行的解决方案，适合不需要和用户交互而且还要求长期运行的任务。依赖于创建服务的程序，程序被杀掉，服务也停止运行。服务不会自动开启线程，需要服务内部创建子线程。
 
-- **Broadcast Receiver 广播接收器**：应用程序可以使用它对外部事件进行过滤只对感兴趣的外部事件(如当电话呼入时，或者数据网络可用时)进行接收并做出响应。广播接收器没有用户界面。然而，它们可以启动一个 Activity 或 Serice 来响应它们收到的信息，或者用NotificationManager 来通知用户。通知可以用很多种方式来吸引用户的注意力──闪动背灯、震动、播放声音等。
+- **Broadcast Receiver 广播接收器**：应用程序可以使用它对感兴趣的外部事件(如当电话呼入时，或者数据网络可用时)进行接收并做出响应。广播接收器没有用户界面。然而，它们可以启动一个 Activity 或 Serice 来响应它们收到的信息，或者用 NotificationManager 来通知用户。通知可以用很多种方式来吸引用户的注意力──闪动背灯、震动、播放声音等。
 
-- **Content Provider内容提供者**：内容提供器主要用于在不同的应用程序之间实现数据共享的功能，允许一个程序访问另一个程序中的数据，同时还能保证被访问数据的安全性。
+- **Content Provider内容提供者**：主要用于在不同的应用程序之间实现数据共享的功能，允许一个程序访问另一个程序中的数据，同时还能保证被访问数据的安全性。与其他存储方式不同的是：可以选择哪部分数据分享，从而保证隐私数据的安全性。
 
 ### Android平台的framework的层次结构
 
@@ -386,9 +386,132 @@ Service 是Android的一种特殊机制，Service是运行在主线程当中的�
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 ## 四、Content Provider
-### 谈谈你对ContentProvider的理解
+
+### Content Provider是什么？
+
+**内容提供者**：主要用于在不同的应用程序之间实现数据共享的功能，允许一个程序访问另一个程序中的数据，同时还能保证被访问数据的安全性。与其他存储方式不同的是：可以选择哪部分数据分享，从而保证隐私数据的安全性。
+
+### ContentProvider 的特点
+
+1. 四大组件之一，需要在Mainifest.xml文件中进行注册。
+2. 接口的统一，并不能用于存储数据，只是为数据的获取、添加、修改的操作提供统一的接口。
+3. 跨进程供多个应用程序共享数据；
+4. 设备存储数据：通讯录、图片；
+5. 数据更新监听：UI更新；
+
+### ContentProvider 的优缺点
+
+1. 数据访问统一接口（存储方式都不用管）优点。 
+2. 跨进程数据的访问 优点。
+3. 无法单独使用，必须与其他的存储方式结合使用 缺点。
+
+### 如何实现数据的访问？
+
+- ContentResolver   Contex.getContentResolver()。
+    - 提供了CRUD操作；
+    - Transport implements；
+    - IContentProvider；
+
+- Uri，ContentResolver中的增删查改都是用Uri来代替表名参数。
+    - 概念：统一资源标识符；
+    - 组成：协议、域名authority、路径path；
+    - content://com.example.app.authority/path；
+    - 作用：访问ContentProvider；
+    - 不同：与其他组件交互不同的地方(Intent)；
+
+### ContentProvider工作流程
+
+1. 应用程序A(提供者)定义了 ContentProvider，定义了一些数据库和文件来存放数据。
+2. 应用程序B(访问者)获得 ContentResolver 对象，根据Uri访问指定的 ContentProvider。
+3. ContentProvider 就会访问底层的存储方式，并返回数据给 ContentProvider。
+4. ContentProvider 将数据返回给 ContentResolver，ContentResolver 再转到应用B。
+
+### 访问设备数据
+
+在访问数据之前要了解：存放的位置、特点(数据库形式存联系人、File存头像)、Uri(地址)。
+
+### 更新设备数据
+
+1、ContentResoler：注册内容观察者
+2、ContentService：通过handler来更新UI
+3、ContentObserver
+
+```java
+public class Main2Activity extends AppCompatActivity {
+
+    Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            //在主线程更新UI  adapter.notifyChangeSet();
+        }
+    };
+    ContentObserver observer = new ContentObserver(mHandler) {
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            //Uri数据改变，非Ui线程不能直接更新
+            //发送消息
+        }
+    };
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //注册内容观察者
+        this.getContentResolver().registerContentObserver(uri, notifyForDescendants, observer);
+    }
+}
+```
+### ContentResolver 访问数据
+
+```java
+List<String> contactsList = new ArrayList<>();
+Cursor mCursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+        null, null, null, null);
+if (mCursor != null) {
+    while (mCursor.moveToNext()) {
+        String displayName = mCursor.getString(mCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+        String number = mCursor.getString(mCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+        contactsList.add(displayName + "\n" + number);
+    }
+}
+mCursor.close();
+```
+### ContentProvider 提供数据
+
+1. 新建类去继承ContentProvider，并实现6个抽象方法
+2. 借助UriMather实现匹配内容URI的功能。
+
+### ContentObserver 内容观察者
+
+
+
+### 谈谈你对 ContentProvider 的理解
+
 ### 说说ContentProvider、ContentResolver、ContentObserver 之间的关系
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## 五、Broadcast Receiver
@@ -408,39 +531,53 @@ Service 是Android的一种特殊机制，Service是运行在主线程当中的�
 
 ### 3、广播的种类
 
-- **标准广播 Normal Broadcast**：一种异步执行的广播，所有接受者在同一时刻收到这条广播消息。效率高，没有先后顺序，无法截断。
+- **标准广播 Normal Broadcast**：一种异步执行的广播，所有接受者在同一时刻收到这条广播消息。效率高，没有先后顺序，无法截断。属于全局广播。
 
+- **有序广播 Ordered Broadcast**：一种同步执行的广播，同一时刻只会有一个广播接收器能够接收到这条广播消息。先后顺序，优先级，可截断。属于全局广播。
+
+- **本地广播 LocalBroadcastManager**：发送的广播只能够在自己 App 的内部传递，并且广播接收器也只能接收本App发出的广播，提高了安全性能。
+
+### 4、广播的实现方式：
+
+- 标准广播
+- 
 ```xml
     <intent-filter>
         <action android:name="com.example.broadcasttest.LOCAL_BROADCAST" />
     </intent-filter>
 ```
+
 ```java
 //通过sendBroadcast发送标准合家欢广播
 sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 ```
 
-- **有序广播 Ordered Broadcast**：一种同步执行的广播，同一时刻只会有一个广播接收器能够接收到这条广播消息。先后顺序，优先级，可截断。
+- 有序广播
 
 (1)给广播接收器设置优先级：
+
 ```xml
     <intent-filter android:priority="100">
         <action android:name="com.example.broadcasttest.LOCAL_BROADCAST" />
     </intent-filter>
 ```
+
 (2)广播接收器截断：
+
 ```java
 public void onReceive(Context context, Intent intent) {
     abortBroadcast();
 }
 ```
+
 (3)发送广播：
+
 ```java
 //通过sendOrderedBroadcast发送传递广播
 sendOrderedBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"),null);
 ```
 
-- **本地广播 LocalBroadcastManager**：系统内置了许多系统级别的广播，可以通过在应用程序中监听这些广播来得到各种系统的状态信息。比如手机开完机会发出一条广播，网络状态、电量和短信等等。
+- 本地广播
 
 ```java
 //获取LocalBroadcastManager实例
@@ -456,17 +593,12 @@ lbm.registerReceiver(new BroadcastReceiver() {
 lbm.sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 ```
 
-
-
-
-### 实现广播 Receiver：静态、动态注册
+### 5、实现广播接收器 Receiver (静态和动态)
 
 - **静态注册** : 将广播写在 AndroidMainifest.xml 文件当中，特点是:Activity 销毁了或进程被杀死了，仍然能接收广播，**注册完成就一直运行**。
 
 ```java
-//首先创建 Broadcast Receiver文件，Exported 属性表示是否允许这个广播接收本程序以外的广播，Enabled 属
-
-性表示是否启用用这个广播接收器。
+//首先创建 Broadcast Receiver文件，Exported 属性表示是否允许这个广播接收本程序以外的广播，Enabled 属性表示是否启用用这个广播接收器。
 public class MyReceiver extends BroadcastReceiver {
 
         //onReceive 不能做过多的耗时操作，因为它不能开启子线程。
@@ -527,24 +659,46 @@ public class Main2Activity extends AppCompatActivity {
 }
 ```
 
-### 广播实现机制
+### 6、广播内部实现机制
 
-### LocalBroadcastManager详解
+1. 自定义广播接收者 BroadcastReceiver，并复写 onRecvice();
+2. 通过Binder 机制向 AMS(Activity Manager Service)进行注册；
+3. 广播发送者通过 Binder 机制向AMS发送广播；
+4. AMS查找符合相应条件(IntentFilter/Permission等)的BroadcastReceiver，将广播发送到BroadcastReceiver(一般情况下是Activity)相应的消息循环队列中。
+5. 消息循环队列拿到此广播，回调BroadcastReceiver中的 onRecvice() 方法。
 
-### 请描述一下广播Broadcast Receiver的理解
-### 广播的分类
-### 广播使用的方式和场景
-### 本地广播和全局广播有什么差别？
+### 7、AMS 是什么？
 
-全局广播：针对应用间、应用与系统间、应用内部进行通信的一种方式。
+ AMS(Activity Manager Service)：是贯穿Android系统组件的核心服务，负责启动四大组件启动切换调度。
 
-本地广播：
+### 8、本地广播 LocalBroadcastManager 详解
+
  - 发送的广播只能够在自己 App 的内部传递，不会泄露给其他 App，确保隐私数据不会泄露；
  - 广播接收器只能接收来自本 App 发出的广播；
  - 其他App也无法向你的App发送该广播，不用担心其他App会来搞破坏；
+ - 比系统的全局广播更加高效。
 
+1. LocalBroadcastManager 高效的原因主要因为它内部是通过Handler实现的，它的sendBroadcast()方法是通过handler()发送一个Message实现的。
+2. 相比系统广播是通过Binder实现的，本地广播会更加高效。别人应用无法向自己的App发送广播，而自己App发送的广播也不会离开自己的App。
+3. LocalBroadcastManager 内部协作主要是靠两个Map集合：mReceivers和mActions，当然还有一个List集合mPendingBroadcasts，主要是存储待接收的广播对象。
 
-### BroadcastReceiver，LocalBroadcastReceiver 区别
+### 9、全局广播的缺点
+
+- App被反编译获得Action后，会被植入广告、数据泄露。
+
+### 10、BroadcastReceiver，LocalBroadcastReceiver 区别
+
+- 应用场景
+
+   1、BroadcastReceiver用于应用之间的传递消息；
+
+   2、而LocalBroadcastManager用于应用内部传递消息，比broadcastReceiver更加高效。
+
+- 安全
+
+   1、BroadcastReceiver使用的Content API，所以本质上它是跨应用的，所以在使用它时必须要考虑到不要被别的应用滥用；
+
+   2、LocalBroadcastManager不需要考虑安全问题，因为它只在应用内部有效。
 
 
 
@@ -717,9 +871,8 @@ int age = pref.getInt("age",0);
 boolean married = pref.getBoolean("married",false);
 ```
 
+- 4）**ContentProvider**：并不能用户存储数据。主要用于不同应用程序之间共享数据，只是为我们存储以及添加数据制定统一的接口而已。
 
-
-- 4）**ContentProvider**：主要用于不同应用程序之间共享数据，ContentProvider 更好的提供了数据共享接口的统一性，使不同应用共享数据更规范和安全。
 - 5）**网络存储数据**：通过网络上提供的存储空间来上传(存储)或下载(获取)我们存储在网络空间中的数据信息
 
 ### 共享数据的方式
