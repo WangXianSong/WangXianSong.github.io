@@ -612,13 +612,7 @@ public void onReceive(Context context, Intent intent) {
 }
 ```
 
-
-
-
 	3. 发送广播：
-
-
-
 
 ```java
 //通过sendOrderedBroadcast发送传递广播
