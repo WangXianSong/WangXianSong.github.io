@@ -549,7 +549,9 @@ public class MyReceiver extends BroadcastReceiver {
     }
 }
 ```
+
 在AndroidMainifest.xml中进行修改：
+
 ```xml
 <receiver
     android:name=".MyReceiver">
@@ -590,6 +592,7 @@ sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 - **(2)有序广播**：
 
 	- 1.给广播接收器设置优先级：
+
 ```xml
     <intent-filter android:priority="100">
         <action android:name="com.example.broadcasttest.LOCAL_BROADCAST" />
@@ -597,6 +600,7 @@ sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 ```
 
 	- 2.广播接收器截断：
+
 ```java
 public void onReceive(Context context, Intent intent) {
     abortBroadcast();
@@ -604,6 +608,7 @@ public void onReceive(Context context, Intent intent) {
 ```
 
 	- 3.发送广播：
+
 ```java
 //通过sendOrderedBroadcast发送传递广播
 sendOrderedBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"),null);
