@@ -520,7 +520,7 @@ mCursor.close();
 
 - 在 Android 中，Broadcast 是一种在应用程序之间传输信息的机制，Android 中我们要发送的广播内容是一个 Intent，这个 Intent 中可以携带我们要传送的数据。
 
-- 广播实现了不同程序之间的**信息传输与共享**，只要和发送广播的 action 相同的接收者，都能接收到这个广播。还可以作为**通知**的作用，发送消息给service来更新UI。
+- 广播实现了不同程序之间的**(1)信息传输与共享**，只要和发送广播的 action 相同的接收者，都能接收到这个广播。还可以作为**(2)通知**的作用，发送消息给 service 来更新 UI。
 
 - 类似设计模式中的“观察者模式”，当被观察者数据发生变化的时候，会去相应的通知观察者做相应的数据处理。
 
@@ -540,6 +540,7 @@ mCursor.close();
 ### 4、注册广播接收 (静态和动态)
 
 - **(1)静态注册** : 将广播写在 AndroidMainifest.xml 文件当中，特点是：Activity 销毁了或进程被杀死了，仍然能接收广播，**注册完成就一直运行**。
+
 ```java
 //首先创建 Broadcast Receiver文件，Exported 属性表示是否允许这个广播接收本程序以外的广播，Enabled 属性表示是否启用用这个广播接收器。
 public class MyReceiver extends BroadcastReceiver {
@@ -562,6 +563,7 @@ public class MyReceiver extends BroadcastReceiver {
 ```
 
 - **(2)动态注册** : 在代码中调用 registerReceiver() 注册来进行广播的注册。必须在 onDestroy 中调用 unregisterReceiver() 方法，否则会引起内存泄露，**生命周期是跟随Activity的生命周期**。
+
 ```java
        IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
@@ -571,9 +573,8 @@ public class MyReceiver extends BroadcastReceiver {
     protected void onDestroy() {
         unregisterReceiver(networkChangeReceiver);
     }
-//ChangeReceiver就是接收后会怎么样怎么样
+    //ChangeReceiver就是接收后会怎么样怎么样
 ```
-
 
 ### 5、广播的发送：(标准、有序、本地广播)
 
@@ -591,7 +592,6 @@ sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 ```
 
 - **(2)有序广播**：
-
 	1. 给广播接收器设置优先级：
 
 ```xml
@@ -600,7 +600,11 @@ sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
     </intent-filter>
 ```
 
+
+
 	2. 广播接收器截断：
+
+
 
 ```java
 public void onReceive(Context context, Intent intent) {
@@ -608,7 +612,13 @@ public void onReceive(Context context, Intent intent) {
 }
 ```
 
+
+
+
 	3. 发送广播：
+
+
+
 
 ```java
 //通过sendOrderedBroadcast发送传递广播
@@ -622,7 +632,6 @@ sendOrderedBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"),nul
 LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
 //注册本地广播监听器(接收广播,intent)，以下是简介版
 lbm.registerReceiver(new BroadcastReceiver() {
-    @Override
     public void onReceive(Context context, Intent intent) {
         Toast.makeText(Main2Activity.this, "本地广播简介版", Toast.LENGTH_SHORT).show();
     }
@@ -630,8 +639,6 @@ lbm.registerReceiver(new BroadcastReceiver() {
 //通过sendBroadcast来发送广播
 lbm.sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 ```
-
-
 
 ### 6、广播内部实现机制
 
@@ -663,16 +670,12 @@ lbm.sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 ### 10、BroadcastReceiver 和 LocalBroadcastReceiver 区别
 
 - 应用场景
-
-   1、BroadcastReceiver用于应用之间的传递消息；
-
-   2、而LocalBroadcastManager用于应用内部传递消息，比broadcastReceiver更加高效。
+	1. BroadcastReceiver用于应用之间的传递消息；
+	2. 而LocalBroadcastManager用于应用内部传递消息，比broadcastReceiver更加高效。
 
 - 安全
-
-   1、BroadcastReceiver使用的Content API，所以本质上它是跨应用的，所以在使用它时必须要考虑到不要被别的应用滥用；
-
-   2、LocalBroadcastManager不需要考虑安全问题，因为它只在应用内部有效。
+   1. BroadcastReceiver使用的Content API，所以本质上它是跨应用的，所以在使用它时必须要考虑到不要被别的应用滥用；
+   2. LocalBroadcastManager不需要考虑安全问题，因为它只在应用内部有效。
 
 
 
