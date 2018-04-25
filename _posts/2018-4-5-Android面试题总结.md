@@ -537,7 +537,7 @@ mCursor.close();
 
 - **本地广播 LocalBroadcastManager**：发送的广播只能够在自己 App 的内部传递，并且广播接收器也只能接收本App发出的广播，提高了安全性能。
 
-### 4、注册广播(静态和动态)
+### 4、注册广播接收 (静态和动态)
 
 - **(1)静态注册** : 将广播写在 AndroidMainifest.xml 文件当中，特点是：Activity 销毁了或进程被杀死了，仍然能接收广播，**注册完成就一直运行**。
 ```java
@@ -571,10 +571,11 @@ public class MyReceiver extends BroadcastReceiver {
     protected void onDestroy() {
         unregisterReceiver(networkChangeReceiver);
     }
+//ChangeReceiver就是接收后会怎么样怎么样
 ```
 
 
-### 5、广播的实现方式：(标准、有序、本地广播)
+### 5、广播的发送：(标准、有序、本地广播)
 
 - **(1)标准广播**：
 
@@ -591,7 +592,7 @@ sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 
 - **(2)有序广播**：
 
-	- 1.给广播接收器设置优先级：
+	1. 给广播接收器设置优先级：
 
 ```xml
     <intent-filter android:priority="100">
@@ -599,7 +600,7 @@ sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
     </intent-filter>
 ```
 
-	- 2.广播接收器截断：
+	2. 广播接收器截断：
 
 ```java
 public void onReceive(Context context, Intent intent) {
@@ -607,7 +608,7 @@ public void onReceive(Context context, Intent intent) {
 }
 ```
 
-	- 3.发送广播：
+	3. 发送广播：
 
 ```java
 //通过sendOrderedBroadcast发送传递广播
@@ -615,6 +616,7 @@ sendOrderedBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"),nul
 ```
 
 - **(3)本地广播**：
+
 ```java
 //获取LocalBroadcastManager实例
 LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
