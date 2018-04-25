@@ -518,7 +518,7 @@ mCursor.close();
 
 ### 1、广播的定义
 
-- 在 Android 中，Broadcast 是一种广泛运用的在应用程序之间传输信息的机制，Android 中我们要发送的广播内容是一个 Intent，这个 Intent 中可以携带我们要传送的数据。
+- 在 Android 中，Broadcast 是一种在应用程序之间传输信息的机制，Android 中我们要发送的广播内容是一个 Intent，这个 Intent 中可以携带我们要传送的数据。
 
 - 广播实现了不同程序之间的**信息传输与共享**，只要和发送广播的 action 相同的接收者，都能接收到这个广播。还可以作为**通知**的作用，发送消息给service来更新UI。
 
@@ -526,7 +526,7 @@ mCursor.close();
 
 ### 2、广播的场景
 
-- 同一个 App 具有多个进程的不同组件之间的消息通信。
+- 同个 App 具有多个进程的不同组件之间的消息通信。
 - 不同 App 之间的组件之间消息通信。
 
 ### 3、广播的种类
@@ -540,7 +540,7 @@ mCursor.close();
 ### 4、广播的实现方式：
 
 - 标准广播
-- 
+
 ```xml
     <intent-filter>
         <action android:name="com.example.broadcasttest.LOCAL_BROADCAST" />
@@ -595,12 +595,10 @@ lbm.sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 
 ### 5、实现广播接收器 Receiver (静态和动态)
 
-- **静态注册** : 将广播写在 AndroidMainifest.xml 文件当中，特点是:Activity 销毁了或进程被杀死了，仍然能接收广播，**注册完成就一直运行**。
-
+- **静态注册** : 将广播写在 AndroidMainifest.xml 文件当中，特点是：Activity 销毁了或进程被杀死了，仍然能接收广播，**注册完成就一直运行**。
 ```java
 //首先创建 Broadcast Receiver文件，Exported 属性表示是否允许这个广播接收本程序以外的广播，Enabled 属性表示是否启用用这个广播接收器。
 public class MyReceiver extends BroadcastReceiver {
-
         //onReceive 不能做过多的耗时操作，因为它不能开启子线程。
     public void onReceive(Context context, Intent intent) {
         Toast.makeText(context, "boot complete", Toast.LENGTH_SHORT).show();
@@ -609,13 +607,8 @@ public class MyReceiver extends BroadcastReceiver {
 ```
 在AndroidMainifest.xml中进行修改：
 ```xml
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
 <receiver
-    android:name=".MyReceiver"
-    android:enabled="true"
-    android:exported="true">
+    android:name=".MyReceiver">
     <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED" />
     </intent-filter>
@@ -623,40 +616,15 @@ public class MyReceiver extends BroadcastReceiver {
 ```
 
 - **动态注册** : 在代码中调用 registerReceiver() 注册来进行广播的注册。必须在 onDestroy 中调用 unregisterReceiver() 方法，否则会引起内存泄露，**生命周期是跟随Activity的生命周期**。
-
 ```java
-public class Main2Activity extends AppCompatActivity {
-
-    public NetworkChangeReceiver networkChangeReceiver;
-    public IntentFilter intentFilter;
-
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
-        intentFilter = new IntentFilter();
+       IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        NetworkChangeReceiver ChangeReceiver = new NetworkChangeReceiver();
         registerReceiver(ChangeReceiver, intentFilter);
-    }
 
     //在onDestroy()中要取消注册，否则会引起内存泄漏。
     protected void onDestroy() {
-        super.onDestroy();
         unregisterReceiver(networkChangeReceiver);
     }
-
-    //新建类 NetworkChangeReceiver,先继承自BroadcastReceiver，然后重写 onReceive，才可以执行。
-    public class NetworkChangeReceiver extends BroadcastReceiver {
-        public void onReceive(Context context, Intent intent) {
-            ConnectivityManager cManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfo = cManager.getActiveNetworkInfo();
-            if (networkInfo != null && networkInfo.isAvailable()) {
-                Toast.makeText(context, "network is available", Toast.LENGTH_SHORT).show();
-            } else
-                Toast.makeText(context, "network is unavailable", Toast.LENGTH_SHORT).show();
-        }
-    }
-}
 ```
 
 ### 6、广播内部实现机制
@@ -686,7 +654,7 @@ public class Main2Activity extends AppCompatActivity {
 
 - App被反编译获得Action后，会被植入广告、数据泄露。
 
-### 10、BroadcastReceiver，LocalBroadcastReceiver 区别
+### 10、BroadcastReceiver 和 LocalBroadcastReceiver 区别
 
 - 应用场景
 
