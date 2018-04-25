@@ -537,65 +537,9 @@ mCursor.close();
 
 - **本地广播 LocalBroadcastManager**：发送的广播只能够在自己 App 的内部传递，并且广播接收器也只能接收本App发出的广播，提高了安全性能。
 
-### 4、广播的实现方式：
+### 4、注册广播(静态和动态)
 
-- 标准广播
-
-```xml
-    <intent-filter>
-        <action android:name="com.example.broadcasttest.LOCAL_BROADCAST" />
-    </intent-filter>
-```
-
-```java
-//通过sendBroadcast发送标准合家欢广播
-sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
-```
-
-- 有序广播
-
-(1)给广播接收器设置优先级：
-
-```xml
-    <intent-filter android:priority="100">
-        <action android:name="com.example.broadcasttest.LOCAL_BROADCAST" />
-    </intent-filter>
-```
-
-(2)广播接收器截断：
-
-```java
-public void onReceive(Context context, Intent intent) {
-    abortBroadcast();
-}
-```
-
-(3)发送广播：
-
-```java
-//通过sendOrderedBroadcast发送传递广播
-sendOrderedBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"),null);
-```
-
-- 本地广播
-
-```java
-//获取LocalBroadcastManager实例
-LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-//注册本地广播监听器(接收广播,intent)，以下是简介版
-lbm.registerReceiver(new BroadcastReceiver() {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        Toast.makeText(Main2Activity.this, "本地广播简介版", Toast.LENGTH_SHORT).show();
-    }
-}, new IntentFilter("com.example.broadcasttest.LOCAL_BROADCAST"));
-//通过sendBroadcast来发送广播
-lbm.sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
-```
-
-### 5、实现广播接收器 Receiver (静态和动态)
-
-- **静态注册** : 将广播写在 AndroidMainifest.xml 文件当中，特点是：Activity 销毁了或进程被杀死了，仍然能接收广播，**注册完成就一直运行**。
+- **(1)静态注册** : 将广播写在 AndroidMainifest.xml 文件当中，特点是：Activity 销毁了或进程被杀死了，仍然能接收广播，**注册完成就一直运行**。
 ```java
 //首先创建 Broadcast Receiver文件，Exported 属性表示是否允许这个广播接收本程序以外的广播，Enabled 属性表示是否启用用这个广播接收器。
 public class MyReceiver extends BroadcastReceiver {
@@ -615,7 +559,7 @@ public class MyReceiver extends BroadcastReceiver {
 </receiver>
 ```
 
-- **动态注册** : 在代码中调用 registerReceiver() 注册来进行广播的注册。必须在 onDestroy 中调用 unregisterReceiver() 方法，否则会引起内存泄露，**生命周期是跟随Activity的生命周期**。
+- **(2)动态注册** : 在代码中调用 registerReceiver() 注册来进行广播的注册。必须在 onDestroy 中调用 unregisterReceiver() 方法，否则会引起内存泄露，**生命周期是跟随Activity的生命周期**。
 ```java
        IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
@@ -626,6 +570,61 @@ public class MyReceiver extends BroadcastReceiver {
         unregisterReceiver(networkChangeReceiver);
     }
 ```
+
+
+### 5、广播的实现方式：(标准、有序、本地广播)
+
+- **(1)标准广播**：
+
+```xml
+    <intent-filter>
+        <action android:name="com.example.broadcasttest.LOCAL_BROADCAST" />
+    </intent-filter>
+```
+
+```java
+//通过sendBroadcast发送标准合家欢广播
+sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
+```
+
+- **(2)有序广播**：
+
+	- 1.给广播接收器设置优先级：
+```xml
+    <intent-filter android:priority="100">
+        <action android:name="com.example.broadcasttest.LOCAL_BROADCAST" />
+    </intent-filter>
+```
+
+	- 2.广播接收器截断：
+```java
+public void onReceive(Context context, Intent intent) {
+    abortBroadcast();
+}
+```
+
+	- 3.发送广播：
+```java
+//通过sendOrderedBroadcast发送传递广播
+sendOrderedBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"),null);
+```
+
+- **(3)本地广播**：
+```java
+//获取LocalBroadcastManager实例
+LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+//注册本地广播监听器(接收广播,intent)，以下是简介版
+lbm.registerReceiver(new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Toast.makeText(Main2Activity.this, "本地广播简介版", Toast.LENGTH_SHORT).show();
+    }
+}, new IntentFilter("com.example.broadcasttest.LOCAL_BROADCAST"));
+//通过sendBroadcast来发送广播
+lbm.sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
+```
+
+
 
 ### 6、广播内部实现机制
 
