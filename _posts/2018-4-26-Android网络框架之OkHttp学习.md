@@ -21,13 +21,32 @@ tags: 第三方框架
 
 ## Okhttp
 
-## 使用过程：
+网络请求都要在子线程中执行。
 
-### 异步 GET 请求
+```java
+new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                   //...网络请求
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                           //UI更新
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+```
+
+
+### 1. 异步 GET 请求
 
 ```java
 // 第一步：创建  OkHttpClient 对象，使用到了 Builder 设计模式
-OkHttpClient client = new OkHttpClient()；
+OkHttpClient client = new OkHttpClient();
 
 //第二步：创建 Request 对象，封装了一些请求报文的信息
 Request request = new Request.Builder()
@@ -47,7 +66,7 @@ String responseData = response.boby().string();
 //Response response = client.newCall(request).execute()//简写第三四步
 
 //2.异步 enqueue 获取数据，方法内容接收 new Callback 对象，Okhttp会让实际的网络请求在新的工作线程中执行。在请求成功之后会回调 onResponse 方法，会进行成功之后的数据处理，而请求失败或者请求取消就会回调 onFailure 方法。
-  call.enqueue(new Callback){
+call.enqueue(new Callback){
     public void onFailure(Call call,IOException e){
          //失败
     }
@@ -58,21 +77,31 @@ String responseData = response.boby().string();
 }
 ```
 
-## Okhttp 同步需要注意
+## 2. Okhttp 需要注意的地方
 
-- 发送请求后，就会进入阻塞状态，直到收到相应。(这是同步和异步请求的最大不同之处)
+- **同步请求**：发送请求后，就会进入阻塞状态，直到收到相应。(这是同步和异步请求的最大不同之处)
 
-## Okhttp 异步需要注意
+- **异步请求**：onResponse 和 onFailure 都是在工作线程中执行的。
 
-- onResponse 和 onFailure 都是在工作线程中执行的。
-
-## Okhttp 同步和异步的区别
+## 3. Okhttp 同步和异步的区别
 
 - 发起请求的方法调用：execute/enqueue(new Callback)；
 - 阻塞线程与否：阻塞/开启新线程；
 
 
-## Okhttp 流程图
+## 4. Okhttp 流程图
 
 ![](https://i.imgur.com/3FRJLeY.png)
  
+## 5. 异步 POST 请求
+
+```java
+RequestBody requestBody = new FormBody.Builder()
+        .add("username", "admin")
+        .add("password", "123456")
+        .build();
+Request request = new Request.Builder()
+        .url("https://www.imooc.com/")
+        .post(requestBody)//添加进来
+        .build();
+```
