@@ -1,6 +1,18 @@
-#Android 的消息机制之 Handler
+---
+layout: post
+title:  "Android 的消息机制之 Handler"
+date:  2018-3-1 15:39:20
+categories: Android
+tags: Android
 
-![](https://i.imgur.com/Xkr5hdt.jpg)
+---
+* content
+{:toc}
+
+
+
+
+
 
 ## 前言
 
