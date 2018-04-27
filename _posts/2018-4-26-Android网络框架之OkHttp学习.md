@@ -29,29 +29,25 @@ Gradle：api 'com.squareup.okhttp3:okhttp:3.10.0'
 new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
                    //...网络请求
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                           //UI更新
+                           //...UI更新
                         }
                     });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
 ```
 
 
-### 1.异步 GET 请求
+## 1.异步 GET 请求
 
 - 第一步：创建  OkHttpClient 对象，使用到了 Builder 设计模式
 - 第二步：创建 Request 对象，封装了一些请求报文的信息
 - 第三步：将 Request 封装成 Call 对象。
 	调用 OkHttpClient 的 newCall 方法创建一个 call对象，
 	把 request 作为参数传进来。call 是 request 和 response 之间的桥梁。
-- 第四步：同步、异步请求。
+- 第四步：同步、异步请求。异步方法内容接收 new Callback 对象，Okhttp会让实际的网络请求在新的工作线程中执行。在请求成功之后会回调 onResponse 方法，会进行成功之后的数据处理，而请求失败或者请求取消就会回调 onFailure 方法。
 
 
 ```java
@@ -64,7 +60,7 @@ Response response = call.execute();
 String responseData = response.boby().string();
 //Response response = client.newCall(request).execute()//简写第三四步
 
-//2.异步 enqueue 获取数据，方法内容接收 new Callback 对象，Okhttp会让实际的网络请求在新的工作线程中执行。在请求成功之后会回调 onResponse 方法，会进行成功之后的数据处理，而请求失败或者请求取消就会回调 onFailure 方法。
+//2.异步 enqueue 获取数据
 call.enqueue(new Callback){
     public void onFailure(Call call,IOException e){
          //失败
@@ -74,6 +70,19 @@ call.enqueue(new Callback){
         sysout(response.boby().string());//成功
     }
 }
+```
+
+## 5.异步 POST 请求
+
+```java
+RequestBody requestBody = new FormBody.Builder()
+        .add("username", "admin")
+        .add("password", "123456")
+        .build();
+Request request = new Request.Builder()
+        .url("https://www.imooc.com/")
+        .post(requestBody)//添加进来
+        .build();
 ```
 
 ## 2.Okhttp 需要注意的地方
@@ -92,15 +101,3 @@ call.enqueue(new Callback){
 
 ![](https://i.imgur.com/3FRJLeY.png)
  
-## 5.异步 POST 请求
-
-```java
-RequestBody requestBody = new FormBody.Builder()
-        .add("username", "admin")
-        .add("password", "123456")
-        .build();
-Request request = new Request.Builder()
-        .url("https://www.imooc.com/")
-        .post(requestBody)//添加进来
-        .build();
-```
