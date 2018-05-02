@@ -192,7 +192,7 @@ HTTP请求方法有8种，分别是GET、POST、HEAD、PUT、DELETE、TRACE、CO
 	-  Cookie是保存在客户端的，不占用服务端资源，如果并发很多的情况建议使用Cookie。 
 
 
-## 三、HTTPS26067585
+## 三、HTTPS
 
 ### 15.HTTPS是什么？ 
 https实际就是在TCP与http之间加入了SSL/TLS加密来为上层的安全保驾护航，主要用到对称加密、非对称加密、证书，等技术进行客户端与服务器的数据加密传输，最终达到保证整个通信的安全性。
