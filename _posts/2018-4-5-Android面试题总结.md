@@ -51,10 +51,10 @@ tags: 面试
 ### Android平台的framework的层次结构
 
 - Linux Kernel(**Linux内核**)
-- Hardware Abstraction Layer(**硬件抽象层**)
-- Libraies(**系统运行库**或者是c/c++**核心库**)
-- Application Framework(**开发框架包** )
-- Applications(**核心应用程序**)
+- Hardware Abstraction Layer(**HAL硬件抽象层**)
+- Native C/C++Libraies(**原生C/C++库**) Android Runtime(**安卓运行时**)
+- Java API Framework(**Java API 框架** )
+- Applications(**系统应用**)
 
 ### Android中常用的布局。
 
@@ -147,11 +147,11 @@ Android 提供了三种解析XML的方式：**SAX(Simple API XML)** ，**DOM(Doc
 
 ### 7、Activity 进程优先级
 
-- **前台**：处于与用户交互的 Activity，或者在前台绑定的 Service。
-- **可见**：处于前台，但用户又不能点击的情况下。
-- **服务**：在后台开启 Service服务。
-- **后台**：用户按了Home键回到了桌面，根据内存情况作出相应的回收。
-- **空**：优先级最低，处于缓存的目的而保留，系统随时杀掉。
+- **前台进程**：处于与用户交互的 Activity，或者在前台绑定的 Service。
+- **可见进程**：处于前台，但用户又不能点击的情况下。
+- **服务进程**：在后台开启 Service服务。
+- **后台进程**：用户按了Home键回到了桌面，根据内存情况作出相应的回收。
+- **空进程**：优先级最低，处于缓存的目的而保留，系统随时杀掉。
 
 ### 8、Activity 启动模式
 
@@ -217,7 +217,7 @@ Activity中提供了一个onSaveInstanceState()回调方法，只要在代码中
 //步骤1：添加FragmentTransaction的实例
 FragmentManager fragmentManager = getFragmentManager();
 FragmentTransaction transaction = fragmentManager.beginTransaction();
-//步骤2:用add()加Fragment对象fragment1，并绑定到其XML页面里的容器内
+//步骤2：用add()加Fragment对象fragment1，并绑定到其XML页面里的容器内
 Fragment1 fragment1 = new Fragment1();
 transaction.add(R.id.lin_id, fragment1, "fragment1");
 //步骤3：调用commit方法使得FragmentTransaction实例的改变生效
@@ -286,14 +286,6 @@ transaction.commit();
 - **add** 将 Fragment 的实例添加到 Activity 的**最上层**；
 - **remove** 将 Fragment 的实例从 Activity 的队列中**删除**；
 
-### Fragment 管理器 FragmentManager
-### fragment各种情况下的生命周期
-### Fragment状态保存 startActivityForResult 是哪个类的方法，在什么情况下使用？
-
-### 如何实现Fragment的滑动？
-ViewPager + Fragment
-### fragment之间传递数据的方式？
-
 ### Fragment 特点
 
 - Fragment 可以作为 Activity 界面的一部分组成出现；
@@ -315,6 +307,29 @@ ViewPager + Fragment
 - 将屏幕碎片化为多个 Fragment 后，其实 Activity 只需要花精力去管理当前屏幕内应该显示哪些 Fragments，以及应该对它们进行如何布局就行了。这是一种组件化的思维，用 Fragment 去组合了一系列有关联的 UI 组件，并管理它们之间的逻辑，而 Activity 负责在不同屏幕下（例如横竖屏）布局不同的 Fragments 组合。
 - 这种碎片不单单能管理可视的 Views，它也能执行不可视的 Tasks，它提供了 retainInstance 属性，能够在 Activity 因为屏幕状态发生改变（例如切换横竖屏时）而销毁重建时，依然保留实例。这示意着我们能在 RetainedFragment 里面执行一些在屏幕状态发生改变时不被中断的操作。例如使用 RetainedFragment 来缓存在线音乐文件，它在横竖屏切换时依然维持下载进度，并通过一个 DialogFragment 来展示进度。
 
+### 遇到过哪些关于Fragment的问题，如何处理的？
+
+- **getActivity()空指针**：这种情况一般发生在在异步任务里调用getActivity()，而Fragment已经onDetach()，此时就会有空指针，解决方案是在Fragment里使用 一个全局变量mActivity，在onAttach()方法里赋值，这样可能会引起内存泄漏，但是异步任务没有停止的情况下本身就已经可能内存泄漏，相比直接crash，这种方式 显得更妥当一些。
+
+- **Fragment视图重叠**：在类onCreate()的方法加载Fragment，并且没有判断saveInstanceState==null或if(findFragmentByTag(mFragmentTag) == null)，导致重复加载了同一个Fragment导致重叠。（PS：replace情况下，如果没有加入回退栈，则不判断也不会造成重叠，但建议还是统一判断下）
+
+```java
+@Override 
+protected void onCreate(@Nullable Bundle savedInstanceState) {
+// 在页面重启时，Fragment会被保存恢复，而此时再加载Fragment会重复加载，导致重叠 ;
+    if(saveInstanceState == null){
+    // 或者 if(findFragmentByTag(mFragmentTag) == null)
+       // 正常情况下去 加载根Fragment 
+    } 
+}
+```
+### Fragment 管理器 FragmentManager
+### fragment各种情况下的生命周期
+### Fragment状态保存 startActivityForResult 是哪个类的方法，在什么情况下使用？
+### 如何实现Fragment的滑动？
+ViewPager + Fragment
+### fragment之间传递数据的方式？
+
 
 ## 三、Service面试详解
 
@@ -327,6 +342,7 @@ Service 是一种可以在后台执行长时间运行操作而没有用户界面
 都是运行在主线程当中，都不能做长时间的耗时操作。
 
 ### Service 和 Thread 的区别
+
 - **定义**：Thread 是程序执行的最小单元，它是分配CPU的最小单位。可以执行异步操作，是相对**独立**的。
 Service 是Android的一种特殊机制，Service是运行在主线程当中的，是**依托于**所在的主线程。是由系统进程托管，也是一种轻量级IPC通信方式(Activity 和 Service 绑定，然后数据通信，并处于不同进程。 )
 
@@ -366,26 +382,22 @@ Service 是Android的一种特殊机制，Service是运行在主线程当中的�
 
 ### Service 的生命周期
 
-- **StartService** ：onCreat -> onStartCommand -> running -> stopService/stopSelf -> onDestroy
+- startService()：开启Service，调用者退出后Service仍然存在。
+- bindService()：开启Service，调用者退出后Service也随即退出。
 
-如果这个服务之前没有创建过，onCreate方法会先于 onStartCommand 方法执行，服务启动后一直保持运行状态，直到 stopService 或 stopSelf() 方法被调用。
+**Service生命周期**：
 
-- **bindService**：onCreat -> onBind ->onUnBind -> onDestroy
-
-如果这个服务之前没有创建过，onCreate方法会先于 onBind 方法执行，服务启动后一直保持运行状态，直到 unBindService 方法被调用。
-
-**StartService+bindService**：同时被调用的情况下，需要同时调用 stopService和unBindService。
-
+- 只是用startService()启动服务：onCreate() -> onStartCommand() -> onDestory
+- 只是用bindService()绑定服务：onCreate() -> onBind() -> onUnBind() -> onDestory
+- 同时使用startService()启动服务与bindService()绑定服务：onCreate() -> onStartCommnad() -> onBind() -> onUnBind() -> onDestory
 
 
+### Activity如何与Service通信？
+
+可以通过bindService的方式，先在Activity里实现一个ServiceConnection接口，并将该接口传递给bindService()方法，在ServiceConnection接口的onServiceConnected()方法 里执行相关操作。
 
 ### Activity 怎么和 Service 绑定？
 ### 怎么在Activity 中启动自己对应的Service？
-### service 和 activity 怎么进行数据交互？
-
-
-
-
 
 
 
@@ -493,12 +505,13 @@ mCursor.close();
 
 ### ContentObserver 内容观察者
 
-
-
 ### 谈谈你对 ContentProvider 的理解
 
 ### 说说ContentProvider、ContentResolver、ContentObserver 之间的关系
 
+- **ContentProvider**：管理数据，提供数据的增删改查操作，数据源可以是数据库、文件、XML、网络等，ContentProvider为这些数据的访问提供了统一的接口，可以用来做进程间数据共享。
+- **ContentResolver**：ContentResolver可以不同URI操作不同的ContentProvider中的数据，外部进程可以通过ContentResolver与ContentProvider进行交互。
+- **ContentObserver**：观察ContentProvider中的数据变化，并将变化通知给外界。
 
 
 
@@ -524,22 +537,20 @@ mCursor.close();
 
 - 类似设计模式中的“观察者模式”，当被观察者数据发生变化的时候，会去相应的通知观察者做相应的数据处理。
 
-### 2、广播的场景
+### 2、广播的使用场景
 
 - 同个 App 具有多个进程的不同组件之间的消息通信。
 - 不同 App 之间的组件之间消息通信。
 
 ### 3、广播的种类
 
-- **标准广播 Normal Broadcast**：一种异步执行的广播，所有接受者在同一时刻收到这条广播消息。效率高，没有先后顺序，无法截断。属于全局广播。
+- **普通广播 Normal Broadcast**：异步执行的广播，所有接收者在同一时刻收到这条广播消息。效率高，没有先后顺序，无法截断。属于全局广播。调用 sendBroadcast() 发送，最常用的广播。
 
-- **有序广播 Ordered Broadcast**：一种同步执行的广播，同一时刻只会有一个广播接收器能够接收到这条广播消息。先后顺序，优先级，可截断。属于全局广播。
-
-- **本地广播 LocalBroadcastManager**：发送的广播只能够在自己 App 的内部传递，并且广播接收器也只能接收本App发出的广播，提高了安全性能。
+- **有序广播 Ordered Broadcast**：同步执行的广播，发出去的广播会被广播接受者按照顺序接收，广播接收者按照Priority属性值从大-小排序，Priority属性相同者，动态注册的广播优先，广播接收者还可以选择对广播进行截断和修改。调用sendOrderedBroadcast()发送。
 
 ### 4、注册广播接收 (静态和动态)
 
-- **(1)静态注册** : 将广播写在 AndroidMainifest.xml 文件当中，特点是：Activity 销毁了或进程被杀死了，仍然能接收广播，**注册完成就一直运行**。
+- **(1)静态注册** : 将广播写在 AndroidMainifest.xml 文件当中，特点是：常驻系统，不受组件生命周期影响，即便应用退出，广播还是可以被接收，耗电、占内存。
 
 ```java
 //首先创建 Broadcast Receiver文件，Exported 属性表示是否允许这个广播接收本程序以外的广播，Enabled 属性表示是否启用用这个广播接收器。
@@ -562,7 +573,7 @@ public class MyReceiver extends BroadcastReceiver {
 </receiver>
 ```
 
-- **(2)动态注册** : 在代码中调用 registerReceiver() 注册来进行广播的注册。必须在 onDestroy 中调用 unregisterReceiver() 方法，否则会引起内存泄露，**生命周期是跟随Activity的生命周期**。
+- **(2)动态注册** : 在代码中调用 registerReceiver() 注册来进行广播的注册。必须在 onDestroy 中调用 unregisterReceiver() 方法，否则会引起内存泄露，特点是：不常驻，跟随组件的生命变化，组件结束，广播结束。在组件结束前，需要先移除广播，否则容易造成内存泄漏。
 
 ```java
        IntentFilter intentFilter = new IntentFilter();
@@ -599,21 +610,13 @@ sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
         <action android:name="com.example.broadcasttest.LOCAL_BROADCAST" />
     </intent-filter>
 ```
-
-
-
-	2. 广播接收器截断：
-
-
-
+	 2. 广播接收器截断：
 ```java
 public void onReceive(Context context, Intent intent) {
     abortBroadcast();
 }
 ```
-
 	3. 发送广播：
-
 ```java
 //通过sendOrderedBroadcast发送传递广播
 sendOrderedBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"),null);
@@ -637,10 +640,10 @@ lbm.sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 ### 6、广播内部实现机制
 
 1. 自定义广播接收者 BroadcastReceiver，并复写 onRecvice();
-2. 通过Binder 机制向 AMS(Activity Manager Service)进行注册；
-3. 广播发送者通过 Binder 机制向AMS发送广播；
-4. AMS查找符合相应条件(IntentFilter/Permission等)的BroadcastReceiver，将广播发送到BroadcastReceiver(一般情况下是Activity)相应的消息循环队列中。
-5. 消息循环队列拿到此广播，回调BroadcastReceiver中的 onRecvice() 方法。
+2. 通过 Binder 机制向 AMS(Activity Manager Service) 注册广播；
+3. 通过 Binder 机制向 AMS(Activity Manager Service) 发送广播。
+4. AMS 查找符合相应条件(IntentFilter/Permission等)的BroadcastReceiver，将广播发送到BroadcastReceiver 所在的消息循环队列中。
+5. BroadcastReceiver 所在消息队列拿到此广播后，回调它的 onReceive() 方法。
 
 ### 7、AMS 是什么？
 
@@ -663,24 +666,116 @@ lbm.sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 
 ### 10、BroadcastReceiver 和 LocalBroadcastReceiver 区别
 
-- 应用场景
-	1. BroadcastReceiver用于应用之间的传递消息；
-	2. 而LocalBroadcastManager用于应用内部传递消息，比broadcastReceiver更加高效。
+- **BroadcastReceiver** 是跨应用广播，利用Binder机制实现。
+- **LocalBroadcastReceiver** 是应用内广播，利用Handler实现，利用了IntentFilter的match功能，提供消息的发布与接收功能，实现应用内通信，效率比较高。
 
-- 安全
-   1. BroadcastReceiver使用的Content API，所以本质上它是跨应用的，所以在使用它时必须要考虑到不要被别的应用滥用；
-   2. LocalBroadcastManager不需要考虑安全问题，因为它只在应用内部有效。
-
+### 广播传输的数据是否有限制，是多少，为什么要限制？
 
 
 ## 六、webview安全漏洞
+
+### WebView优化了解吗，如何提高WebView的加载速度？
+为什么WebView加载会慢呢？
+
+> 这是因为在客户端中，加载H5页面之前，需要先初始化WebView，在WebView完全初始化完成之前，后续的界面加载过程都是被阻塞的。
+
+优化手段围绕着以下两个点进行：
+
+1. 预加载WebView。
+1. 加载WebView的同时，请求H5页面数据。
+
+因此常见的方法是：
+
+1. 全局WebView。
+1. 客户端代理页面请求。WebView初始化完成后向客户端请求数据。
+1. asset存放离线包。
+
+除此之外还有一些其他的优化手段：
+
+- 脚本执行慢，可以让脚本最后运行，不阻塞页面解析。
+- DNS与链接慢，可以让客户端复用使用的域名与链接。
+- React框架代码执行慢，可以将这部分代码拆分出来，提前进行解析。
+
+### Java和JS的相互调用怎么实现，有做过什么优化吗？
+
+jockeyjs：[https://github.com/tcoulter/jockeyjs](https://github.com/tcoulter/jockeyjs)
+
+对协议进行统一的封装和处理。
+
 ## 七、Binder
+
+Android Binder是用来做进程通信的，Android的各个应用以及系统服务都运行在独立的进程中，它们的通信都依赖于Binder。
+
+为什么选用Binder，在讨论这个问题之前，我们知道Android也是基于Linux内核，Linux现有的进程通信手段有以下几种：
+
+1. 管道：在创建时分配一个page大小的内存，缓存区大小比较有限；
+1. 消息队列：信息复制两次，额外的CPU消耗；不合适频繁或信息量大的通信；
+1. 共享内存：无须复制，共享缓冲区直接付附加到进程虚拟地址空间，速度快；但进程间的同步问题操作系统无法实现，必须各进程利用同步工具解决；
+1. 套接字：作为更通用的接口，传输效率低，主要用于不通机器或跨网络的通信；
+1. 信号量：常作为一种锁机制，防止某进程正在访问共享资源时，其他进程也访问该资源。因此，主要作为进程间以及同一进程内不同线程之间的同步手段。6. 信号: 不适用于信息交换，更适用于进程中断控制，比如非法内存访问，杀死某个进程等；
+
+既然有现有的IPC方式，为什么重新设计一套Binder机制呢。主要是出于以上三个方面的考量：
+
+- **高性能**：从数据拷贝次数来看Binder只需要进行一次内存拷贝，而管道、消息队列、Socket都需要两次，共享内存不需要拷贝，Binder的性能仅次于共享内存。
+- **稳定性**：上面说到共享内存的性能优于Binder，那为什么不适用共享内存呢，因为共享内存需要处理并发同步问题，控制负责，容易出现死锁和资源竞争，稳定性较差。而Binder基于C/S架构，客户端与服务端彼此独立，稳定性较好。
+- **安全性**：我们知道Android为每个应用分配了UID，用来作为鉴别进程的重要标志，Android内部也依赖这个UID进行权限管理，包括6.0以前的固定权限和6.0以后的动态权限，传荣IPC只能由用户在数据包里填入UID/PID，这个标记完全 是在用户空间控制的，没有放在内核空间，因此有被恶意篡改的可能，因此Binder的安全性更高。
+
 ## 八、Handler
+
+![](https://github.com/guoxiaoxing/android-open-source-project-analysis/raw/master/art/native/process/android_handler_structure.png)
+
+主要涉及的角色如下所示：
+
+- Message：消息，分为硬件产生的消息（例如：按钮、触摸）和软件产生的消息。
+- MessageQueue：消息队列，主要用来向消息池添加消息和取走消息。
+- Looper：消息循环器，主要用来把消息分发给相应的处理者。
+- Handler：消息处理器，主要向消息队列发送各种消息以及处理各种消息。
+
+整个消息的循环流程还是比较清晰的，具体说来：
+
+1. Handler通过sendMessage()发送消息Message到消息队列MessageQueue。
+1. Looper通过loop()不断提取触发条件的Message，并将Message交给对应的target handler来处理。
+1. target handler调用自身的handleMessage()方法来处理Message。
+
 ## 九、AsyncTask
 ## 十、HandlerThread
 ## 十一、IntentService
+
 ## 十二、View绘制
+### 描述一下View的绘制原理？
+View的绘制流程主要分为三步：
+
+- **onMeasure**：测量视图的大小，从顶层父View到子View递归调用measure()方法，measure()调用onMeasure()方法，onMeasure()方法完成测量工作。
+- **onLayout**：确定视图的位置，从顶层父View到子View递归调用layout()方法，父View将上一步measure()方法得到的子View的布局大小和布局参数，将子View放在合适的位置上。
+- **onDraw**：绘制最终的视图，首先ViewRoot创建一个Canvas对象，然后调用onDraw()方法进行绘制。onDraw()方法的绘制流程为：① 绘制视图背景。② 绘制画布的图层。 ③ 绘制View内容。 ④ 绘制子视图，如果有的话。⑤ 还原图层。⑥ 绘制滚动条。
+
 ## 十三、View事件分发
+### 描述一下Android的事件分发机制？
+
+Android事件分发机制的本质：事件从哪个对象发出，经过哪些对象，最终由哪个对象处理了该事件。此处对象指的是Activity、Window与View。
+
+Android事件的分发顺序：Activity（Window） -> ViewGroup -> View
+
+Android事件的分发主要由三个方法来完成，如下所示：
+
+```java
+// 父View调用dispatchTouchEvent()开始分发事件
+public boolean dispatchTouchEvent(MotionEvent event){
+    boolean consume = false;
+    // 父View决定是否拦截事件
+    if(onInterceptTouchEvent(event)){
+        // 父View调用onTouchEvent(event)消费事件，如果该方法返回true，表示
+        // 该View消费了该事件，后续该事件序列的事件（Down、Move、Up）将不会在传递
+        // 该其他View。
+        consume = onTouchEvent(event);
+    }else{
+        // 调用子View的dispatchTouchEvent(event)方法继续分发事件
+        consume = child.dispatchTouchEvent(event);
+    }
+    return consume;
+}
+```
+
 ## 十四、Listview缓存
 ## 十五、Android目录结构
 ## 十六、Android目录构建
@@ -694,7 +789,53 @@ lbm.sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 ## 二四、glide图片框架
 ## 二五、ANR异常
 ## 二六、OOM异常
+
+**1、什么是OOM**：OutOfMemoryError(OOM)内存泄露，当 JVM 因为没有足够的内存来为对象分配空间并且垃圾回收器也已经没有空间可回收时，就会抛出这个异常。
+
+**2、为什么会OOM**：
+
+- **(1)瞬时加载了一些资源**，例如，视频、图片、音频等等的内存申请大小超过了App的额定内存值，解决方案：对资源可能需要申请大内存的地方做压缩处理。
+- **(2)调用registerRecevier() 后未调用 unregisterReceiver()**, 解决方案：在每一次动态注册的时候，记得在在适当的地方（Activity的OnDestory()）取消注册。
+- **(3)数据库cursor没有关闭**，解决方案：使用完cursor及时关闭。
+- **(4)构造Adapter没有使用缓存contentview**， 解决方案：在构造Adapter的时候，使用ContentView缓存页面，节省内存。
+- **(5)未关闭InputStream/OutputStream** , 解决方案：在使用到IO Stream 的时候，及时关闭。
+- **(6)Bitmap使用后未调用recycle() **，解决方案：在Bitmap不在需要被加载到内存中的收获，做回收处理。
+- **(7)Context泄露，内部类持有外部类的引用。** 解决方案：  第一： 将线程的内部类，改为静态内部类  第二：在线程内部采用弱引用保存Context引用。
+- **(8)static 原因**。 解决方案： 
+	1. 应该尽量避免static成员变量引用资源耗费过多的实例，比如Context。
+	1. Context尽量使用Application Context，因为Application的Context的生命周期比较长，引用它不会出现内存泄露的问题。
+	1. 使用WeakReference代替强引用。比如可以使用WeakReference<Context> mContextRef;
+- 查找内存泄漏可以使用Android Profiler工具或者利用LeakCanary工具。
+
+**3、为什么Android会有APP的内存限制**：
+
+- **(1)要开发者使用内存更加合理。**限制每个应用可用内存上限，避免恶意程序或单个程序使用过多内存导致其他程序的不可运行。有了限制，开发者就必须合理使用资源，优化资源使用
+- **(2)屏幕显示内容有限，内存足够即可**。即使有万千图片千万数据需要使用到，但在特定时刻需要展示给用户看的总是有限的，因为屏幕显示就那么大，上面可以放的信息就是很有限的。大部分信息都是处于准备显示状态，所以没必要给予太多heap内存。必须一个ListView显示图片，打个比方这个ListView含有500个item，但是屏幕显示最多有10调item显示，其余数据是处于准备显示状态。
+- **(3)Android多个虚拟机Davlik的限制需要。**android设备上的APP运行，每打开一个应用就会打开至少一个独立虚拟机。这样可以避免系统崩溃，但代价是浪费更多内存。
+
 ## 二七、bitmap
+
+### 如何计算一个Bitmap占用内存的大小，怎么保证加载Bitmap不产生内存溢出？
+Bitamp 占用内存大小 = 宽度像素 x （inTargetDensity / inDensity） x 高度像素 x （inTargetDensity / inDensity）x 一个像素所占的内存
+
+注：这里inDensity表示目标图片的dpi（放在哪个资源文件夹下），inTargetDensity表示目标屏幕的dpi，所以你可以发现inDensity和inTargetDensity会对Bitmap的宽高 进行拉伸，进而改变Bitmap占用内存的大小。
+
+在Bitmap里有两个获取内存占用大小的方法。
+
+- getByteCount()：API12 加入，代表存储 Bitmap 的像素需要的最少内存。
+- getAllocationByteCount()：API19 加入，代表在内存中为 Bitmap 分配的内存大小，代替了 getByteCount() 方法。
+
+在不复用 Bitmap 时，getByteCount() 和 getAllocationByteCount 返回的结果是一样的。在通过复用 Bitmap 来解码图片时，那么 getByteCount() 表示新解码图片占用内存的大 小，getAllocationByteCount() 表示被复用 Bitmap真实占用的内存大小（即 mBuffer 的长度）。
+
+为了保证在加载Bitmap的时候不产生内存溢出，可以受用BitmapFactory进行图片压缩，主要有以下几个参数：
+
+- BitmapFactory.Options.inPreferredConfig：将ARGB_8888改为RGB_565，改变编码方式，节约内存。
+- BitmapFactory.Options.inSampleSize：缩放比例，可以参考Luban那个库，根据图片宽高计算出合适的缩放比例。
+- BitmapFactory.Options.inPurgeable：让系统可以内存不足时回收内存。
+
+### Android如何在不压缩的情况下加载高清大图？
+使用BitmapRegionDecoder进行布局加载。
+
 ## 二八、UI卡顿
 ## 二九、内存泄露
 ## 三十、内存管理
@@ -703,15 +844,125 @@ lbm.sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 ## 三三、MVC架构设计模式
 ## 三四、MVP架构设计模式
 ## 三五、MVVM架构设计模式
+### MVC、MVP与MVVM之间的对比分析？
+
+![](https://github.com/BeesAndroid/BeesAndroid/raw/master/art/practice/project/module/mvp_structure.png)
+
+- **MVC**：PC时代就有的架构方案，在Android上也是最早的方案，Activity/Fragment这些上帝角色既承担了V的角色，也承担了C的角色，小项目开发起来十分顺手，大项目就会遇到 耦合过重，Activity/Fragment类过大等问题。
+- **MVP**：为了解决MVC耦合过重的问题，MVP的核心思想就是提供一个Presenter将视图逻辑I和业务逻辑相分离，达到解耦的目的。
+- **MVVM**：使用ViewModel代替Presenter，实现数据与View的双向绑定，这套框架最早使用的data-binding将数据绑定到xml里，这么做在大规模应用的时候是不行的，不过数据绑定是 一个很有用的概念，后续Google又推出了ViewModel组件与LiveData组件。ViewModel组件规范了ViewModel所处的地位、生命周期、生产方式以及一个Activity下多个Fragment共享View Model数据的问题。LiveData组件则提供了在Java层面View订阅ViewModel数据源的实现方案。
+
 ## 三六、android插件化
+### 了解插件化和热修复吗，它们有什么区别，理解它们的原理吗？
+- 插件化：插件化是体现在功能拆分方面的，它将某个功能独立提取出来，独立开发，独立测试，再插入到主应用中。依次来较少主应用的规模。
+- 热修复：热修复是体现在bug修复方面的，它实现的是不需要重新发版和重新安装，就可以去修复已知的bug。
+利用PathClassLoader和DexClassLoader去加载与bug类同名的类，替换掉bug类，进而达到修复bug的目的，原理是在app打包的时候阻止类打上CLASS_ISPREVERIFIED标志，然后在 热修复的时候动态改变BaseDexClassLoader对象间接引用的dexElements，替换掉旧的类。
+
+目前热修复框架主要分为两大类：
+
+- Sophix：修改方法指针。
+- Tinker：修改dex数组元素。
+
+
 ## 三七、android热更新
 ## 三八、进程保活
+
+### 进程保活如何做，如何唤醒其他进程？
+进程保活主要有两个思路：
+
+1. 提升进程的优先级，降低进程被杀死的概率。
+1. 拉活已经被杀死的进程。
+
+如何提升优先级，如下所示：
+
+监控手机锁屏事件，在屏幕锁屏时启动一个像素的Activity，在用户解锁时将Activity销毁掉，前台Activity可以将进程变成前台进程，优先级升级到最高。
+
+如果拉活：利用广播拉活Activity。
+
 ## 三九、设计模式
 观察者模式、动态代理 、工厂、策略类、装饰、桥接、单例等常用设计模式
 ## 四十、网络协议
 https／http、dns、tcp／ip以及加密算法
 ## 四一、java知识
 GC/回收算法／堆栈／、反射／编译时vs运行时、注解（结合android annotation库）、范型、线程池／并发编程、Socket、IO/NIO、集合框架、类加载器、异常、继承／组合／多态、引用类型／内存泄漏、java虚拟机
+
+## Intent
+### Android里的Intent传递的数据有大小限制吗，如何解决？
+Intent传递数据大小的限制大概在1M左右，超过这个限制就会静默崩溃。处理方式如下：
+
+- 进程内：EventBus，文件缓存、磁盘缓存。
+- 进程间：通过ContentProvider进行款进程数据共享和传递。
+
+## APK的打包流程
+### 了解APK的打包流程吗，描述一下？
+Android的包文件APK分为两个部分：代码和资源，所以打包方面也分为资源打包和代码打包两个方面，这篇文章就来分析资源和代码的编译打包原理。
+
+APK整体的的打包流程如下图所示：
+
+![](https://github.com/guoxiaoxing/android-open-source-project-analysis/raw/master/art/native/vm/apk_package_flow.png)
+
+具体说来：
+
+1. 通过AAPT工具进行资源文件（包括AndroidManifest.xml、布局文件、各种xml资源等）的打包，生成R.java文件。
+1. 通过AIDL工具处理AIDL文件，生成相应的Java文件。
+1. 通过Javac工具编译项目源码，生成Class文件。
+1. 通过DX工具将所有的Class文件转换成DEX文件，该过程主要完成Java字节码转换成Dalvik字节码，压缩常量池以及清除冗余信息等工作。
+1. 通过ApkBuilder工具将资源文件、DEX文件打包生成APK文件。
+1. 利用KeyStore对生成的APK文件进行签名。
+1. 如果是正式版的APK，还会利用ZipAlign工具进行对齐处理，对齐的过程就是将APK文件中所有的资源文件举例文件的起始距离都偏移4字节的整数倍，这样通过内存映射访问APK文件 的速度会更快。
+
+
+### 了解APK的安装流程吗，描述一下？
+
+![](https://github.com/guoxiaoxing/android-open-source-project-analysis/raw/master/art/app/package/apk_install_structure.png)
+
+1. 复制APK到/data/app目录下，解压并扫描安装包。
+1. 资源管理器解析APK里的资源文件。
+1. 解析AndroidManifest文件，并在/data/data/目录下创建对应的应用数据目录。
+1. 然后对dex文件进行优化，并保存在dalvik-cache目录下。
+1. 将AndroidManifest文件解析出的四大组件信息注册到PackageManagerService中。
+1. 安装完成后，发送广播。
+
+
+
+## 性能优化
+### 如何做性能优化？
+
+1. 节制的使用Service，当启动一个Service时，系统总是倾向于保留这个Service依赖的进程，这样会造成系统资源的浪费，可以使用IntentService，执行完成任务后会自动停止。
+1. 当界面不可见时释放内存，可以重写Activity的onTrimMemory()方法，然后监听TRIM_MEMORY_UI_HIDDEN这个级别，这个级别说明用户离开了页面，可以考虑释放内存和资源。
+1. 避免在Bitmap浪费过多的内存，使用压缩过的图片，也可以使用Fresco等库来优化对Bitmap显示的管理。
+1. 使用优化过的数据集合SparseArray代替HashMap，HashMap为每个键值都提供一个对象入口，使用SparseArray可以免去基本对象类型转换为引用数据类想的时间。
+
+### 如何防止过度绘制，如何做布局优化？
+
+1. 使用include复用布局文件。
+1. 使用merge标签避免嵌套布局。
+1. 使用stub标签仅在需要的时候在展示出来。
+
+### 如何提交代码质量？
+
+1. 避免创建不必要的对象，尽可能避免频繁的创建临时对象，例如在for循环内，减少GC的次数。
+1. 尽量使用基本数据类型代替引用数据类型。
+1. 静态方法调用效率高于动态方法，也可以避免创建额外对象。
+1. 对于基本数据类型和String类型的常量要使用static final修饰，这样常量会在dex文件的初始化器中进行初始化，使用的时候可以直接使用。
+1. 多使用系统API，例如数组拷贝System.arrayCopy()方法，要比我们用for循环效率快9倍以上，因为系统API很多都是通过底层的汇编模式执行的，效率比较高。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -864,6 +1115,8 @@ boolean married = pref.getBoolean("married",false);
 
 ### Handler机制原理
 
+
+
 ### ANR
 
  - **什么是ANR**： 在Android中，如果应用程序有一段时间响应不够灵敏，系统会向用户显示**应用程序无响应**（ANR：Application Not Responding）对话框。用户可以选择让程序继续运行或者关闭程序。
@@ -893,41 +1146,9 @@ boolean married = pref.getBoolean("married",false);
 - **分代收集算法**：根据对象存活的情况不同，把内存分为新生代和年老代，新生代对象存活率低，就用复制算法，年老代存活率高，就用标记--清除算法或者标记--整理算法。
 
 
-### OOM原理
+### OOM原理()
 
-**1、什么是OOM**：当 JVM 因为没有足够的内存来为对象分配空间并且垃圾回收器也已经没有空间可回收时，就会抛出这个异常。
 
-**2、为什么会OOM**：
-
-- **(1)瞬时加载了一些资源**，例如，视频、图片、音频等等的内存申请大小超过了App的额定内存值，解决方案：对资源可能需要申请大内存的地方做压缩处理。
-
-- **(2)调用registerRecevier() 后未调用 unregisterReceiver()**, 解决方案：在每一次动态注册的时候，记得在在适当的地方（Activity的OnDestory()）取消注册。
-
-- **(3)数据库cursor没有关闭**，解决方案：使用完cursor及时关闭。
-
-- **(4)构造Adapter没有使用缓存contentview**， 解决方案：在构造Adapter的时候，使用ContentView缓存页面，节省内存。
-
-- **(5)未关闭InputStream/OutputStream** , 解决方案：在使用到IO Stream 的时候，及时关闭。
-
-- **(6)Bitmap使用后未调用recycle() **，解决方案：在Bitmap不在需要被加载到内存中的收获，做回收处理。
-
-- **(7)Context泄露，内部类持有外部类的引用。** 解决方案：  第一： 将线程的内部类，改为静态内部类  第二：在线程内部采用弱引用保存Context引用。
-
-- **(8)static 原因**。 解决方案： 
-
-第一，应该尽量避免static成员变量引用资源耗费过多的实例，比如Context。
-
-第二、Context尽量使用Application Context，因为Application的Context的生命周期比较长，引用它不会出现内存泄露的问题。
-
-第三、使用WeakReference代替强引用。比如可以使用WeakReference<Context> mContextRef;
-
-**3、为什么Android会有APP的内存限制**：
-
-- **(1)要开发者使用内存更加合理。**限制每个应用可用内存上限，避免恶意程序或单个程序使用过多内存导致其他程序的不可运行。有了限制，开发者就必须合理使用资源，优化资源使用
-
-- **(2)屏幕显示内容有限，内存足够即可**。即使有万千图片千万数据需要使用到，但在特定时刻需要展示给用户看的总是有限的，因为屏幕显示就那么大，上面可以放的信息就是很有限的。大部分信息都是处于准备显示状态，所以没必要给予太多heap内存。必须一个ListView显示图片，打个比方这个ListView含有500个item，但是屏幕显示最多有10调item显示，其余数据是处于准备显示状态。
-
-- **(3)Android多个虚拟机Davlik的限制需要。**android设备上的APP运行，每打开一个应用就会打开至少一个独立虚拟机。这样可以避免系统崩溃，但代价是浪费更多内存。
 
 
 
