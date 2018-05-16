@@ -603,22 +603,23 @@ sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 ```
 
 - **(2)有序广播**：
-	1. 给广播接收器设置优先级：
 
 ```xml
+    /*1. 给广播接收器设置优先级 */
     <intent-filter android:priority="100">
         <action android:name="com.example.broadcasttest.LOCAL_BROADCAST" />
     </intent-filter>
 ```
-	 2. 广播接收器截断：
+
 ```java
+//2.广播接收器截断：
 public void onReceive(Context context, Intent intent) {
     abortBroadcast();
 }
 ```
-	3. 发送广播：
+
 ```java
-//通过sendOrderedBroadcast发送传递广播
+//3.通过sendOrderedBroadcast发送传递广播
 sendOrderedBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"),null);
 ```
 
@@ -799,7 +800,7 @@ public boolean dispatchTouchEvent(MotionEvent event){
 - **(3)数据库cursor没有关闭**，解决方案：使用完cursor及时关闭。
 - **(4)构造Adapter没有使用缓存contentview**， 解决方案：在构造Adapter的时候，使用ContentView缓存页面，节省内存。
 - **(5)未关闭InputStream/OutputStream** , 解决方案：在使用到IO Stream 的时候，及时关闭。
-- **(6)Bitmap使用后未调用recycle() **，解决方案：在Bitmap不在需要被加载到内存中的收获，做回收处理。
+- **(6)Bitmap使用后未调用recycle()**，解决方案：在Bitmap不在需要被加载到内存中的收获，做回收处理。
 - **(7)Context泄露，内部类持有外部类的引用。** 解决方案：  第一： 将线程的内部类，改为静态内部类  第二：在线程内部采用弱引用保存Context引用。
 - **(8)static 原因**。 解决方案： 
 	1. 应该尽量避免static成员变量引用资源耗费过多的实例，比如Context。
