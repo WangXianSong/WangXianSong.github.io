@@ -861,7 +861,7 @@ call.enqueue(new Callback){
 - 请求成功后通过 Route(路由) 和 Platform 找到合适平台。
 - 通过 Server(Socket) 去获取到 data。
 
-## 二二、Retrofit网络框架
+## 二二、Retrofit网络框架 
 
 - 第一步：
 	- 通过Builer构造者来创建 Retrofit 对象。
