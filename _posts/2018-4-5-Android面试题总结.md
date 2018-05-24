@@ -863,42 +863,9 @@ call.enqueue(new Callback){
 
 ## 二二、Retrofit网络框架 
 
-- 第一步：
-	- 通过Builer构造者来创建 Retrofit 对象。
-	- 然后通过baseUrl来拼接URL(这里的URL不是完整的URL)。
-	- 通过.build()来完成对象的创建。
 
-```java
-public static final String BASE_URL = "https://api.douban.com/v2/movie/";
-Retrofit retrofit = new Retrofit.Builder() 
-       .baseUrl(BASE_URL) 
-       .addConverterFactory(GsonConverterFactory.create())
-       .build();
-```
 
-- 第二步：
-	- 通过 Retrofit.create() 方法创建好我们需要的网络请求接口。
-	- 然后用 网络请求接口 调用他的方法来获取 Retrofit.call方法。
-	- 最后通过call.enqueue这个异步方法进行异步网络请求操作。
 
-```java
-MovieService movieService = retrofit.create(MovieService.class); 
-//调用方法得到一个Call ,并传参数
-Call<MovieSubject> call = movieService.getTop250(0,20);
-
- //进行网络请求 
-call.enqueue(new Callback<MovieSubject>() {
-       @Override 
-       public void onResponse(Call<MovieSubject> call, Response<MovieSubject> response) { 
-            mMovieAdapter.setMovies(response.body().subjects);     
-            mMovieAdapter.notifyDataSetChanged(); 
-       } 
-      @Override 
-      public void onFailure(Call<MovieSubject> call, Throwable t) { 
-         t.printStackTrace(); 
-      } 
-});
-```
 
 - 第三步：创建接口
 
