@@ -46,7 +46,7 @@ tags: 面试
 
 - **Broadcast Receiver 广播接收器**：应用程序可以使用它对感兴趣的外部事件(如当电话呼入时，或者数据网络可用时)进行接收并做出响应。广播接收器没有用户界面。然而，它们可以启动一个 Activity 或 Serice 来响应它们收到的信息，或者用 NotificationManager 来通知用户。通知可以用很多种方式来吸引用户的注意力──闪动背灯、震动、播放声音等。
 
-- **Content Provider内容提供者**：主要用于在不同的应用程序之间实现数据共享的功能，允许一个程序访问另一个程序中的数据，同时还能保证被访问数据的安全性。与其他存储方式不同的是：可以选择哪部分数据分享，从而保证隐私数据的安全性。
+- **Content Provider 内容提供者**：主要用于在不同的应用程序之间实现数据共享的功能，允许一个程序访问另一个程序中的数据，同时还能保证被访问数据的安全性。与其他存储方式不同的是：可以选择哪部分数据分享，从而保证隐私数据的安全性。
 
 ### Android平台的framework的层次结构
 
@@ -62,9 +62,9 @@ tags: 面试
 
 （1）**FrameLayout**：所有东西依次都放在左上角，会重叠，这个布局比较简单，也只能放一点比较简单的东西。
 
-（2）**LinearLayout**：线性布局，每一个LinearLayout里面又可分为垂直布局（android:orientation="vertical"）和水平布局（android:orientation="horizontal" ）。当垂直布局时，每一行就只有一个元素，多个元素依次垂直往下；水平布局时，只有一行，每一个元素依次向右排列。
+（2）**LinearLayout**：线性布局，每一个LinearLayout里面又可分为垂直布局 vertical 和水平布局horizontal。
 
-（3）**AbsoluteLayout**：绝对布局用X,Y坐标来指定元素的位置，这种布局方式也比较简单，但是在屏幕旋转时，往往会出问题，而且多个元素的时候，计算比较麻烦。
+（3）**AbsoluteLayout**：绝对布局用 XY 坐标来指定元素的位置，这种布局方式也比较简单，但是在屏幕旋转时，往往会出问题，而且多个元素的时候，计算比较麻烦。
 
 （4）**RelativeLayout**：相对布局可以理解为某一个元素为参照物，来定位的布局方式。主要属性有：相对于某一个元素android:layout_below、 android:layout_toLeftOf相对于父元素的地方android:layout_alignParentLeft、android:layout_alignParentRigh；
 
@@ -397,7 +397,17 @@ Service 是Android的一种特殊机制，Service是运行在主线程当中的�
 可以通过bindService的方式，先在Activity里实现一个ServiceConnection接口，并将该接口传递给bindService()方法，在ServiceConnection接口的onServiceConnected()方法 里执行相关操作。
 
 ### Activity 怎么和 Service 绑定？
+
 ### 怎么在Activity 中启动自己对应的Service？
+
+### IntentService是什么？
+
+- IntentService 是一个特殊的 Service，它继承了 Service 并且它是一个抽象类，因此必须创建它的子类才能使用 IntentService。
+- 它封装了 HandlerThread 和 Handler，可用于执行后台耗时的任务，当任务全部执行完毕后自动停止。
+- 它的优先级比普通线程要高，所以适合执行高优先级的后台任务。
+
+（HandlerThread是继承了Thread，他的作用是 不用每次创建线程，他内部有循环机制可以重复利用，不用的时候要quit或者quitSafely。）
+
 
 
 
@@ -458,7 +468,7 @@ Service 是Android的一种特殊机制，Service是运行在主线程当中的�
 
 1、ContentResoler：注册内容观察者
 2、ContentService：通过handler来更新UI
-3、ContentObserver
+3、ContentObserver:
 
 ```java
 public class Main2Activity extends AppCompatActivity {
@@ -507,14 +517,23 @@ mCursor.close();
 
 ### 谈谈你对 ContentProvider 的理解
 
+ContentProvider 是应用程序之间共享数据的接口。使用的时候首先自定义一个类继承 ContentProvider，然后覆写 query、insert、update、delete 等方法。因为其是四大组件之一因
+此必须在 AndroidManifest 文件中进行注册。
+
 ### 说说ContentProvider、ContentResolver、ContentObserver 之间的关系
 
-- **ContentProvider**：管理数据，提供数据的增删改查操作，数据源可以是数据库、文件、XML、网络等，ContentProvider为这些数据的访问提供了统一的接口，可以用来做进程间数据共享。
-- **ContentResolver**：ContentResolver可以不同URI操作不同的ContentProvider中的数据，外部进程可以通过ContentResolver与ContentProvider进行交互。
-- **ContentObserver**：观察ContentProvider中的数据变化，并将变化通知给外界。
+- **ContentProvider**：**内容提供者**，用于对外提供数据，提供数据的增删改查操作，数据源可以是数据库、文件、XML、网络等，ContentProvider为这些数据的访问提供了统一的接口，可以用来做进程间数据共享。
+- **ContentResolver**：**内容解析者**，用于获取内容提供者提供的数据。ContentResolver可以不同URI操作不同的ContentProvider中的数据，外部进程可以通过ContentResolver与ContentProvider进行交互。
+- **ContentObserver**：**内容监听器**，可以监听数据的改变状态。
 
 
+### 为什么要用 ContentProvider？它和 sql 的实现上有什么差别？
 
+- **ContentProvider** 屏蔽了数据存储的细节,内部实现对用户完全透明,用户只需要关心操作数据的
+uri 就可以了，ContentProvider 可以实现不同 app 之间共享。
+
+- **Sql** 也有增删改查的方法，但是 sql 只能查询本应用下的数据库。而 ContentProvider 还可
+以去增删改查本地文件. xml 文件的读取等。
 
 
 
@@ -673,12 +692,19 @@ lbm.sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 ### 广播传输的数据是否有限制，是多少，为什么要限制？
 
 
+
+
+
+
+
+
+
+
 ## 六、webview安全漏洞
 
 ### WebView优化了解吗，如何提高WebView的加载速度？
-为什么WebView加载会慢呢？
 
-> 这是因为在客户端中，加载H5页面之前，需要先初始化WebView，在WebView完全初始化完成之前，后续的界面加载过程都是被阻塞的。
+> 为什么WebView加载会慢呢？ 这是因为在客户端中，加载H5页面之前，需要先初始化WebView，在WebView完全初始化完成之前，后续的界面加载过程都是被阻塞的。
 
 优化手段围绕着以下两个点进行：
 
@@ -785,10 +811,115 @@ public boolean dispatchTouchEvent(MotionEvent event){
 ## 十九、proguard代码混淆
 ## 二十、volley网络框架
 ## 二一、okhttp网络框架
-## 二二、retrofit网络框架
+
+### OKhttp 的好处
+
+- 支持 SPDY，共享同一个 Socket 来处理同一个服务器的所有请求。
+- 如果 SPDY 不可用，则通过连接池来减少请求延迟。
+- 无缝的支持 GZIP 来减少数据流量。
+- 缓存响应数据来减少重复的网络请求。
+- 可从很多常用的连接问题中自动恢复。
+- 还会处理代理服务器问题和 SSL 失败的问题。
+- 使用起来非常简单。
+
+### OKHttp 的使用
+
+- 第一步：创建 OkHttpClient 对象，使用到了 Builder 设计模式。
+- 第二步：创建 Request 对象，封装了一些请求报文的信息。
+- 第三步：创建 Call 对象，调用 execute/enqueue。
+- 第四步：获取返回对象 Response。
+
+```java
+OkHttpClient client = new OkHttpClient();
+Request request = new Request.Builder().url("http://www.baidu.com/").build();
+Call call = client.newCall(request);
+
+//同步 execute 获取数据
+Response response = call.execute();
+String responseData = response.boby().string();
+//Response response = client.newCall(request).execute()//简写第三四步
+
+//异步 enqueue 获取数据
+call.enqueue(new Callback){
+    public void onFailure(Call call,IOException e){
+         //失败
+    }
+    public void onResponse(Call call,Response response)throws IOException{
+	//runOnUiThread
+        sysout(response.boby().string());//成功
+    }
+}
+```
+### OKhttp 设计思路
+
+- 通过 Builder(构建者) 构建 Request。
+- Diapatcher(任务调度器) 不断从 RequestQueue(请求队列) 中取出 Request(请求)。
+- Diapatcher 把 Request 分发到 HttpEngine 中。
+- 根据当前请求是否有 Cache(缓存) 来返回 Response。
+- 没有就把请求发到 ConnectionPool 连接池中。
+- 从 ConnectionPool 连接池中获取到 Connection 之后去发起真正的请求。
+- 请求成功后通过 Route(路由) 和 Platform 找到合适平台。
+- 通过 Server(Socket) 去获取到 data。
+
+## 二二、Retrofit网络框架
+
+- 第一步：
+	- 通过Builer构造者来创建 Retrofit 对象。
+	- 然后通过baseUrl来拼接URL(这里的URL不是完整的URL)。
+	- 通过.build()来完成对象的创建。
+
+```java
+public static final String BASE_URL = "https://api.douban.com/v2/movie/";
+Retrofit retrofit = new Retrofit.Builder() 
+       .baseUrl(BASE_URL) 
+       .addConverterFactory(GsonConverterFactory.create())
+       .build();
+```
+
+- 第二步：
+	- 通过 Retrofit.create() 方法创建好我们需要的网络请求接口。
+	- 然后用 网络请求接口 调用他的方法来获取 Retrofit.call方法。
+	- 最后通过call.enqueue这个异步方法进行异步网络请求操作。
+
+```java
+MovieService movieService = retrofit.create(MovieService.class); 
+//调用方法得到一个Call ,并传参数
+Call<MovieSubject> call = movieService.getTop250(0,20);
+
+ //进行网络请求 
+call.enqueue(new Callback<MovieSubject>() {
+       @Override 
+       public void onResponse(Call<MovieSubject> call, Response<MovieSubject> response) { 
+            mMovieAdapter.setMovies(response.body().subjects);     
+            mMovieAdapter.notifyDataSetChanged(); 
+       } 
+      @Override 
+      public void onFailure(Call<MovieSubject> call, Throwable t) { 
+         t.printStackTrace(); 
+      } 
+});
+```
+
+- 第三步：创建接口
+
+```java
+public interface MovieService { 
+ //获取豆瓣Top250 榜单 
+ @GET("top250")
+ Call<MovieSubject> getTop250(@Query("start") int start,@Query("count")int count);
+}
+```
+
 ## 二三、butterknife注解框架
-## 二四、glide图片框架
+## 二四、Glide图片框架
 ## 二五、ANR异常
+
+ - **什么是ANR**： 在Android中，如果应用程序有一段时间响应不够灵敏，系统会向用户显示**应用程序无响应**（ANR：Application Not Responding）对话框。用户可以选择让程序继续运行或者关闭程序。
+
+ - **ANR产生的原因**：ANR产生的根本原因是APP阻塞了UI线程，不同的组件发生ANR 的时间不一样，主线程 Activity 是 5 秒，Service是 20 秒，BroadCastReceiver 是 10 秒。AsyncTask是5秒，Handler也是5秒。
+
+ - **怎样避免ANR**：让耗时的工作（比如数据库操作，I/O，连接网络或者别的有可能阻碍UI线程的操作）把它放入单独的线程处理。
+
 ## 二六、OOM异常
 
 **1、什么是OOM**：OutOfMemoryError(OOM)内存泄露，当 JVM 因为没有足够的内存来为对象分配空间并且垃圾回收器也已经没有空间可回收时，就会抛出这个异常。
@@ -843,7 +974,53 @@ Bitamp 占用内存大小 = 宽度像素 x （inTargetDensity / inDensity） x �
 ## 三一、冷启动优化
 ## 三二、其他优化
 ## 三三、MVC架构设计模式
+
+> https://juejin.im/entry/56ebb4ad5bbb50004c440972
+
+**MVC简介**：全名是Model View Controller，如图，是模型(model)－视图(view)－控制器(controller)的缩写，一种软件设计典范，用一种业务逻辑、数据、界面显示分离的方法组织代码，在改进和个性化定制界面及用户交互的同时，不需要重新编写业务逻辑。
+
+- M层处理数据，业务逻辑等；
+- V层处理界面的显示结果；
+- C层起到桥梁的作用，来控制V层和M层通信以此来达到分离视图显示和业务逻辑层。
+
+
+**Android中的MVC**：Android中界面部分也采用了当前比较流行的MVC框架，在Android中：
+
+- (V)一般采用XML文件进行界面的描述，这些XML可以理解为AndroidApp的View。使用的时候可以非常方便的引入。同时便于后期界面的修改。逻辑中与界面对应的id不变化则代码不用修改，大大增强了代码的可维护性。
+
+- (C)Android的控制层的重任通常落在了众多的 Activity 的肩上。这句话也就暗含了不要在Activity中写代码，要通过 Activity 交割 Model 业务逻辑层处理，这样做的另外一个原因是 Android 中的 Actiivity 的响应时间是5s，如果耗时的操作放在这里，程序就很容易被回收掉。
+
+- (M)我们针对业务模型，建立的数据结构和相关的类，就可以理解为AndroidApp的Model，Model是与View无关，而与业务相关的。对数据库的操作、对网络等的操作都应该在Model里面处理，当然对业务计算等操作也是必须放在的该层的。
+
 ## 三四、MVP架构设计模式
+
+**MVP简介**：MVP从更早的MVC框架演变过来，与MVC有一定的相似性：Controller/Presenter 负责逻辑的处理，Model 提供数据，View负责显示。
+
+ view < - - > Presenter < - - >Model
+
+**MVP框架由3部分组成**：View负责显示，Presenter负责逻辑处理，Model提供数据。在MVP模式里通常包含3个要素（加上View interface是4个）：
+
+- View：负责绘制UI元素、与用户进行交互(在Android中体现为Activity)
+
+- Model：负责存储、检索、操纵数据(有时也实现一个Model interface用来降低耦合)
+
+- Presenter：作为View与Model交互的中间纽带，处理与用户交互的负责逻辑。
+
+- *View interface：需要 View 实现的接口，View 通过 View interface与Presenter进行交互，降低耦合，方便进行单元测试
+
+**MVP的优点**：
+
+- 1、模型与视图完全分离，我们可以修改视图而不影响模型；
+
+- 2、可以更高效地使用模型，因为所有的交互都发生在一个地方——Presenter内部；
+
+- 3、我们可以将一个Presenter用于多个视图，而不需要改变Presenter的逻辑。这个特性非常的有用，因为视图的变化总是比模型的变化频繁；
+
+- 4、如果我们把逻辑放在Presenter中，那么我们就可以脱离用户接口来测试这些逻辑（单元测试）。
+
+举个简单的例子，UI层通知逻辑层（Presenter）用户点击了一个Button，逻辑层（Presenter）自己决定应该用什么行为进行响应，该找哪个模型（Model）去做这件事，最后逻辑层（Presenter）将完成的结果更新到UI层。
+
+
 ## 三五、MVVM架构设计模式
 ### MVC、MVP与MVVM之间的对比分析？
 
@@ -887,12 +1064,58 @@ https／http、dns、tcp／ip以及加密算法
 ## 四一、java知识
 GC/回收算法／堆栈／、反射／编译时vs运行时、注解（结合android annotation库）、范型、线程池／并发编程、Socket、IO/NIO、集合框架、类加载器、异常、继承／组合／多态、引用类型／内存泄漏、java虚拟机
 
+## GC垃圾回收机制
+
+**(1)GC 垃圾回收机制**(Gabage Collection) 在jvm运行时，由于所需要存放的对象越来越多，java堆就得想办法回收已不再用的对象来节省空间，那么垃圾回收机制在进行垃圾回收前就得判断哪些实例已不再使用，哪些实例还要使用，以便于回收不再使用的实例。
+
+**(2)判断对象是否已死**：jvm在回收垃圾之前，得先判断哪些实例是不再需要的，不能乱回收。
+
+- 引用计数算法
+- 可达性分析算法
+
+**(3)垃圾收集算法**：
+
+- **标记--清除算法**：先标记再清除，当对象被统一标记后，再统一回收。
+
+- **复制算法**：把内存按容量分为两个相同的块。每次只使用其中的一块，当一块用完后，就将存活的对象复制到另一块，然后再清理已使用的空间。
+
+- **标记--整理算法**：标记--整理算法的思想和标记--清除算法类似。但后续步骤不是清除可回收的对象，而是把存活的对象都向一端移动，然后直接清除掉边界以外的内存。
+
+- **分代收集算法**：根据对象存活的情况不同，把内存分为新生代和年老代，新生代对象存活率低，就用复制算法，年老代存活率高，就用标记--清除算法或者标记--整理算法。
+
 ## Intent
-### Android里的Intent传递的数据有大小限制吗，如何解决？
+### Intent 传递的数据有大小限制吗，如何解决？
 Intent传递数据大小的限制大概在1M左右，超过这个限制就会静默崩溃。处理方式如下：
 
 - 进程内：EventBus，文件缓存、磁盘缓存。
 - 进程间：通过ContentProvider进行款进程数据共享和传递。
+
+### Intent 传递数据时，可以传递哪些类型数据？
+
+Intent 可以传递的数据类型非常的丰富，java 的基本数据类型和 String 以及他们的数组形式
+都可以，除此之外还可以传递实现了 Serializable 和 Parcelable 接口的对象。
+
+### 请描述一下 Intent 和 IntentFilter
+
+- Intent：Android 中通过 Intent 对象来表示一条消息，一个 Intent 对象不仅包含有这个消息的目的
+地，还可以包含消息的内容，这好比一封 Email，对于一个 Intent 对象，消息“目的地”是必须的，而内容则是可选项。通过 Intent 可以实现各种系统组件的调用与激活。
+
+- IntentFilter：可以理解为邮局或者是一个信笺的分拣系统，这个分拣系统通过 3 个参数来识别：
+	- Action: 动作 view  用户定义的字符串，用于描述一个 Android 应用程序组件，可多个。
+	- Data: 数据 uri uri   Intent 可以通过 URI 携带外部数据给目标组件，<data/>
+ 	- Category : 而外的附加信息。
+
+###  Serializable 和 Parcelable 的区别
+
+在使用内存的时候，Parcelable 类比 Serializable 性能高，所以推荐使用 Parcelable 类。
+
+- 1．Serializable 在序列化的时候会产生大量的临时变量，从而引起频繁的 GC。
+- 2．Parcelable 不能使用在要将数据存储在磁盘上的情况。尽管 Serializable 效率低点，但在这种情况下，还是建议用 Serializable 。
+
+实现：
+
+- 1．Serializable 的实现，只需要继承 Serializable 即可。这只是给对象打了一个标记，系统会自动将其序列化。
+- 2．Parcelabel 的实现，需要在类中添加一个静态成员变量 CREATOR，这个变量需要继承Parcelable.Creator 接口。
 
 ## APK的打包流程
 ### 了解APK的打包流程吗，描述一下？
@@ -1120,31 +1343,12 @@ boolean married = pref.getBoolean("married",false);
 
 ### ANR
 
- - **什么是ANR**： 在Android中，如果应用程序有一段时间响应不够灵敏，系统会向用户显示**应用程序无响应**（ANR：Application Not Responding）对话框。用户可以选择让程序继续运行或者关闭程序。
 
- - **ANR产生的原因**：ANR产生的根本原因是APP阻塞了UI线程，不同的组件发生ANR 的时间不一样，主线程 Activity 是 5 秒，Service是 20 秒，BroadCastReceiver 是 10 秒。AsyncTask是5秒，Handler也是5秒。
-
- - **怎样避免ANR**：让耗时的工作（比如数据库操作，I/O，连接网络或者别的有可能阻碍UI线程的操作）把它放入单独的线程处理。
 
 
 ### Java GC 原理
 
-**(1)GC 垃圾回收机制**(Gabage Collection) 在jvm运行时，由于所需要存放的对象越来越多，java堆就得想办法回收已不再用的对象来节省空间，那么垃圾回收机制在进行垃圾回收前就得判断哪些实例已不再使用，哪些实例还要使用，以便于回收不再使用的实例。
 
-**(2)判断对象是否已死**：jvm在回收垃圾之前，得先判断哪些实例是不再需要的，不能乱回收。
-
-- 引用计数算法
-- 可达性分析算法
-
-**(3)垃圾收集算法**：
-
-- **标记--清除算法**：先标记再清除，当对象被统一标记后，再统一回收。
-
-- **复制算法**：把内存按容量分为两个相同的块。每次只使用其中的一块，当一块用完后，就将存活的对象复制到另一块，然后再清理已使用的空间。
-
-- **标记--整理算法**：标记--整理算法的思想和标记--清除算法类似。但后续步骤不是清除可回收的对象，而是把存活的对象都向一端移动，然后直接清除掉边界以外的内存。
-
-- **分代收集算法**：根据对象存活的情况不同，把内存分为新生代和年老代，新生代对象存活率低，就用复制算法，年老代存活率高，就用标记--清除算法或者标记--整理算法。
 
 
 ### OOM原理()
@@ -1277,55 +1481,7 @@ public void onItemClick(){
 
 ### MVC MVP 架构
 
-> https://juejin.im/entry/56ebb4ad5bbb50004c440972
 
-**MVC简介**：全名是Model View Controller，如图，是模型(model)－视图(view)－控制器(controller)的缩写，一种软件设计典范，用一种业务逻辑、数据、界面显示分离的方法组织代码，在改进和个性化定制界面及用户交互的同时，不需要重新编写业务逻辑。
-
-- M层处理数据，业务逻辑等；
-- V层处理界面的显示结果；
-- C层起到桥梁的作用，来控制V层和M层通信以此来达到分离视图显示和业务逻辑层。
-
-
-**Android中的MVC**：Android中界面部分也采用了当前比较流行的MVC框架，在Android中：
-
-- (V)一般采用XML文件进行界面的描述，这些XML可以理解为AndroidApp的View。使用的时候可以非常方便的引入。同时便于后期界面的修改。逻辑中与界面对应的id不变化则代码不用修改，大大增强了代码的可维护性。
-
-- (C)Android的控制层的重任通常落在了众多的 Activity 的肩上。这句话也就暗含了不要在Activity中写代码，要通过 Activity 交割 Model 业务逻辑层处理，这样做的另外一个原因是 Android 中的 Actiivity 的响应时间是5s，如果耗时的操作放在这里，程序就很容易被回收掉。
-
-- (M)我们针对业务模型，建立的数据结构和相关的类，就可以理解为AndroidApp的Model，Model是与View无关，而与业务相关的。对数据库的操作、对网络等的操作都应该在Model里面处理，当然对业务计算等操作也是必须放在的该层的。
-
-
-
-
-**MVP简介**：MVP从更早的MVC框架演变过来，与MVC有一定的相似性：Controller/Presenter 负责逻辑的处理，Model 提供数据，View负责显示。
-
- view < - - > Presenter < - - >Model
-
-**MVP框架由3部分组成**：View负责显示，Presenter负责逻辑处理，Model提供数据。在MVP模式里通常包含3个要素（加上View interface是4个）：
-
-- View：负责绘制UI元素、与用户进行交互(在Android中体现为Activity)
-
-- Model：负责存储、检索、操纵数据(有时也实现一个Model interface用来降低耦合)
-
-- Presenter：作为View与Model交互的中间纽带，处理与用户交互的负责逻辑。
-
-- *View interface：需要 View 实现的接口，View 通过 View interface与Presenter进行交互，降低耦合，方便进行单元测试
-
-**MVP的优点**：
-
-- 1、模型与视图完全分离，我们可以修改视图而不影响模型；
-
-- 2、可以更高效地使用模型，因为所有的交互都发生在一个地方——Presenter内部；
-
-- 3、我们可以将一个Presenter用于多个视图，而不需要改变Presenter的逻辑。这个特性非常的有用，因为视图的变化总是比模型的变化频繁；
-
-- 4、如果我们把逻辑放在Presenter中，那么我们就可以脱离用户接口来测试这些逻辑（单元测试）。
-
-举个简单的例子，UI层通知逻辑层（Presenter）用户点击了一个Button，逻辑层（Presenter）自己决定应该用什么行为进行响应，该找哪个模型（Model）去做这件事，最后逻辑层（Presenter）将完成的结果更新到UI层。
-
-### handler
-https://blog.csdn.net/wzhworld/article/details/78337641
-### AsyncTask
 
 
 
