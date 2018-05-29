@@ -209,7 +209,7 @@ protected void onCreate(Bundle saveInstanceState){
 }
 ```
 
-### 快速退出所有Activity(关闭多个Activity)？
+### 11、快速退出所有Activity(关闭多个Activity)？
 
 1、**记录打开的Acitivity**，只需要用一个专门的收集类对所有的活动进行管理就可以了，新建 ActivityCollector 类作为活动管理器。在BaseActivity中的onCreate方法中调用 ActivityCollector.addActivity(this);即可
 ```java
@@ -237,19 +237,20 @@ public class ActivityCollector{
 
 4、通过 intent 的 flag 来实现 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)激活一个新的 activity。此时如果该任务栈中已经有该 Activity，那么系统会把这个 Activity 上面的所有 Activity 干掉。其实相当于给 Activity 配置的启动模式为 SingleTop。
 
-### 如何将一个Activity设置成窗口样式
+### 12、如何将一个Activity设置成窗口样式
 
 只需要给我们的 Activity 配置如下属性即可。
 android:theme="@android:style/Theme.Dialog"
 
-### gravity 和 layout_gracity 的区别
+### 13、gravity 和 layout_gracity 的区别
 
 android:gravity：用于指定文字在控件中的对齐方式；
 android:layout_gracity：用于指定控件在布局中的对齐方式。
 android:layout_weight：使用比例方式来指定控件的大小。
-<include layout="@layout/title">引入布局
+```xml
+<include layout="@layout/title" > ```引入布局
 
-### Android 中的 Context, Activity，Appliction 有什么区别？
+### 14、Android 中的 Context, Activity，Appliction 有什么区别？
 
 **相同**：Activity 和 Application 都是 Context 的子类。
 
