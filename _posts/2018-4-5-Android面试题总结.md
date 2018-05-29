@@ -136,7 +136,16 @@ Android 提供了三种解析XML的方式：**SAX(Simple API XML)** ，**DOM(Doc
 
 1、不设置 Activity的android:configChanges 时，切屏会重新调用各个生命周期，切横屏时会执行一次，切竖屏时会执行两次。
 
+横屏：onCreate-->onStart-->onResume-->onSaveInstanceState-->onPause-->onStop-->onDestroy-->onCreate-->onStart-->onRestoreInstanceState-->onResume-->
+
+竖屏：onSaveInstanceState-->onPause-->onStop-->onDestroy-->
+onCreate-->onStart-->onRestoreInstanceState-->onResume-->
+onSaveInstanceState-->onPause-->onStop-->onDestroy-->
+onCreate-->onStart-->onRestoreInstanceState-->onResume-->
+
 2、设置Activity的android:configChanges="orientation"时，切屏还是会重新调用各个生命周期，切横、竖屏时只会执行一次。
+
+onSaveInstanceState-->onPause-->onStop-->onDestroy-->onCreate-->onStart-->onRestoreInstanceState-->onResume-->
 
 3、设置 Activity的 android:configChanges="orientation\|keyboardHidden" 时，切屏不会重新调用各个生命周期，只会执行 onConfigurationChanged 方法。
 
@@ -160,9 +169,9 @@ Android 提供了三种解析XML的方式：**SAX(Simple API XML)** ，**DOM(Doc
 - **singleTop**：栈顶复用模式。
   - (1) 如果新Activity已经位于任务栈的栈顶，那么此Activity不会被重新创建，同时它的**onNewIntent**方法会被回调；
   - (2) 需要注意的是，这个Activity的onCreate、onStart不会被系统调用，因为它并没有发生改变；
-  - (3) 如果新的Activity的实例已经存在但不是位于栈顶，那么新的Activity仍然会重新创建；
+  - (3) 如果新的Activity的实例已经存在但不是位于栈顶，那么新的Activity仍然会新创建一个；
 
-- **singleTask**：栈内复用模式。这是一种单实例模式，在这种情况下，只要Activity在一个栈中存在，那么多次启动此Activity都不会重新创建实例，和singleTop一样，系统也会回调其onNewIntent；
+- **singleTask**：栈内复用模式。如果要启动的在栈内存在了，但不在栈顶，它会把上面的全部出栈。系统也会回调其onNewIntent；
 
 - **singleInstance**：单实例模式，这是一种加强的singleTask模式，它除了具有singleTask模式的所有特性外，还加强一点，那就是具有此种模式的Activity只能单独地位于一个任务栈中。
 
@@ -176,21 +185,94 @@ Android 提供了三种解析XML的方式：**SAX(Simple API XML)** ，**DOM(Doc
 
 ### 10、Activity状态保存于恢复
 
-在《第一行代码》的 63 页中有详细介绍：
-Activity中提供了一个onSaveInstanceState()回调方法，只要在代码中将临时数据保存在Bundle类型中，在Activity的onCreate方法中去获取数据即可。
+当系统内存不足的情况Activity有可能会被系统回收，Activity中提供了一个onSaveInstanceState()回调方法，只要在代码中将临时数据保存在Bundle类型中，在Activity的onCreate方法中去获取数据即可。
+
+需要注意的是, onSaveInstanceState()方法并不是一定会被调用的, 因为有些场景是不需要保存
+状态数据的. 比如用户按下 BACK 键退出 activity 时, 用户显然想要关闭这个 activity, 此时是没有必
+要 保 存 数 据 以 供 下 次 恢 复 的 , 也 就 是 onSaveInstanceState() 方 法 不 会 被 调 用 . 如 果 调 用
+onSaveInstanceState()方法, 调用将发生在 onPause()或 onStop()方法之前。
+
+```java
+//MainActivity 中添加代码进行临时保存
+protected void onSaveInstanceState(Bundle outState){
+    super.onSaveInstanceState(outState);
+    String tempData = "123";
+    outState.putString("data_key","tempData");
+}
+
+//MainActivity的onCreate()方法中修改如下：
+protected void onCreate(Bundle saveInstanceState){
+    ...
+    if(saveInstanceState != null){
+        String tempData = savedInstanceState.getString("data_key");
+}
+}
+```
 
 ### 快速退出所有Activity(关闭多个Activity)？
 
-只需要用一个专门的收集类对所有的活动进行管理就可以了，在《第一行代码》的72页中有详细介绍：
+1、**记录打开的Acitivity**，只需要用一个专门的收集类对所有的活动进行管理就可以了，新建 ActivityCollector 类作为活动管理器。在BaseActivity中的onCreate方法中调用 ActivityCollector.addActivity(this);即可
+```java
+public class ActivityCollector{
+	public static List<Activity>activities = new ArrayList<>();
+	public static void addActivity(Activity activity){
+	activities.add(activity);
+	}
+	public static void remoeActivity(Activity activity){
+	activities.remove(activity);
+	}
+	public static void finishAll(){
+		for(Activity activity : activities){
+			if(!activity.isFinishing()){
+				activity.finish();
+			}
+		}
+		activities.clear();
+	}
+}
+```
+2、**发送特定广播**，需要结束应用时，给每个Activity收到广播后，关闭即可。
 
-新建ActivityCollector类作为活动管理器。
+3、**递归退出**，在打开新的 Activity 时使用 startActivityForResult，然后自己加标志，在 onActivityResult 中处理，递归关闭。
 
+4、通过 intent 的 flag 来实现 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)激活一个新的 activity。此时如果该任务栈中已经有该 Activity，那么系统会把这个 Activity 上面的所有 Activity 干掉。其实相当于给 Activity 配置的启动模式为 SingleTop。
 
+### 如何将一个Activity设置成窗口样式
 
+只需要给我们的 Activity 配置如下属性即可。
+android:theme="@android:style/Theme.Dialog"
 
+### gravity 和 layout_gracity 的区别
 
+android:gravity：用于指定文字在控件中的对齐方式；
+android:layout_gracity：用于指定控件在布局中的对齐方式。
+android:layout_weight：使用比例方式来指定控件的大小。
+<include layout="@layout/title">引入布局
 
+### Android 中的 Context, Activity，Appliction 有什么区别？
 
+**相同**：Activity 和 Application 都是 Context 的子类。
+
+Context 从字面上理解就是上下文的意思，在实际应用中它也确实是起到了管理上下文环境中各个参
+数和变量的总用，方便我们可以简单的访问到各种资源。
+
+**不同**：维护的生命周期不同。 Context 维护的是当前的 Activity 的生命周期，Application 维护
+的是整个项目的生命周期。
+
+使用 context 的时候，小心内存泄露，防止内存泄露，**注意一下几个方面**：
+
+1. 不要让生命周期长的对象引用 activity context，即保证引用 activity 的对象要与 activity 本身
+生命周期是一样的。
+2. 对于生命周期长的对象，可以使用 application，context。
+3. 避免非静态的内部类，尽量使用静态类，避免生命周期问题，注意内部类对外部对象引用导致
+的生命周期变化。
+
+### Context 是什么？
+
+1、它描述的是一个应用程序环境的信息，即上下文。
+2、该类是一个抽象(abstract class)类，Android 提供了该抽象类的具体实现类（ContextIml）。
+3、通过它我们可以获取应用程序的资源和类，也包括一些应用级别操作，例如：启动一个 Activity，
+发送广播，接受 Intent，信息，等。
 
 
 ## 三、Fragment面试详解
@@ -700,6 +782,20 @@ lbm.sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## 六、webview安全漏洞
 
 ### WebView优化了解吗，如何提高WebView的加载速度？
@@ -729,6 +825,17 @@ jockeyjs：[https://github.com/tcoulter/jockeyjs](https://github.com/tcoulter/jo
 
 对协议进行统一的封装和处理。
 
+
+
+
+
+
+
+
+
+
+
+
 ## 七、Binder
 
 Android Binder是用来做进程通信的，Android的各个应用以及系统服务都运行在独立的进程中，它们的通信都依赖于Binder。
@@ -746,6 +853,16 @@ Android Binder是用来做进程通信的，Android的各个应用以及系统�
 - **高性能**：从数据拷贝次数来看Binder只需要进行一次内存拷贝，而管道、消息队列、Socket都需要两次，共享内存不需要拷贝，Binder的性能仅次于共享内存。
 - **稳定性**：上面说到共享内存的性能优于Binder，那为什么不适用共享内存呢，因为共享内存需要处理并发同步问题，控制负责，容易出现死锁和资源竞争，稳定性较差。而Binder基于C/S架构，客户端与服务端彼此独立，稳定性较好。
 - **安全性**：我们知道Android为每个应用分配了UID，用来作为鉴别进程的重要标志，Android内部也依赖这个UID进行权限管理，包括6.0以前的固定权限和6.0以后的动态权限，传荣IPC只能由用户在数据包里填入UID/PID，这个标记完全 是在用户空间控制的，没有放在内核空间，因此有被恶意篡改的可能，因此Binder的安全性更高。
+
+
+
+
+
+
+
+
+
+
 
 ## 八、Handler
 
@@ -768,25 +885,72 @@ Android Binder是用来做进程通信的，Android的各个应用以及系统�
 ## 十、HandlerThread
 ## 十一、IntentService
 
+
+
+
+
+
+
 ## 十二、View绘制
-### 描述一下View的绘制原理？
-View的绘制流程主要分为三步：
+
+### view树的绘制流程
 
 - **onMeasure**：测量视图的大小，从顶层父View到子View递归调用measure()方法，measure()调用onMeasure()方法，onMeasure()方法完成测量工作。
 - **onLayout**：确定视图的位置，从顶层父View到子View递归调用layout()方法，父View将上一步measure()方法得到的子View的布局大小和布局参数，将子View放在合适的位置上。
 - **onDraw**：绘制最终的视图，首先ViewRoot创建一个Canvas对象，然后调用onDraw()方法进行绘制。onDraw()方法的绘制流程为：① 绘制视图背景。② 绘制画布的图层。 ③ 绘制View内容。 ④ 绘制子视图，如果有的话。⑤ 还原图层。⑥ 绘制滚动条。
 
+### measure
+
+![](https://i.imgur.com/C3hEYc5.png)
+
+重要的参数：
+
+ViewGroup.LayoutParams：用来指定视图高度宽带(具体的长宽高、和父控件一样、包含即可)
+MeasureSpec：测量规格，包括两种(测量模式、..)
+
+measure方法调用：
+
+- measure：为每一个View的宽高赋值
+- onMeasure：
+- setMeasuredDimension ：完成整个测量
+
+
+### layout
+### draw
+
+### 描述一下View的绘制原理？
+
+
+
+
+
+
+
+
+
 ## 十三、View事件分发
-### 描述一下Android的事件分发机制？
 
-Android事件分发机制的本质：事件从哪个对象发出，经过哪些对象，最终由哪个对象处理了该事件。此处对象指的是Activity、Window与View。
+### 为什么会有事件分发机制？
 
-Android事件的分发顺序：Activity（Window） -> ViewGroup -> View
+答： Android 的 View 是树形结构的，View 可能会重叠在一起，当我们点击的地方有多个 View 都可以响应的时候，这个点击事件由谁来触发呢？为了解决这个问题，就有了事件分发机制。 
 
-Android事件的分发主要由三个方法来完成，如下所示：
+- **Phonewindow**：最顶层的管理容器，作为window的唯一实现类。
+- **DecorView**：Phonewindow的内部类，作为传递消息的使者。
+
+### 事件分发流程
+
+Activity-> PhoneWindow -> DecorView -> ViewGroup -> ... -> View
+
+当最后一个View 没有消费事件，这个事件会依次返转回到最高位的Activity，如果这样都没消费的话才抛弃。
+
+### 三个重要的事件分发方法
+
+- **dispatchTouchEvent**：用来进行事件的分发。
+- **onInterceptTouchEvent**：用来判断是否拦截某个事件。在 dispatchTouchEvent 方法内部调用，果当前 View 拦截了某个事件，那在同一个事件序列中，此方法不会再次调用，返回结果表示是否拦截当前事件。
+- **onTouchEvent**：用来处理点击事件。在 dispatchTouchEvent 方法内部调用，返回结果表示是否消耗当前事件，如果不消耗，在同一事件序列里，当前 View 无法再次接收到事件。
 
 ```java
-// 父View调用dispatchTouchEvent()开始分发事件
+// 父View调用 dispatchTouchEvent() 开始分发事件
 public boolean dispatchTouchEvent(MotionEvent event){
     boolean consume = false;
     // 父View决定是否拦截事件
@@ -796,14 +960,43 @@ public boolean dispatchTouchEvent(MotionEvent event){
         // 该其他View。
         consume = onTouchEvent(event);
     }else{
-        // 调用子View的dispatchTouchEvent(event)方法继续分发事件
+        //否则， 调用子View的dispatchTouchEvent(event)方法继续分发事件
         consume = child.dispatchTouchEvent(event);
     }
     return consume;
 }
 ```
 
+
+
+
+
+
 ## 十四、Listview缓存
+
+### 什么是listview 
+
+ListView 就是一个能用数据集合以滚动的方法展示到用户界面的View，用列表来展示内容。
+
+### listview适配器模式
+
+![](https://i.imgur.com/o7M1eU6.png)
+
+### listview的 recycleBin机制
+
+### listview的优化
+
+
+
+
+
+
+
+
+
+
+
+
 ## 十五、Android目录结构
 ## 十六、Android目录构建
 ## 十七、git版本控制器
@@ -863,9 +1056,42 @@ call.enqueue(new Callback){
 
 ## 二二、Retrofit网络框架 
 
+- 第一步：
+	- 通过Builer构造者来创建 Retrofit 对象。
+	- 然后通过baseUrl来拼接URL(这里的URL不是完整的URL)。
+	- 通过.build()来完成对象的创建。
 
+```java
+public static final String BASE_URL = "https://api.douban.com/v2/movie/";
+Retrofit retrofit = new Retrofit.Builder() 
+       .baseUrl(BASE_URL) 
+       .addConverterFactory(GsonConverterFactory.create())
+       .build();
+```
 
+- 第二步：
+	- 通过 Retrofit.create() 方法创建好我们需要的网络请求接口。
+	- 然后用 网络请求接口 调用他的方法来获取 Retrofit.call方法。
+	- 最后通过call.enqueue这个异步方法进行异步网络请求操作。
 
+```java
+MovieService movieService = retrofit.create(MovieService.class); 
+//调用方法得到一个Call ,并传参数
+Call<MovieSubject> call = movieService.getTop250(0,20);
+
+ //进行网络请求 
+call.enqueue(new Callback<MovieSubject>() {
+       @Override 
+       public void onResponse(Call<MovieSubject> call, Response<MovieSubject> response) { 
+            mMovieAdapter.setMovies(response.body().subjects);     
+            mMovieAdapter.notifyDataSetChanged(); 
+       } 
+      @Override 
+      public void onFailure(Call<MovieSubject> call, Throwable t) { 
+         t.printStackTrace(); 
+      } 
+});
+```
 
 - 第三步：创建接口
 
@@ -1071,6 +1297,40 @@ Intent 可以传递的数据类型非常的丰富，java 的基本数据类型�
 	- Action: 动作 view  用户定义的字符串，用于描述一个 Android 应用程序组件，可多个。
 	- Data: 数据 uri uri   Intent 可以通过 URI 携带外部数据给目标组件，<data/>
  	- Category : 而外的附加信息。
+
+### 隐式Intent
+
+setData(Uri.parse(网址、电话))
+
+putExtra(键，数据)，接收是 Intent intent = getIntent()；String data = intent.getStringExtra("键名")；还有getBoolExtra()方法。
+
+###返回数据给上一个Activity
+
+A通过startActivityForResult启动BActivity，期望在B销毁的时候能返回一个结果给上一个A活动。
+```java
+Intent intent = new Intent(FirstActivity.this,SecondActivity.class);
+startActivityForResult(intent,1);//请求码只要是一个唯一值就可以了。
+```
+B调用了setResult，第一个参数是返回处理结果(RESULT_OK或RESULT_CANCELED)，另一个是intent
+```java
+Intent intent = new Intent();
+intent.putExtra("key","data"); 
+setResult(RESULT_OK,intent);
+finish();
+```
+A页面重写onActivityResult()方法来得到返回的数据
+```java
+protected void onActivityResult(int requestCode,int resultCode,Intent data){
+  switch(requestCode){
+  case 1:
+     if(resultCode==RESULT_OK){
+     String returnedData = data.getStringExtra(key);
+     }
+     break;
+    default:
+  }
+}
+```
 
 ###  Serializable 和 Parcelable 的区别
 
