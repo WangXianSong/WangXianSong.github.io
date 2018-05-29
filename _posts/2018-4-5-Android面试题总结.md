@@ -248,7 +248,8 @@ android:gravity：用于指定文字在控件中的对齐方式；
 android:layout_gracity：用于指定控件在布局中的对齐方式。
 android:layout_weight：使用比例方式来指定控件的大小。
 ```xml
-<include layout="@layout/title" >``` 
+<include layout="@layout/title">
+``` 
 
 ### 14、Android 中的 Context, Activity，Appliction 有什么区别？
 
