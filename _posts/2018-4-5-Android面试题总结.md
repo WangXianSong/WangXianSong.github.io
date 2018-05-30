@@ -244,12 +244,10 @@ android:theme="@android:style/Theme.Dialog"
 
 ### 13、gravity 和 layout_gracity 的区别
 
-android:gravity：用于指定文字在控件中的对齐方式；
-android:layout_gracity：用于指定控件在布局中的对齐方式。
-android:layout_weight：使用比例方式来指定控件的大小。
-```xml
-<include layout="@layout/title">
-``` 
+- android:gravity：用于指定文字在控件中的对齐方式；
+- android:layout_gracity：用于指定控件在布局中的对齐方式。
+- android:layout_weight：使用比例方式来指定控件的大小。
+
 
 ### 14、Android 中的 Context, Activity，Appliction 有什么区别？
 
@@ -269,12 +267,12 @@ Context 从字面上理解就是上下文的意思，在实际应用中它也确
 3. 避免非静态的内部类，尽量使用静态类，避免生命周期问题，注意内部类对外部对象引用导致
 的生命周期变化。
 
-### Context 是什么？
+### 15、Context 是什么？
 
-1、它描述的是一个应用程序环境的信息，即上下文。
-2、该类是一个抽象(abstract class)类，Android 提供了该抽象类的具体实现类（ContextIml）。
-3、通过它我们可以获取应用程序的资源和类，也包括一些应用级别操作，例如：启动一个 Activity，
-发送广播，接受 Intent，信息，等。
+- 1、它描述的是一个应用程序环境的信息，即上下文。
+- 2、该类是一个抽象(abstract class)类，Android 提供了该抽象类的具体实现类（ContextIml）。
+- 3、通过它我们可以获取应用程序的资源和类，也包括一些应用级别操作，例如：启动一个 Activity，
+- 发送广播，接受 Intent，信息，等。
 
 
 ## 三、Fragment面试详解
@@ -417,15 +415,15 @@ ViewPager + Fragment
 
 ## 三、Service面试详解
 
-### Service 是什么？
+### 1、Service 是什么？
 
-Service 是一种可以在后台执行长时间运行操作而没有用户界面的应用组件。(Service 不能做耗时操作)
+Service 是一种可以“在后台执行长时间运行操作”“没有用户界面”的应用组件。(Service 不能做耗时操作)
 
-### Service 和 BroadcastReceiver 共同点
+### 2、Service 和 BroadcastReceiver 共同点
 
 都是运行在主线程当中，都不能做长时间的耗时操作。
 
-### Service 和 Thread 的区别
+### 3、Service 和 Thread 的区别
 
 - **定义**：Thread 是程序执行的最小单元，它是分配CPU的最小单位。可以执行异步操作，是相对**独立**的。
 Service 是Android的一种特殊机制，Service是运行在主线程当中的，是**依托于**所在的主线程。是由系统进程托管，也是一种轻量级IPC通信方式(Activity 和 Service 绑定，然后数据通信，并处于不同进程。 )
@@ -449,48 +447,63 @@ Service 是Android的一种特殊机制，Service是运行在主线程当中的�
 
 ### 开启 Service 的两种方式以及区别
 
-- **StartService**
+- **StartService**：
+	1. 定义一个类**继承** Service，并重写onCreate、onStartCommand、onDestory方法；
+	2. 在**Manifest.xml**文件中配置该 Service
+	3. 使用**startService(Intent)**方法启动Service
+	4. 不再使用时，调用 **stopService**(Intent) 方法停止该服务。
 
-1.定义一个类继承 Service
-2.在Manifest.xml文件中配置该 Service
-3.使用Context的startService(Intent)方法启动Service
-4.不再使用时，调用 stopService(Intent) 方法停止该服务。
+- **bindService**：绑定服务提供了客户端和服务端接口，进行数据的交互(发送请求、获取结果、进程间通信)
+	1. 创建BindService服务端，继承自Service，并在类中创建一个实例IBinder接口实现对象并提供公共方法给客户端调用。
+	2. 从 onBind() 回调方法返回此Binder实例
+	3. 在客户端中，从onServiceConnected()回调方法接收Binder，并使用提供的方法调用绑定服务。
 
-- **bindService**:
+- 如果一个 service 通过 startService 被 start 之后，多次调用 startService 的话，service 会多次调
+用 onStart 方法。多次调用 stopService 的话，service 只会调用一次 onDestroyed 方法。
 
-绑定服务提供了客户端和服务端接口，进行数据的交互(发送请求、获取结果、进程间通信)
-1.创建BindService服务端，继承自Service，并在类中创建一个实例IBinder接口实现对象并提供公共方法给客户端调用。
-2.从onBind()回调方法返回此Binder实例
-3.在客户端中，从onServiceConnected()回调方法接收Binder，并使用提供的方法调用绑定服务。
+- 如果一个 service 通过 bindService 被 start 之后，多次调用 bindService 的话，service 只会调用
+一次 onBind 方法。多次调用 unbindService 的话会抛出异常。
 
 
 ### Service 的生命周期
 
-- startService()：开启Service，调用者退出后Service仍然存在。
-- bindService()：开启Service，调用者退出后Service也随即退出。
+- startService()：开启Service，调用者退出后Service仍然**存在**。
+- bindService()：开启Service，调用者退出后Service也随即**退出**。
 
 **Service生命周期**：
 
-- 只是用startService()启动服务：onCreate() -> onStartCommand() -> onDestory
-- 只是用bindService()绑定服务：onCreate() -> onBind() -> onUnBind() -> onDestory
-- 同时使用startService()启动服务与bindService()绑定服务：onCreate() -> onStartCommnad() -> onBind() -> onUnBind() -> onDestory
-
+- 只是用 **startService**() 启动服务：onCreate() -> onStartCommand() -> onDestory()
+- 只是用 **bindService**() 绑定服务：onCreate() -> onBind() -> onUnBind() -> onDestory()
+- 同时使用startService()启动服务与bindService()绑定服务：onCreate() -> onStartCommnad() -> onBind() -> onUnBind() -> onDestory。
 
 ### Activity如何与Service通信？
 
-可以通过bindService的方式，先在Activity里实现一个ServiceConnection接口，并将该接口传递给bindService()方法，在ServiceConnection接口的onServiceConnected()方法 里执行相关操作。
+在 Activity 中可以通过 startService 和 bindService 方法启动 Service。一般情况下如果想获取
+Service 的服务对象那么肯定需要通过 **bindService**（）方法，比如音乐播放器，第三方支付等。如
+果仅仅只是为了开启一个后台任务那么可以使用 startService（）方法。
 
-### Activity 怎么和 Service 绑定？
+1. 先在Activity里实现一个 **ServiceConnection** 接口，重写onServiceConnected和onServiceDisconnected方法，分别表示绑定成功与断开；
+2. 并将该接口传递给 **bindService**() 方法去启动Service；
+3. 在ServiceConnection接口的**onServiceConnected()**方法 里执行具体的操作。
+4. 最后通过 **unbindService** 来解绑服务。
 
-### 怎么在Activity 中启动自己对应的Service？
+### 说说 Activity、Intent、Service 是什么关系
+
+他们都是 Android 开发中使用频率最高的类。其中 Activity 和 Service 都是 Android 四大组件
+之一。他俩都是 Context 类的子类 ContextWrapper 的子类，因此他俩可以算是兄弟关系吧。不过
+兄弟俩各有各自的本领，Activity 负责用户界面的显示和交互，Service 负责后台任务的处理。Activity
+和 Service 之间可以通过 Intent 传递数据，因此可以把 Intent 看作是通信使者。
+
+### Service 里面可以弹吐司么
+可以的。弹吐司有个条件就是得有一个 Context 上下文，而 Service 本身就是 Context 的子类，因此在 Service 里面弹吐司是完全可以的。比如我们在 Service 中完成下载任务后可以弹一个吐司通知
+用户。
 
 ### IntentService是什么？
 
 - IntentService 是一个特殊的 Service，它继承了 Service 并且它是一个抽象类，因此必须创建它的子类才能使用 IntentService。
 - 它封装了 HandlerThread 和 Handler，可用于执行后台耗时的任务，当任务全部执行完毕后自动停止。
 - 它的优先级比普通线程要高，所以适合执行高优先级的后台任务。
-
-（HandlerThread是继承了Thread，他的作用是 不用每次创建线程，他内部有循环机制可以重复利用，不用的时候要quit或者quitSafely。）
+- （HandlerThread是继承了Thread，他的作用是 不用每次创建线程，他内部有循环机制可以重复利用，不用的时候要quit或者quitSafely。）
 
 
 
