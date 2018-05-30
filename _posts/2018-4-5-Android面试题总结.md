@@ -44,7 +44,7 @@ tags: 面试
 
 - **Service 服务**：是Android 中实现程序后台运行的解决方案，适合不需要和用户交互而且还要求长期运行的任务。依赖于创建服务的程序，程序被杀掉，服务也停止运行。服务不会自动开启线程，需要服务内部创建子线程。
 
-- **Broadcast Receiver 广播接收器**：应用程序可以使用它对感兴趣的外部事件(如当电话呼入时，或者数据网络可用时)进行接收并做出响应。广播接收器没有用户界面。然而，它们可以启动一个 Activity 或 Serice 来响应它们收到的信息，或者用 NotificationManager 来通知用户。通知可以用很多种方式来吸引用户的注意力──闪动背灯、震动、播放声音等。
+- **Broadcast Receiver 广播接收器**：主要用于接收系统或者 app 发送的广播事件，应用程序可以使用它对感兴趣的外部事件(如当电话呼入时，或者更改网络4Gwifi)进行接收并做出响应。广播接收器没有用户界面。然而，它们可以启动一个 Activity 或 Serice 来响应它们收到的信息，或者用 NotificationManager 来通知用户。通知可以用很多种方式来吸引用户的注意力──闪动背灯、震动、播放声音等。
 
 - **Content Provider 内容提供者**：主要用于在不同的应用程序之间实现数据共享的功能，允许一个程序访问另一个程序中的数据，同时还能保证被访问数据的安全性。与其他存储方式不同的是：可以选择哪部分数据分享，从而保证隐私数据的安全性。
 
@@ -518,13 +518,13 @@ Service 的服务对象那么肯定需要通过 **bindService**（）方法，�
 
 ## 四、Content Provider
 
-### Content Provider是什么？
+### 1、Content Provider是什么？
 
 **内容提供者**：主要用于在不同的应用程序之间实现数据共享的功能，允许一个程序访问另一个程序中的数据，同时还能保证被访问数据的安全性。与其他存储方式不同的是：可以选择哪部分数据分享，从而保证隐私数据的安全性。
 
-### ContentProvider 的特点
+### 2、ContentProvider 的特点
 
-1. 四大组件之一，需要在Mainifest.xml文件中进行注册。
+1. 四大组件之一，需要在 Mainifest.xml 文件中进行注册。
 2. 接口的统一，并不能用于存储数据，只是为数据的获取、添加、修改的操作提供统一的接口。
 3. 跨进程供多个应用程序共享数据；
 4. 设备存储数据：通讯录、图片；
@@ -534,7 +534,7 @@ Service 的服务对象那么肯定需要通过 **bindService**（）方法，�
 
 1. 数据访问统一接口（存储方式都不用管）优点。 
 2. 跨进程数据的访问 优点。
-3. 无法单独使用，必须与其他的存储方式结合使用 缺点。
+3. 无法单独使用，必须与其他的存储方式结合使用缺点。
 
 ### 如何实现数据的访问？
 
@@ -612,10 +612,6 @@ mCursor.close();
 
 ### ContentObserver 内容观察者
 
-### 谈谈你对 ContentProvider 的理解
-
-ContentProvider 是应用程序之间共享数据的接口。使用的时候首先自定义一个类继承 ContentProvider，然后覆写 query、insert、update、delete 等方法。因为其是四大组件之一因
-此必须在 AndroidManifest 文件中进行注册。
 
 ### 说说ContentProvider、ContentResolver、ContentObserver 之间的关系
 
@@ -632,8 +628,23 @@ uri 就可以了，ContentProvider 可以实现不同 app 之间共享。
 - **Sql** 也有增删改查的方法，但是 sql 只能查询本应用下的数据库。而 ContentProvider 还可
 以去增删改查本地文件. xml 文件的读取等。
 
+### 请介绍下 ContentProvider 是如何实现数据共享的？
 
+- 1、在 Android 中如果想将自己应用的数据（一般多为数据库中的数据）提供给第三发应用，那么我们只能通过 ContentProvider 来实现了。
 
+- 2、ContentProvider 是应用程序之间共享数据的接口，使用的时候首先自定义一个类继承ContentProvider，然后覆写 query、insert、update、delete 等方法。因为它是四大组件之一因此必须在 AndroidManifest 文件中进行注册。
+
+- 3、把自己的数据通过 uri 的形式共享出去，第三方可以通过 ContentResolver 来访问该 Provider。
+
+```java
+public class PersonContentProvider extends ContentProvider{
+	public boolean onCreate(){}
+	query(Uri, String[], String, String[], String)
+	insert(Uri, ContentValues)	
+	update(Uri, ContentValues, String, String[])
+	delete(Uri, String, String[])
+}
+```
 
 
 
@@ -660,9 +671,9 @@ uri 就可以了，ContentProvider 可以实现不同 app 之间共享。
 
 ### 3、广播的种类
 
-- **普通广播 Normal Broadcast**：异步执行的广播，所有接收者在同一时刻收到这条广播消息。效率高，没有先后顺序，无法截断。属于全局广播。调用 sendBroadcast() 发送，最常用的广播。
+- **普通广播 Normal Broadcast**：异步执行的广播，所有接收者在同一时刻收到这条广播消息。效率高，没有先后顺序，无法截断。属于全局广播。调用 **sendBroadcast**() 发送，最常用的广播。
 
-- **有序广播 Ordered Broadcast**：同步执行的广播，发出去的广播会被广播接受者按照顺序接收，广播接收者按照Priority属性值从大-小排序，Priority属性相同者，动态注册的广播优先，广播接收者还可以选择对广播进行截断和修改。调用sendOrderedBroadcast()发送。
+- **有序广播 Ordered Broadcast**：同步执行的广播，发出去的广播会被广播接收者按照顺序接收，广播接收者按照Priority属性值从大-小排序，Priority属性相同者，动态注册的广播优先，广播接收者还可以选择对广播进行截断和修改。调用 **sendOrderedBroadcast**() 发送。
 
 ### 4、注册广播接收 (静态和动态)
 
@@ -671,7 +682,7 @@ uri 就可以了，ContentProvider 可以实现不同 app 之间共享。
 ```java
 //首先创建 Broadcast Receiver文件，Exported 属性表示是否允许这个广播接收本程序以外的广播，Enabled 属性表示是否启用用这个广播接收器。
 public class MyReceiver extends BroadcastReceiver {
-        //onReceive 不能做过多的耗时操作，因为它不能开启子线程。
+        //onReceive 不能做过多的耗时操作，10秒没响应就ANR
     public void onReceive(Context context, Intent intent) {
         Toast.makeText(context, "boot complete", Toast.LENGTH_SHORT).show();
     }
@@ -692,6 +703,7 @@ public class MyReceiver extends BroadcastReceiver {
 - **(2)动态注册** : 在代码中调用 registerReceiver() 注册来进行广播的注册。必须在 onDestroy 中调用 unregisterReceiver() 方法，否则会引起内存泄露，特点是：不常驻，跟随组件的生命变化，组件结束，广播结束。在组件结束前，需要先移除广播，否则容易造成内存泄漏。
 
 ```java
+       ChangeReceiver = new BroadcastReceiver();
        IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(ChangeReceiver, intentFilter);
@@ -788,9 +800,19 @@ lbm.sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 
 ### 广播传输的数据是否有限制，是多少，为什么要限制？
 
+### Broadcast Receiver能在onReceive中执行耗时任务吗？
+
+BroadcastReceiver 在 10 秒内没有执行完毕，Android 会认为该程序无响应，所以在 onReceive 通常是不能开启线程的，一般是通过 service 或者 IntentService 来处理。
 
 
+### BroadCastReceiver 的生命周期
 
+- a. 广播接收者的生命周期非常短暂的，在接收到广播的时候创建，onReceive()方法结束之后销
+- 毁；
+- b. 广播接收者中不要做一些耗时的工作，否则会弹出 Application No Response 错误对话框；
+- c. 最好也不要在广播接收者中创建子线程做耗时的工作，因为广播接收者被销毁后进程就成为了
+- 空进程，很容易被系统杀掉；
+- d. 耗时的较长的工作最好放在服务中完成；
 
 
 
