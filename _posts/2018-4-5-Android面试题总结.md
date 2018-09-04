@@ -190,10 +190,16 @@ protected void onCreate(Bundle saveInstanceState){
 
 - a.**由于资源相关配置发生改变，导致Activity被杀死和重新创建。**
 	- 例如屏幕发生旋转：当竖屏切换到横屏时，会先调用onSaveInstanceState来保存切换时的数据，接着销毁当前的Activity，然后重新创建一个Activity，再调用onRestoreInstanceState恢复数据。
+	
 	- 竖屏切换横屏执行一遍：onCreate–>onStart–>onResume–>onSaveInstanceState-->onPause（不定）-->onStop-->onDestroy-->onCreate-->onStart-->onRestoreInstanceState-->onResume
+	
 	- 横屏切换竖屏执行两遍：onSaveInstanceState–>onPause–>onStop–>onDestroy–> onCreate–>onStart–>onRestoreInstanceState–>onResume–> onSaveInstanceState–>onPause–>onStop–>onDestroy–> onCreate–>onStart–>onRestoreInstanceState–>onResume–>
+	
 	- 设置Activity的android:configChanges="orientation"时，切屏还是会重新调用各个生命周期，切横、竖屏时只会执行一次。
+	
 	- **设置Activity的android:configChanges="orientation\|keyboardHidden\|screenSize"。此时再次旋转屏幕时，该Activity不会被系统杀死和重建，只会调用onConfigurationChanged。因此，当配置程序需要响应配置改变，指定configChanges属性，重写onConfigurationChanged方法即可。**
+	-  .
+
 
 - b.**由于系统资源不足，导致优先级低的Activity被回收。**
 	- ①Activity优先级排序：前台可见Activity>前台可见不可交互Activity（前台Activity弹出Dialog)>后台Activity（用户按下Home键、切换到其他应用）
@@ -204,7 +210,7 @@ protected void onCreate(Bundle saveInstanceState){
 ### 7、Activity 启动模式LaunchMode
 
 - **设置Activity启动模式的方法**
-	- a.在AndroidManifest.xml中给对应的Activity设定属性android:launchMode="standard|singleInstance|single Task|singleTop"。
+	- a.在AndroidManifest.xml中给对应的Activity设定属性android:launchMode="standard\|singleInstance\|singleTask\|singleTop"。
 	- b.通过标记位设定，方法是intent.addFlags(Intent.xxx)。
 
 - **standard**：标准模式，这也是系统的默认模式。每次启动一个Activity都会重新创建一个新的实例，不管这个实例是否已经存在；
