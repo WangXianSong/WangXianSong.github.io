@@ -20,12 +20,6 @@ tags: 面试
 - 1.礼貌：态度谦虚
 - 2.听懂问题直接回答
 
-### 面试技巧
-
-- 1.根据简历来面试、根据项目需求来面试、根据牛人来面试。
-- 2.遇到难题时，可以向面试官提出，“我没有听清楚，刚出可能外面有些噪音，你能不能重复一下问题”，来为自己争取时间。实在回答不出，也不能说不知道，可以将题目拆分来成123小点来逐一回答。可以离题、可以扯别的问题。
-- 3.实在不会就可以说下想法就好，绝对不可以说不知道。
-
 ### 面试建议：
 
 - 1.选一个自己相对比较擅长的领域。（源码深入）
@@ -97,25 +91,168 @@ Android 提供了三种解析XML的方式：**SAX(Simple API XML)** ，**DOM(Doc
 
 ## 二、Activity 面试详解
 
-### 1、Activity的四种状态：
+### 1、生命周期全解析
+
+1.典型情况下的Activity生命周期：
+
+- **onCreate**():
+	- 状态：Activity 正在创建
+	- 任务：做初始化工作，如setViewContent界面资源、初始化数据，还可以恢复状态。
+	- 注意：此方法的传参Bundle为该Activity上次被异常情况销毁时保存的状态信息。
+- **onStart**()：
+	- 状态：Activity 正在启动，这时Activity 可见但不在前台，无法和用户交互。
+- **onResume**()：
+	- 状态：Activity 获得焦点，此时Activity 可见且在前台并开始活动。
+- **onPause**()：
+	- 状态： Activity 正在停止
+	- 任务：可做 数据存储、停止动画等操作。
+	- 注意：Activity切换时，旧Activity的onPause会先执行，然后才会启动新的Activity的onCreate，所以不能在onPause执行耗时操作。
+- **onStop**():
+	- 状态：Activity 即将停止
+	- 任务：可做稍微重量级回收工作，如取消网络连接、注销广播接收器等。
+	- 注意：新Activity是透明主题时，旧Activity都不会走onStop。
+- **onDestroy**():
+	- 状态：Activity 即将销毁
+	- 任务：做回收工作、资源释放。
+- **onRestart**()：
+	- 状态：Activity 重新启动，Activity由后台切换到前台，由不可见到可见。
+
+### 2、Activity生命周期的切换过程
+
+- ①**启动一个Activity**：onCreate()-->onStart()-->onResume()
+
+- ②**打开一个新Activity**：旧Activity的onPause() -->新Activity的onCreate()-->onStart()-->onResume()-->旧Activity的onStop()
+
+- ③**返回到旧Activity**：新Activity的onPause（）-->旧Activity的onRestart()-->onStart()-->onResume()-->新Activity的onStop()-->onDestory();
+
+- ④**Activity1上弹出对话框Activity2**：Activity1的onPause()-->Activity2的onCreate()-->onStart()-->onResume() (1不会stop)
+
+- ⑤**关闭屏幕/按Home键**：Activity2的onPause()-->onStop()-->Activity1的onStop()
+
+- ⑥**点亮屏幕/回到前台**：Activity2的onRestart()-->onStart()-->Activity1的onRestart()-->onStart()-->Activity2的onResume()
+
+- ⑦**关闭对话框Activity2**：Activity2的onPause()-->Activity1的onResume()-->Activity2的onStop()-->onDestroy()
+
+- ⑧**销毁Activity1**：onPause()-->onStop()-->onDestroy()
+
+### 3、onStart()和onResume()、onPause()和onStop()的区别：
+
+- onStart与onStop是从Activity是否**可见**这个角度调用的，
+- onResume和onPause是从Activity是否显示在**前台**这个角度来回调的，
+- 在实际使用没其他明显区别。
+
+### 4、生命周期的各阶段
+
+- **完整生命周期**：
+Activity在onCreate()和onDestroy()之间所经历的。
+在onCreate()中完成各初始化操作，在onDestroy()中释放资源。
+
+- **可见生命周期**：
+Activity在onStart()和onStop()之间所经历的。
+活动对于用户是可见的，但仍无法与用户进行交互。
+
+- **前台生命周期**：
+Activity在onResume()和onPause()之间所经历的。
+活动可见，且可交互。
+
+### 5、onSaveInstanceState和onRestoreInstanceState的区别
+
+- a.**出现时机**：异常情况下Activity 重建，非用户主动去销毁。
+
+- b.当系统异常终止时，调用onSavaInstanceState来保存状态。该方法调用在onStop之前，但和onPause没有时序关系。
+
+- **onSaveInstanceState与onPause的区别**：前者适用于对**临时性**状态的保存，而后者适用于对数据的**持久化**保存。
+
+- c.Activity被重新创建时，调用onRestoreInstanceState（该方法在onStart之后），并将onSavaInstanceState保存的Bundle对象作为参数传到onRestoreInstanceState与onCreate方法。
+
+- 可通过onRestoreInstanceState(Bundle savedInstanceState)和onCreate((Bundle savedInstanceState)来判断Activity是否被重建，并取出数据进行恢复。但需要注意的是，在onCreate取出数据时一定要先判断savedInstanceState是否为空。另外，谷歌更推荐使用onRestoreInstanceState进行数据恢复。
+
+- 需要注意的是，onSaveInstanceState()方法并不是一定会被调用的, 因为有些场景是不需要保存
+状态数据的。比如用户按下 BACK 键退出 activity 时，用户显然想要关闭这个 activity，此时是没有必
+要 保 存 数 据 以 供 下 次 恢 复  , 也 就 是 onSaveInstanceState() 方 法 不 会 被 调 用。如 果 调 用
+onSaveInstanceState()方法，调用将发生在 onPause()或 onStop()方法之前。
+```java
+//MainActivity 中添加代码进行临时保存
+protected void onSaveInstanceState(Bundle outState){
+    super.onSaveInstanceState(outState);
+    String tempData = "123";
+    outState.putString("data_key","tempData");
+}
+//MainActivity的onCreate()方法中修改如下：
+protected void onCreate(Bundle saveInstanceState){
+    ...
+    if(saveInstanceState != null){
+        String tempData = savedInstanceState.getString("data_key");
+    }
+}
+```
+### 6、Activity异常情况下生命周期分析
+
+- a.**由于资源相关配置发生改变，导致Activity被杀死和重新创建。**
+	- 例如屏幕发生旋转：当竖屏切换到横屏时，会先调用onSaveInstanceState来保存切换时的数据，接着销毁当前的Activity，然后重新创建一个Activity，再调用onRestoreInstanceState恢复数据。
+	- 竖屏切换横屏执行一遍：onCreate–>onStart–>onResume–>onSaveInstanceState-->onPause（不定）-->onStop-->onDestroy-->onCreate-->onStart-->onRestoreInstanceState-->onResume
+	- 横屏切换竖屏执行两遍：onSaveInstanceState–>onPause–>onStop–>onDestroy–> onCreate–>onStart–>onRestoreInstanceState–>onResume–> onSaveInstanceState–>onPause–>onStop–>onDestroy–> onCreate–>onStart–>onRestoreInstanceState–>onResume–>
+	- 设置Activity的android:configChanges="orientation"时，切屏还是会重新调用各个生命周期，切横、竖屏时只会执行一次。
+	- **设置Activity的android:configChanges="orientation\|keyboardHidden\|screenSize"。此时再次旋转屏幕时，该Activity不会被系统杀死和重建，只会调用onConfigurationChanged。因此，当配置程序需要响应配置改变，指定configChanges属性，重写onConfigurationChanged方法即可。**
+
+- b.**由于系统资源不足，导致优先级低的Activity被回收。**
+	- ①Activity优先级排序：前台可见Activity>前台可见不可交互Activity（前台Activity弹出Dialog)>后台Activity（用户按下Home键、切换到其他应用）
+	- ②当系统内存不足时，会按照Activity优先级从低到高去杀死目标Activity所在的进程。
+	- ③若一个进程没有四大组件在执行，那么这个进程将很快被系统杀死。
+
+
+### 7、Activity 启动模式LaunchMode
+
+- **设置Activity启动模式的方法**
+	- a.在AndroidManifest.xml中给对应的Activity设定属性android:launchMode="standard|singleInstance|single Task|singleTop"。
+	- b.通过标记位设定，方法是intent.addFlags(Intent.xxx)。
+
+- **standard**：标准模式，这也是系统的默认模式。每次启动一个Activity都会重新创建一个新的实例，不管这个实例是否已经存在；
+	- (1) 注意：使用ApplicationContext去启动standard模式Activity就会报错。因为standard模式的Activity会默认进入启动它所属的任务栈，但是由于非Activity的Context没有所谓的任务栈。
+
+- **singleTop**：栈顶复用模式。
+	- (1) 如果新Activity已经位于任务栈的栈顶，那么此Activity不会被重新创建，同时它的**onNewIntent**方法会被回调；
+	- (2) 需要注意的是，这个Activity的onCreate、onStart不会被系统调用，因为它并没有发生改变；
+	- (3) 如果新的Activity的实例已经存在但不是位于栈顶，那么新的Activity仍然会新创建一个；
+
+- **singleTask**：栈内复用模式。如果要启动的在栈内存在了，但不在栈顶，它会把上面的全部出栈。系统也会回调其onNewIntent；
+
+- **singleInstance**：单实例模式，具有此模式的Activity只能单独位于一个任务栈中，且此任务栈中只有唯一一个实例。
+
+- **常用的可设定Activity启动模式的标记位**
+	- ①**FLAG_ACTIVITY_NEW_TASK**：这个标记位的作用是为Activity指定”singleTask”启动模式，其效果和在XML中指定该启动模式相同；
+	- ②**FLAG_ACTIVITY_SINGLE_TOP**：这个标记位的作用是为Activity指定”singleTop”启动模式，其效果和在XML中指定该启动模式相同；
+	- ③**FLAG_ACTIVITY_CLEAR_TOP**：具有此标记位的Activity，当它启动时，在同一个任务栈中所有位于它上面的Activity都要出栈；
+	- ④**FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS**：具有这个标记的Activity不会出现在历史Activity的列表中，当某些情况下我们不希望用户通过历史列表回到我们的Activity的时候这个标记比较有用。它等同于在XML中指定Activity的属性”android:excludeFromRecents="true"。
+
+### 8、IntentFilter匹配规则
+- 原则：
+	- ①一个intent只有同时匹配某个Activity的intent-filter中的action、category、data才算完全匹配，才能启动该Activity。
+	- ② 一个Activity可以有多个 intent-filter，一个 intent只要成功匹配任意一组 intent-filter，就可以启动该Activity。
+
+- a. **action匹配规则**：
+	- 要求intent中的action 存在且必须和intent-filter中的其中一个 action相同。
+	- 区分大小写。
+	
+- b. **category匹配规则**：
+	- intent中的category可以不存在，这是因为此时系统给该Activity 默认加上了< category android:name="android.intent.category.DEAFAULT" />属性值。
+	- 除上述情况外，有其他category，则要求intent中的category和intent-filter中的所有category 相同。
+	
+- c. **data匹配规则**：
+	- 如果intent-filter中有定义data，那么Intent中也必须也要定义date。
+	- data主要由mimeType(媒体类型)和URI组成。在匹配时通过intent.setDataAndType(Uri data, String type)方法对date进行设置。
+	- 要求和action相似：如果没有指定URI，默认值为content和file; 有多组data规则时，匹配其中一组即可。
+
+- 采用隐式方式启动Activity时，可以用PackageManager的resolveActivity方法或者Intent的resolveActivity方法判断是否有Activity匹配该隐式Intent。
+
+### 9、Activity的四种状态：
 
 - **running**：处于活动状态，用户可以点击屏幕，屏幕会做出响应，处于Activity 的栈顶。
 - **paused**：处于失去焦点状态或者被一个非全屏的Activity占据，又或者被一个透明的Activity放置栈顶。Activity只是失去和用户的交互能力，处于内存紧张状态。
 - **stopped**：被另外的 Activity 全屏覆盖，不再是可见的，
 - **killed**：Activity 已经被系统回收掉了。
 
-### 2、Activity 在各种情况下的生命周期：
-
-- **Activity启动** ：onCreate()初始化 -> onstart()可见了 -> onResume()可交互了
-- **锁屏或Home键或新覆盖**： onPause() -> onStop()有可能被杀掉
-- **解锁或回到前台**：onRestart()重新启动 -> onStart() -> onResume() 
-- **退出 或Back键** ：onPause() -> onStop() -> onDestroy()回收，资源释放。
-- **弹出对话框**：不会执行任何生命周期(注：对话框如果是Activity(Theme为Dialog)，还是会执行生命周期的)
-- **从A跳转到B**：当B的主题为透明时，A只会执行onPause（A-onPause->B-(onCreate->onStart->onResume)）
-- **从A跳转到B**：A-onPause->B-(onCreate->onStart->onResume)-A-onStop  (注意是B执行onResume后，A才执行onStop，所以尽量不要在onPause中做耗时操作)
-- **从B返回到A**：B-onPause->A-(onRestart->onStart->onResume)-B-(onStop->onDestroy)
-
-### 3、Activity之间的通信方式
+### 10、Activity之间的通信方式
 
 - 1)在Intent跳转时携带数据 
 - 2)借助类的静态变量
@@ -126,35 +263,18 @@ Android 提供了三种解析XML的方式：**SAX(Simple API XML)** ，**DOM(Doc
   - 赤裸裸的使用 File 
 - 5)借助Service
 
-### 4、Activity上有 Dialog 时按Home键的生命周期
+### 11、Activity上有 Dialog 时按Home键的生命周期
 
 **生命周期是**：onCreate() -> onStart() -> onResume -> 启动Dialog-> home键 -> onPause() -> onStop() 
 
  其实就是一个很正常的 Activity 生命周期，并没有什么特别的地方，但是注意 onPause 方法和 onStop 方法是在我点击 Home 键之后才有的，这就说明对话框的出现并没有使 Activity 进入后台。而是点击Home键才使Activity进入后台工作。AlertDialog对话框实际上是Activity的一个组件。
 
-### 5、横竖屏切换时Activity的生命周期；如何将横竖屏切换对应的影响降至最低？
-
-1、不设置 Activity的android:configChanges 时，切屏会重新调用各个生命周期，切横屏时会执行一次，切竖屏时会执行两次。
-
-横屏：onCreate-->onStart-->onResume-->onSaveInstanceState-->onPause-->onStop-->onDestroy-->onCreate-->onStart-->onRestoreInstanceState-->onResume-->
-
-竖屏：onSaveInstanceState-->onPause-->onStop-->onDestroy-->
-onCreate-->onStart-->onRestoreInstanceState-->onResume-->
-onSaveInstanceState-->onPause-->onStop-->onDestroy-->
-onCreate-->onStart-->onRestoreInstanceState-->onResume-->
-
-2、设置Activity的android:configChanges="orientation"时，切屏还是会重新调用各个生命周期，切横、竖屏时只会执行一次。
-
-onSaveInstanceState-->onPause-->onStop-->onDestroy-->onCreate-->onStart-->onRestoreInstanceState-->onResume-->
-
-3、设置 Activity的 android:configChanges="orientation\|keyboardHidden" 时，切屏不会重新调用各个生命周期，只会执行 onConfigurationChanged 方法。
-
-### 6、Activity与Fragment之间生命周期比较
+### 12、Activity与Fragment之间生命周期比较
 
 - **Activity**——onCreate->onStart->onResume->onPause->onStop->onDestroy
 - **Fragment**——onAttach->onCreate->onCreateView->onActivityCreated->onStart->onResume ->onPause->onStop->onDestroyView->  onDestroy->onDetach
 
-### 7、Activity 进程优先级
+### 13、Activity 进程优先级
 
 - **前台进程**：处于与用户交互的 Activity，或者在前台绑定的 Service。
 - **可见进程**：处于前台，但用户又不能点击的情况下。
@@ -162,54 +282,15 @@ onSaveInstanceState-->onPause-->onStop-->onDestroy-->onCreate-->onStart-->onRest
 - **后台进程**：用户按了Home键回到了桌面，根据内存情况作出相应的回收。
 - **空进程**：优先级最低，处于缓存的目的而保留，系统随时杀掉。
 
-### 8、Activity 启动模式
-
-- **standard**：标准模式，这也是系统的默认模式。每次启动一个Activity都会重新创建一个新的实例，不管这个实例是否已经存在；
-
-- **singleTop**：栈顶复用模式。
-  - (1) 如果新Activity已经位于任务栈的栈顶，那么此Activity不会被重新创建，同时它的**onNewIntent**方法会被回调；
-  - (2) 需要注意的是，这个Activity的onCreate、onStart不会被系统调用，因为它并没有发生改变；
-  - (3) 如果新的Activity的实例已经存在但不是位于栈顶，那么新的Activity仍然会新创建一个；
-
-- **singleTask**：栈内复用模式。如果要启动的在栈内存在了，但不在栈顶，它会把上面的全部出栈。系统也会回调其onNewIntent；
-
-- **singleInstance**：单实例模式，这是一种加强的singleTask模式，它除了具有singleTask模式的所有特性外，还加强一点，那就是具有此种模式的Activity只能单独地位于一个任务栈中。
-
-### 9、scheme 跳转协议
-
+### 14、scheme 跳转协议
 **scheme** 是一种页面跳转协议，是一种非常好的实现机制，通过定义自己的scheme协议，可以非常方便跳转app的各个页面；通过scheme 协议，服务器可以定制化告诉App跳转哪个页面，可以通过通知栏消息定制化跳转页面，可以通过H5页面跳转页面。
 
 - 1.服务端下发url，客户端根据url跳转到相应的页面。
 - 2.H5跳转到App相应的Activity。
 - 3.App根据url跳转到另一个App指定页面。
 
-### 10、Activity状态保存于恢复
 
-当系统内存不足的情况Activity有可能会被系统回收，Activity中提供了一个onSaveInstanceState()回调方法，只要在代码中将临时数据保存在Bundle类型中，在Activity的onCreate方法中去获取数据即可。
-
-需要注意的是, onSaveInstanceState()方法并不是一定会被调用的, 因为有些场景是不需要保存
-状态数据的. 比如用户按下 BACK 键退出 activity 时, 用户显然想要关闭这个 activity, 此时是没有必
-要 保 存 数 据 以 供 下 次 恢 复 的 , 也 就 是 onSaveInstanceState() 方 法 不 会 被 调 用 . 如 果 调 用
-onSaveInstanceState()方法, 调用将发生在 onPause()或 onStop()方法之前。
-
-```java
-//MainActivity 中添加代码进行临时保存
-protected void onSaveInstanceState(Bundle outState){
-    super.onSaveInstanceState(outState);
-    String tempData = "123";
-    outState.putString("data_key","tempData");
-}
-
-//MainActivity的onCreate()方法中修改如下：
-protected void onCreate(Bundle saveInstanceState){
-    ...
-    if(saveInstanceState != null){
-        String tempData = savedInstanceState.getString("data_key");
-}
-}
-```
-
-### 11、快速退出所有Activity(关闭多个Activity)？
+### 15、快速退出所有Activity(关闭多个Activity)？
 
 1、**记录打开的Acitivity**，只需要用一个专门的收集类对所有的活动进行管理就可以了，新建 ActivityCollector 类作为活动管理器。在BaseActivity中的onCreate方法中调用 ActivityCollector.addActivity(this);即可
 ```java
@@ -237,24 +318,24 @@ public class ActivityCollector{
 
 4、通过 intent 的 flag 来实现 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)激活一个新的 activity。此时如果该任务栈中已经有该 Activity，那么系统会把这个 Activity 上面的所有 Activity 干掉。其实相当于给 Activity 配置的启动模式为 SingleTop。
 
-### 12、如何将一个Activity设置成窗口样式
+### 16、如何将一个Activity设置成窗口样式
 
 只需要给我们的 Activity 配置如下属性即可。
 android:theme="@android:style/Theme.Dialog"
 
-### 13、gravity 和 layout_gracity 的区别
+### 17、gravity 和 layout_gracity 的区别
 
 - android:gravity：用于指定文字在控件中的对齐方式；
 - android:layout_gracity：用于指定控件在布局中的对齐方式。
 - android:layout_weight：使用比例方式来指定控件的大小。
 
 
-### 14、Android 中的 Context, Activity，Appliction 有什么区别？
+### 18、Android 中的 Context, Activity，Appliction 有什么区别？
 
 **相同**：Activity 和 Application 都是 Context 的子类。
 
 Context 从字面上理解就是上下文的意思，在实际应用中它也确实是起到了管理上下文环境中各个参
-数和变量的总用，方便我们可以简单的访问到各种资源。
+数和变量的作用，方便我们可以简单的访问到各种资源。
 
 **不同**：维护的生命周期不同。 Context 维护的是当前的 Activity 的生命周期，Application 维护
 的是整个项目的生命周期。
@@ -267,12 +348,11 @@ Context 从字面上理解就是上下文的意思，在实际应用中它也确
 3. 避免非静态的内部类，尽量使用静态类，避免生命周期问题，注意内部类对外部对象引用导致
 的生命周期变化。
 
-### 15、Context 是什么？
+### 19、Context 是什么？
 
 - 1、它描述的是一个应用程序环境的信息，即上下文。
 - 2、该类是一个抽象(abstract class)类，Android 提供了该抽象类的具体实现类（ContextIml）。
-- 3、通过它我们可以获取应用程序的资源和类，也包括一些应用级别操作，例如：启动一个 Activity，
-- 发送广播，接受 Intent，信息，等。
+- 3、通过它我们可以获取应用程序的资源和类，也包括一些应用级别操作，例如：启动一个 Activity，发送广播，接受 Intent，信息等。
 
 
 ## 三、Fragment面试详解
@@ -283,9 +363,10 @@ Context 从字面上理解就是上下文的意思，在实际应用中它也确
 
 ### Fragment 为什么被称为 第五大组件
 
-- 首先在使用频率上，Fragment是不属于四大组件的范畴，他有自己的生命周期。
-- 同时它可以灵活动态加载到 Activity 当中去。
-- 而且 Fragment 并不像 Activity 那样独立的，虽然有自己的生命周期，但需要依附Activity。
+- 使用频率高；
+- 有自己的生命周期；
+- 可以灵活加载到Activity中；
+-  虽然 Fragment 有自己的生命周期，并不像 Activity 那样独立的，需要依附 Activity。
 
 ### Fragment 加载到Activity的两种方式
 
@@ -308,7 +389,7 @@ transaction.commit();
 
 ### FragmentPagerAdapter 与 FragmentStatePagerAdaper 区别：
 
-- **FragmentPagerAdapter** ：FragmentPagerAdapter 在切换 ViewPager 的时候，只是把 Fragment的UI 与 Activity的UI 脱离开来，并不回收内存。所以它适用页面**减少**的情况。(在其源码 DestroyItem 方法中的最后一行，mCurTransaction.**detach** 可知)
+- **FragmentPagerAdapter** ：FragmentPagerAdapter 在切换 ViewPager 的时候，只是把 Fragment的UI 与 Activity的UI 脱离开来，并不回收内存。所以它适用页面**较少**的情况。(在其源码 DestroyItem 方法中的最后一行，mCurTransaction.**detach** 可知)
 
 - **FragmentStatePagerAdaper** ：由于 FragmentStatePagerAdaper 在每次切换 ViewPager 的时候，它是回收内存的。又因为在页面较多的情况下会更耗内存，所以它适合页面**较多**的情况。(在源码 DestroyItem 方法中的最后一行，mCurTransaction.**remove** 可知 )
 
@@ -482,9 +563,10 @@ Service 是Android的一种特殊机制，Service是运行在主线程当中的�
 Service 的服务对象那么肯定需要通过 **bindService**（）方法，比如音乐播放器，第三方支付等。如
 果仅仅只是为了开启一个后台任务那么可以使用 startService（）方法。
 
-1. 先在Activity里实现一个 **ServiceConnection** 接口，重写onServiceConnected和onServiceDisconnected方法，分别表示绑定成功与断开；
-2. 并将该接口传递给 **bindService**() 方法去启动Service；
-3. 在ServiceConnection接口的**onServiceConnected()**方法 里执行具体的操作。
+1. 首先定义 **MyService** 来指定具体的操作。
+2. 先在 Activity 里实现一个 **ServiceConnection** 匿名类 connection，重写 onServiceConnected 和 onServiceDisconnected 方法，分别表示绑定成功与断开；
+2. 并将该匿名类 connection 传递给 **bindService**() 方法去启动 Service；
+3. 在ServiceConnection匿名类的**onServiceConnected()**方法里启动 MyService 里的方法。
 4. 最后通过 **unbindService** 来解绑服务。
 
 ### 说说 Activity、Intent、Service 是什么关系
@@ -1015,13 +1097,26 @@ public boolean dispatchTouchEvent(MotionEvent event){
 
 ListView 就是一个能用数据集合以滚动的方法展示到用户界面的View，用列表来展示内容。
 
+### ListView的使用步骤
+
+1.新建javaBean类
+2.新建Item布局
+3.定义适配器
+4.加载适配器
+
+### ListView 的优化
+
+
+
+
+
 ### listview适配器模式
 
 ![](https://i.imgur.com/o7M1eU6.png)
 
 ### listview的 recycleBin机制
 
-### listview的优化
+
 
 
 
@@ -1038,7 +1133,22 @@ ListView 就是一个能用数据集合以滚动的方法展示到用户界面�
 ## 十六、Android目录构建
 ## 十七、git版本控制器
 ## 十八、gradle
-## 十九、proguard代码混淆
+## 十九、Proguard代码混淆
+
+**Proguard 定义**：是用于压缩、优化、混淆我们的代码。主作用是可以移除代码中的无用类、字段、方法和属性，同时还可以混淆代码。
+
+- 压缩(Shrink)：在打包的时候，通过 Proguard 来移除没有用到的类、字段、方法和属性。
+- 优化(Optimize)：通过javac编译后的字节码文件，对字节码进行优化，移除无用的指令。
+- 混淆(Obfuscate)：通过无意义的命名(a b c)来混淆有意义的命名，加大反编译的难度。
+- 预检测(Preveirfy)：在Java平台上对处理后的代码进行预检，确保加载的class文件是可执行的。
+
+**Proguard 工作原理**：
+
+- EntryPoint：在压缩过程中，ProGuard 会从上述的 EntryPoint 开始递归遍历，搜索哪些类和类的成员在使用，对于没有被使用的类和类的成员，就会在压缩段丢弃，在接下来的优化过程中，那些非 EntryPoint 的类、方法都会被设置为 private、static 或 final，不使用的参数会被移除，此外，有些方法会被标记为内联的，在混淆的步骤中，ProGuard 会对非 EntryPoint 的类和方法进行重命名。
+
+![](https://i.imgur.com/QSGaSQp.png)
+
+
 ## 二十、volley网络框架
 ## 二一、okhttp网络框架
 
@@ -1144,36 +1254,53 @@ public interface MovieService {
 ## 二四、Glide图片框架
 ## 二五、ANR异常
 
- - **什么是ANR**： 在Android中，如果应用程序有一段时间响应不够灵敏，系统会向用户显示**应用程序无响应**（ANR：Application Not Responding）对话框。用户可以选择让程序继续运行或者关闭程序。
+ 1. **什么是ANR**： 在Android中，如果应用程序有一段时间响应不够灵敏，系统会向用户显示**应用程序无响应**（ANR：Application Not Responding）对话框。用户可以选择让程序继续运行或者关闭程序。
 
- - **ANR产生的原因**：ANR产生的根本原因是APP阻塞了UI线程，不同的组件发生ANR 的时间不一样，主线程 Activity 是 5 秒，Service是 20 秒，BroadCastReceiver 是 10 秒。AsyncTask是5秒，Handler也是5秒。
 
- - **怎样避免ANR**：让耗时的工作（比如数据库操作，I/O，连接网络或者别的有可能阻碍UI线程的操作）把它放入单独的线程处理。
+ 2. **ANR产生的原因**：
+   - ANR产生的根本原因是主线程做了耗时操作：IO操作、耗时计算、。
+   - 应用程序的响应性是由 Activity Manager 和 WindowManager 系统服务监视的。
+   - 不同的组件发生 ANR 的时间不一样，主线程 Activity 是 5 秒，Service是 20 秒，广播是 10 秒。
+
+
+ 3. **怎样避免ANR**：主线程的耗时工作通过 Handler 机制转移到子线程中执行，在子线程中将结果返回给主线程进行更新UI。
+   - 使用Asynctask处理耗时IO操作。
+   - 使用Thread或者HandlerThread 提高优先级。
+   - 使用Handler来处理工作线程的耗时任务。
+   - Activity的onCreate和onResume回调中尽量避免耗时的代码。
+ 
+
+ 4. **Android哪些操作是在主线程中**：
+    - Activity的所有生命周期回调都是执行在主线程的。
+    - Service默认是执行在主线程的。
+    - BroadCastReceiver的onReceive回调是执行在主线程的。
+    - 没有使用子线程的Looper的Handler的handleMessage、post(Runnable)是执行在主线程的。
+    - AsyncTask的回调除了 doInBackground，其他都是执行在主线程。
 
 ## 二六、OOM异常
 
-**1、什么是OOM**：OutOfMemoryError(OOM)内存泄露，当 JVM 因为没有足够的内存来为对象分配空间并且垃圾回收器也已经没有空间可回收时，就会抛出这个异常。
+什么是oom？
+一些容易混淆的概念：内存溢出oom、内存抖动(短时间大量对象被创建，然后被释放，会严重占用内存)、内存泄露
+如何解决oom：
 
-**2、为什么会OOM**：
 
-- **(1)瞬时加载了一些资源**，例如，视频、图片、音频等等的内存申请大小超过了App的额定内存值，解决方案：对资源可能需要申请大内存的地方做压缩处理。
-- **(2)调用registerRecevier() 后未调用 unregisterReceiver()**, 解决方案：在每一次动态注册的时候，记得在在适当的地方（Activity的OnDestory()）取消注册。
-- **(3)数据库cursor没有关闭**，解决方案：使用完cursor及时关闭。
-- **(4)构造Adapter没有使用缓存contentview**， 解决方案：在构造Adapter的时候，使用ContentView缓存页面，节省内存。
-- **(5)未关闭InputStream/OutputStream** , 解决方案：在使用到IO Stream 的时候，及时关闭。
-- **(6)Bitmap使用后未调用recycle()**，解决方案：在Bitmap不在需要被加载到内存中的收获，做回收处理。
-- **(7)Context泄露，内部类持有外部类的引用。** 解决方案：  第一： 将线程的内部类，改为静态内部类  第二：在线程内部采用弱引用保存Context引用。
-- **(8)static 原因**。 解决方案： 
-	1. 应该尽量避免static成员变量引用资源耗费过多的实例，比如Context。
-	1. Context尽量使用Application Context，因为Application的Context的生命周期比较长，引用它不会出现内存泄露的问题。
-	1. 使用WeakReference代替强引用。比如可以使用WeakReference<Context> mContextRef;
-- 查找内存泄漏可以使用Android Profiler工具或者利用LeakCanary工具。
 
-**3、为什么Android会有APP的内存限制**：
+ 1. **什么是OOM**：当前占用的内存加上申请的内存资源超过了 Dalvik 虚拟机的最大内存限制就会抛出的 Out of memory 异常。
 
-- **(1)要开发者使用内存更加合理。**限制每个应用可用内存上限，避免恶意程序或单个程序使用过多内存导致其他程序的不可运行。有了限制，开发者就必须合理使用资源，优化资源使用
-- **(2)屏幕显示内容有限，内存足够即可**。即使有万千图片千万数据需要使用到，但在特定时刻需要展示给用户看的总是有限的，因为屏幕显示就那么大，上面可以放的信息就是很有限的。大部分信息都是处于准备显示状态，所以没必要给予太多heap内存。必须一个ListView显示图片，打个比方这个ListView含有500个item，但是屏幕显示最多有10调item显示，其余数据是处于准备显示状态。
-- **(3)Android多个虚拟机Davlik的限制需要。**android设备上的APP运行，每打开一个应用就会打开至少一个独立虚拟机。这样可以避免系统崩溃，但代价是浪费更多内存。
+ 2. **为什么会OOM**：
+   - **(1)瞬时加载了一些资源**，例如，视频、图片、音频等等的内存申请大小超过了App的额定内存值，解决方案：对资源可能需要申请大内存的地方做压缩处理。
+   - **(2)调用 registerRecevier() 后未调用 unregisterReceiver()**, 解决方案：在每一次动态注册的时候，记得在在适当的地方（Activity的OnDestory()）取消注册。
+   - **(3)数据库 cursor 没有关闭**，解决方案：使用完cursor及时关闭。
+   - **(4)构造Adapter没有使用缓存 contentview**， 解决方案：在构造Adapter的时候，使用ContentView缓存页面，节省内存。
+   - **(5)未关闭 InputStream/OutputStream** , 解决方案：在使用到IO Stream 的时候，及时关闭。
+   - **(6) Bitmap 使用后未调用recycle()**，解决方案：在Bitmap不在需要被加载到内存中的收获，做回收处理。
+   - **(7)Context泄露，内部类持有外部类的引用。** 解决方案：  第一： 将线程的内部类，改为静态内部类  第二：在线程内部采用弱引用保存Context引用。
+   - **(8)static 原因**。 解决方案：（1）应该尽量避免static成员变量引用资源耗费过多的实例，比如Context。（2）Context尽量使用Application Context，因为Application的Context的生命周期比较长，引用它不会出现内存泄露的问题。（3）使用WeakReference代替强引用。比如可以使用WeakReference<Context> mContextRef；（4）查找内存泄漏可以使用Android Profiler工具或者利用LeakCanary工具。
+
+ 3. **为什么Android会有APP的内存限制**：
+   - **(1)要开发者使用内存更加合理。**限制每个应用可用内存上限，避免恶意程序或单个程序使用过多内存导致其他程序的不可运行。有了限制，开发者就必须合理使用资源，优化资源使用
+   - **(2)屏幕显示内容有限，内存足够即可**。即使有万千图片千万数据需要使用到，但在特定时刻需要展示给用户看的总是有限的，因为屏幕显示就那么大，上面可以放的信息就是很有限的。大部分信息都是处于准备显示状态，所以没必要给予太多heap内存。必须一个ListView显示图片，打个比方这个ListView含有500个item，但是屏幕显示最多有10调item显示，其余数据是处于准备显示状态。
+   - **(3)Android多个虚拟机Davlik的限制需要。**android设备上的APP运行，每打开一个应用就会打开至少一个独立虚拟机。这样可以避免系统崩溃，但代价是浪费更多内存。
 
 ## 二七、bitmap
 
