@@ -71,17 +71,44 @@ tags: 面试
 
 ### Drawable
 
-### Android 中有哪几种解析xml的类
+### res/raw和asserts的区别
+这两个目录下的文件都会被打包进APK，并且不经过任何的压缩处理。
+assets与res/raw不同点在于，assets支持任意深度的子目录，这些文件不会生成任何资源ID，只能使用AssetManager按相对的路径读取文件。如需访问原始文件名和文件层次结构，则可以考虑将某些资源保存在assets目录下。
+
+### 图片放错目录会产生的问题吗？
+高密度（density）的系统去使用低密度目录下的图片资源时，会将图片长宽自动放大以去适应高密度的精度，当然图片占用的内存会更大。所以如果能提各种dpi的对应资源那是最好，可以达到较好内存使用效果。如果提供的图片资源有限，那么图片资源应该尽量放在高密度文件夹下，这样可以节省图片的内存开支。
+
+### drawable-nodpi文件夹
+这个文件夹是一个密度无关的文件夹，放在这里的图片系统就不会对它进行自动缩放，原图片是多大就会实际展示多大。但是要注意一个加载的顺序，drawable-nodpi文件夹是在匹配密度文件夹和更高密度文件夹都找不到的情况下才会去这里查找图片的，因此放在drawable-nodpi文件夹里的图片通常情况下不建议再放到别的文件夹里面。
+
+### Bitmap和Drawable
+Bitmap是Android系统中的图像处理的最重要类。可以简单地说，Bitmap代表的是图片资源在内存中的数据结构，如它的像素数据，长宽等属性都存放在Bitmap对象中。Bitmap类的构造函数是私有的，只能是通过JNI实例化，系统提供BitmapFactory工厂类给我们从从File、Stream和byte[]创建Bitmap的方式。
+Drawable官文文档说明为可绘制物件的一般抽象。View也是可以绘制的，但Drawable与View不同，Drawable不接受事件，无法与用户进行交互。我们知道很多UI控件都提供设置Drawable的接口，如ImageView可以通过setImageDrawable(Drawable drawable)设置它的显示，这个drawable可以是来自Bitmap的BitmapDrawable，也可以是其他的如ShapeDrawable。
+也就是Drawable是一种抽像，最终实现的方式可以是绘制Bitmap的数据或者图形、Color数据等。理解了这些，你很容易明白为什么我们有时候需要进行两者之间的转换。
+
+### 要加载很大的图片怎么办？
+如果图片很大，比如他们的占用内存算下来就直接OOM了，那么我们肯定不能直接加载它。解决主法还是有很多的，系统也给我们提供了一个类BitmapRegionDecoder，可以用来分块加载图片。
+
+### 图片圆角（或称矩形圆角）或者圆形头像的实现方式
+除了把原图直接做成圆角外，常见有三种方式实现：
+使用Xfermode混合图层；
+使用BitmapShader；
+通过裁剪画布区域实现指定形状的图形（ClipPath）
+
+## Android 中有哪几种解析xml的类
 
 官方推荐哪种？以及它们的原理和区别。
 
 Android 提供了三种解析XML的方式：**SAX(Simple API XML)** ，**DOM(Document Object Model)**， **Pull解析** 
 
-- **SAX解析方式**：(Simple API for XML)解析器是一种基于事件的解析器，事件驱动的流式解析方式是，从文件的开始顺序解析到文档的结束，不可暂停或倒退。 
+- **Dom解析**：将XML文件的所有内容读取到内存中（内存的消耗比较大），然后允许您使用DOM API遍历XML树、检索所需的数据。
+- **Sax解析**：Sax是一个解析速度快并且占用内存少的xml解析器，Sax解析XML文件采用的是事件驱动，它并不需要解析完整个文档，而是按内容顺序解析文档的过程。
+- **Pull解析**：Pull解析器的运行方式与 Sax 解析器相似。它提供了类似的事件，可以使用一个switch对感兴趣的事件进行处理。
 
-- **DOM解析方式**：
 
-- **Pull解析方式**：
+
+
+
 
 
 
@@ -155,7 +182,7 @@ Activity在onStart()和onStop()之间所经历的。
 Activity在onResume()和onPause()之间所经历的。
 活动可见，且可交互。
 
-### 5、onSaveInstanceState和onRestoreInstanceState的区别
+### 5、onSaveInstanceState和onRestoreInstanceState的区别/在Activity中如何保存/恢复状态？
 
 - a.**出现时机**：异常情况下Activity 重建，非用户主动去销毁。
 
@@ -360,6 +387,9 @@ Context 从字面上理解就是上下文的意思，在实际应用中它也确
 - 2、该类是一个抽象(abstract class)类，Android 提供了该抽象类的具体实现类（ContextIml）。
 - 3、通过它我们可以获取应用程序的资源和类，也包括一些应用级别操作，例如：启动一个 Activity，发送广播，接受 Intent，信息等。
 
+### 20、launchMode之singleTask与taskAffinity
+
+taskAffinity是用来指示Activity属于哪一个Task的。taskAffinity能够决定以下两件事情（前提是Activity的launchMode为singleTask或者设置了FLAG_ACTIVITY_NEW_TASK）,默认情况下，在一个app中的所有Activity都有一样的taskAffinity，但是我们可以设置不同的taskAffinity，为这些Activity分Task。甚至可以在不同的app之中，设置相同的taskAffinity，以达到不同app的activity公用同一个Task的目的。
 
 ## 三、Fragment面试详解
 
@@ -993,18 +1023,34 @@ Android Binder是用来做进程通信的，Android的各个应用以及系统�
 
 ![](https://github.com/guoxiaoxing/android-open-source-project-analysis/raw/master/art/native/process/android_handler_structure.png)
 
-主要涉及的角色如下所示：
+### 主要涉及的角色：
 
 - Message：消息，分为硬件产生的消息（例如：按钮、触摸）和软件产生的消息。
 - MessageQueue：消息队列，主要用来向消息池添加消息和取走消息。
 - Looper：消息循环器，主要用来把消息分发给相应的处理者。
 - Handler：消息处理器，主要向消息队列发送各种消息以及处理各种消息。
 
-整个消息的循环流程还是比较清晰的，具体说来：
+### 整个消息的循环流程
 
 1. Handler通过sendMessage()发送消息Message到消息队列MessageQueue。
 1. Looper通过loop()不断提取触发条件的Message，并将Message交给对应的target handler来处理。
 1. target handler调用自身的handleMessage()方法来处理Message。
+
+### 在一个工作线程中创建自己的消息队例应该怎么做
+
+Looper.prepare（在每个线程只允许执行一次）
+
+### handler
+- handler通过post（Runnable）和sendMessage（Message）传递Runnable和Message，最后调用的是sendMessage；
+- MessageQueue核心方法：enqueueMessage和next(实现原理：synchronized 和 for(;;))
+- Looper核心方法：Looper.prepare()和Looper.loop()，其中loop()方法里面是一个for(;;)死循环
+msg.target = this
+
+### 为什么主线程不会因为Looper.loop()里的死循环卡死？
+
+事实上，会在进入死循环之前便创建了新binder线程，在代码ActivityThread.main()中：thread.attach(false)；便会创建一个Binder线程（具体是指ApplicationThread，Binder的服务端，用于接收系统服务AMS发送来的事件），该Binder线程通过Handler将Message发送给主线程。对于主线程，我们是绝不希望会被运行一段时间，自己就退出，那么如何保证能一直存活呢？简单做法就是可执行代码是能一直执行下去的，死循环便能保证不会被退出，例如，binder线程也是采用死循环的方法，通过循环方式不同与Binder驱动进行读写操作，当然并非简单地死循环，无消息时会休眠。
+
+主线程的死循环一直运行是不是特别消耗CPU资源呢？ 其实不然，这里就涉及到Linux pipe/epoll机制**，简单说就是在主线程的MessageQueue没有消息时，便阻塞在loop的queue.next()中的nativePollOnce()方法里，此时主线程会释放CPU资源进入休眠状态，直到下个消息到达或者有事务发生，通过往pipe管道写端写入数据来唤醒主线程工作。
 
 ## 九、AsyncTask
 ## 十、HandlerThread
@@ -1136,6 +1182,12 @@ ListView 就是一个能用数据集合以滚动的方法展示到用户界面�
 
 
 ## 十五、Android目录结构
+### 四种引用的区别
+1. 强引用：通常我们编写的代码都是强引用，eg ：Object obj = new Object();当内存空间不足，Java虚拟机宁愿抛出OutOfMemoryError错误，使程序异常终止，也不会靠随意回收具有强引用的对象来解决内存不足问题。比如你创建一个很长的数组Object[] objArr = new Object[10000];当运行至这句时，如果内存不足，JVM会抛出OOM错误也不会回收数组中的object对象。不过要注意的是，当方法运行完之后，数组和数组中的对象都已经不存在了，所以它们指向的对象都会被JVM回收。
+2. 软引用：只要有足够的内存，就一直保持对象。一般可用来实现缓存，通过java.lang.ref.SoftReference类实现。内存非常紧张的时候会被回收，其他时候不会被回收，所以在使用之前需要判空，从而判断当前时候已经被回收了。
+3. 弱引用：通过java.lang.ref.WeakReference或java.util.WeakHashMap类实现，eg : WeakReference p = new WeakReference(new Person(“Rain”));不管内存是否足够，系统垃圾回收时必定会回收。
+4. 虚引用：不能单独使用，主要是用于追踪对象被垃圾回收的状态。通过java.lang.ref.PhantomReference类和引用队列ReferenceQueue类联合使用实现。
+
 ## 十六、Android目录构建
 ## 十七、git版本控制器
 ## 十八、gradle
@@ -1296,10 +1348,10 @@ public interface MovieService {
  2. **为什么会OOM**：
    - **(1)瞬时加载了一些资源**，例如，视频、图片、音频等等的内存申请大小超过了App的额定内存值，解决方案：对资源可能需要申请大内存的地方做压缩处理。
    - **(2)调用 registerRecevier() 后未调用 unregisterReceiver()**, 解决方案：在每一次动态注册的时候，记得在在适当的地方（Activity的OnDestory()）取消注册。
-   - **(3)数据库 cursor 没有关闭**，解决方案：使用完cursor及时关闭。
-   - **(4)构造Adapter没有使用缓存 contentview**， 解决方案：在构造Adapter的时候，使用ContentView缓存页面，节省内存。
+   - **(3)资源对象没关闭造成的内存泄漏，如查询数据库后没有关闭游标cursor**，解决方案：使用完cursor及时关闭。
+   - **(4)构造Adapter没有使用缓存 contentview重用**， 解决方案：在构造Adapter的时候，使用ContentView缓存页面，节省内存。
    - **(5)未关闭 InputStream/OutputStream** , 解决方案：在使用到IO Stream 的时候，及时关闭。
-   - **(6) Bitmap 使用后未调用recycle()**，解决方案：在Bitmap不在需要被加载到内存中的收获，做回收处理。
+   - **(6)Bitmap对象不在使用时调用recycle()释放内存**，解决方案：在Bitmap不在需要被加载到内存中的收获，做回收处理。
    - **(7)Context泄露，内部类持有外部类的引用。** 解决方案：  第一： 将线程的内部类，改为静态内部类  第二：在线程内部采用弱引用保存Context引用。
    - **(8)static 原因**。 解决方案：（1）应该尽量避免static成员变量引用资源耗费过多的实例，比如Context。（2）Context尽量使用Application Context，因为Application的Context的生命周期比较长，引用它不会出现内存泄露的问题。（3）使用WeakReference代替强引用。比如可以使用WeakReference<Context> mContextRef；（4）查找内存泄漏可以使用Android Profiler工具或者利用LeakCanary工具。
 
@@ -1383,6 +1435,22 @@ Bitamp 占用内存大小 = 宽度像素 x （inTargetDensity / inDensity） x �
 
 举个简单的例子，UI层通知逻辑层（Presenter）用户点击了一个Button，逻辑层（Presenter）自己决定应该用什么行为进行响应，该找哪个模型（Model）去做这件事，最后逻辑层（Presenter）将完成的结果更新到UI层。
 
+### MVP(要特别熟悉，能说出优点)
+
+任何事务都存在两面性，MVP当然也不列外，我们来看看MVP的优缺点。
+
+- 优点：
+	- 1.降低耦合度，实现了Model和View真正的完全分离，可以修改View而不影响Modle
+	- 2.模块职责划分明显，层次清晰
+	- 3.Presenter可以复用，一个Presenter可以用于多个View，而不需要更改Presenter的逻辑（当然是在View的改动不影响业务逻辑的前提下）
+	- 4.利于测试驱动开发。以前的Android开发是难以进行单元测试的（虽然很多Android开发者都没有写过测试用例，但是随着项目变得越来越复杂，没有测试是很难保证软件质量的；而且近几年来Android上的测试框架已经有了长足的发展——开始写测试用例吧），在使用MVP的项目中Presenter对View是通过接口进行，在对Presenter进行不依赖UI环境的单元测试的时候。可以通过Mock一个View对象，这个对象只需要实现了View的接口即可。然后依赖注入到Presenter中，单元测试的时候就可以完整的测试Presenter应用逻辑的正确性。
+	- 5.View可以进行组件化。在MVP当中，View不依赖Model。这样就可以让View从特定的业务场景中脱离出来，可以说View可以做到对业务完全无知。它只需要提供一系列接口提供给上层操作。这样就可以做到高度可复用的View组件。
+	- 6.代码灵活性
+- 缺点：
+	- 1.Presenter中除了应用逻辑以外，还有大量的View->Model，Model->View的手动同步逻辑，造成Presenter比较笨重，维护起来会比较困难。
+	- 2.由于对视图的渲染放在了Presenter中，所以视图和Presenter的交互会过于频繁。
+	- 3.如果Presenter过多地渲染了视图，往往会使得它与特定的视图的联系过于紧密。一旦视图需要变更，那么Presenter也需要变更了。
+	- 4.额外的代码复杂度及学习成本。
 
 ## 三五、MVVM架构设计模式
 ### MVC、MVP与MVVM之间的对比分析？
@@ -1544,8 +1612,28 @@ APK整体的的打包流程如下图所示：
 1. 将AndroidManifest文件解析出的四大组件信息注册到PackageManagerService中。
 1. 安装完成后，发送广播。
 
-
-
+### 如何打多渠道包
+在AndroidMainfest.xml配置相应的渠道
+```
+ <meta-data android:value="UMENG_CHANNEL"         
+      android:name="${UMENG_CHANNEL_VALUE}"/>  <!--动态更改渠道号-->
+```
+在build.gradle中配置渠道信息和自动替换脚本
+```
+  //多渠道打包
+    productFlavors {
+        xiaomi {}
+        huawei {}
+        yingyongbao {}
+        wandoujia {}
+    }
+```
+```
+    //自动替换清单文件中的渠道号
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+    }
+```
 ## 性能优化
 ### 如何做性能优化？
 
@@ -1734,24 +1822,6 @@ boolean married = pref.getBoolean("married",false);
 - **JVM** 是 java虚拟机，是实现java夸平台的主要方式，可以使得java这样的高级语言编译成机器可以识别的机器语言，这样使得java 一次编译，到处运行。
 
 
-### Handler机制原理
-
-
-
-### ANR
-
-
-
-
-### Java GC 原理
-
-
-
-
-### OOM原理()
-
-
-
 
 
 
@@ -1782,7 +1852,6 @@ boolean married = pref.getBoolean("married",false);
 3) Subscribe 订阅：创建了 Observable 和 Observer 之后，再用 subscribe() 方法将它们联结起来，整条链子就可以工作了。代码形式很简单。observable.subscribe(observer);
 
 ### Retrofit
-
 
 使用过程：第一步：
 
@@ -1916,3 +1985,10 @@ https://www.jianshu.com/p/97f77927db0f
 ### Http和Https的区别
 ### Https怎么加密的
 ### 10亿数据找到出现最多次数的数字
+
+### 链式存储结构和顺序存储结构
+顺序表适宜于做查找这样的静态操作；链表宜于做插入、删除这样的动态操作。
+若线性表的长度变化不大，且其主要操作是查找，则采用顺序表；
+若线性表的长度变化较大，且其主要操作是插入、删除操作，则采用链表。
+顺序表平均需要移动近一半元素
+链表不需要移动元素，只需要修改指针
