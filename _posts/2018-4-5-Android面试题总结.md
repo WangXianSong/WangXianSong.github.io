@@ -71,29 +71,29 @@ tags: 面试
 
 ### Drawable
 
-### res/raw和asserts的区别
+### 1.res/raw和asserts的区别
 这两个目录下的文件都会被打包进APK，并且不经过任何的压缩处理。
 assets与res/raw不同点在于，assets支持任意深度的子目录，这些文件不会生成任何资源ID，只能使用AssetManager按相对的路径读取文件。如需访问原始文件名和文件层次结构，则可以考虑将某些资源保存在assets目录下。
 
-### 图片放错目录会产生的问题吗？
+### 2.图片放错目录会产生的问题吗？
 高密度（density）的系统去使用低密度目录下的图片资源时，会将图片长宽自动放大以去适应高密度的精度，当然图片占用的内存会更大。所以如果能提各种dpi的对应资源那是最好，可以达到较好内存使用效果。如果提供的图片资源有限，那么图片资源应该尽量放在高密度文件夹下，这样可以节省图片的内存开支。
 
-### drawable-nodpi文件夹
+### 3.drawable-nodpi文件夹
 这个文件夹是一个密度无关的文件夹，放在这里的图片系统就不会对它进行自动缩放，原图片是多大就会实际展示多大。但是要注意一个加载的顺序，drawable-nodpi文件夹是在匹配密度文件夹和更高密度文件夹都找不到的情况下才会去这里查找图片的，因此放在drawable-nodpi文件夹里的图片通常情况下不建议再放到别的文件夹里面。
 
-### Bitmap和Drawable
+### 4.Bitmap和Drawable
 Bitmap是Android系统中的图像处理的最重要类。可以简单地说，Bitmap代表的是图片资源在内存中的数据结构，如它的像素数据，长宽等属性都存放在Bitmap对象中。Bitmap类的构造函数是私有的，只能是通过JNI实例化，系统提供BitmapFactory工厂类给我们从从File、Stream和byte[]创建Bitmap的方式。
 Drawable官文文档说明为可绘制物件的一般抽象。View也是可以绘制的，但Drawable与View不同，Drawable不接受事件，无法与用户进行交互。我们知道很多UI控件都提供设置Drawable的接口，如ImageView可以通过setImageDrawable(Drawable drawable)设置它的显示，这个drawable可以是来自Bitmap的BitmapDrawable，也可以是其他的如ShapeDrawable。
 也就是Drawable是一种抽像，最终实现的方式可以是绘制Bitmap的数据或者图形、Color数据等。理解了这些，你很容易明白为什么我们有时候需要进行两者之间的转换。
 
-### 要加载很大的图片怎么办？
+### 5.要加载很大的图片怎么办？
 如果图片很大，比如他们的占用内存算下来就直接OOM了，那么我们肯定不能直接加载它。解决主法还是有很多的，系统也给我们提供了一个类BitmapRegionDecoder，可以用来分块加载图片。
 
-### 图片圆角（或称矩形圆角）或者圆形头像的实现方式
+### 6.图片圆角（或称矩形圆角）或者圆形头像的实现方式
 除了把原图直接做成圆角外，常见有三种方式实现：
-使用Xfermode混合图层；
-使用BitmapShader；
-通过裁剪画布区域实现指定形状的图形（ClipPath）
+- 使用Xfermode混合图层；
+- 使用BitmapShader；
+- 通过裁剪画布区域实现指定形状的图形（ClipPath）
 
 ## Android 中有哪几种解析xml的类
 
@@ -227,7 +227,6 @@ protected void onCreate(Bundle saveInstanceState){
 	- **设置Activity的android:configChanges="orientation\|keyboardHidden\|screenSize"。此时再次旋转屏幕时，该Activity不会被系统杀死和重建，只会调用onConfigurationChanged。因此，当配置程序需要响应配置改变，指定configChanges属性，重写onConfigurationChanged方法即可。**
 	-  .
 
-
 - b.**由于系统资源不足，导致优先级低的Activity被回收。**
 	- ①Activity优先级排序：前台可见Activity>前台可见不可交互Activity（前台Activity弹出Dialog)>后台Activity（用户按下Home键、切换到其他应用）
 	- ②当系统内存不足时，会按照Activity优先级从低到高去杀死目标Activity所在的进程。
@@ -298,9 +297,9 @@ protected void onCreate(Bundle saveInstanceState){
 
 ### 11、Activity上有 Dialog 时按Home键的生命周期
 
-**生命周期是**：onCreate() -> onStart() -> onResume -> 启动Dialog-> home键 -> onPause() -> onStop() 
+- **生命周期是**：onCreate() -> onStart() -> onResume -> 启动Dialog-> home键 -> onPause() -> onStop() 
 
- 其实就是一个很正常的 Activity 生命周期，并没有什么特别的地方，但是注意 onPause 方法和 onStop 方法是在我点击 Home 键之后才有的，这就说明对话框的出现并没有使 Activity 进入后台。而是点击Home键才使Activity进入后台工作。AlertDialog对话框实际上是Activity的一个组件。
+ - 其实就是一个很正常的 Activity 生命周期，并没有什么特别的地方，但是注意 onPause 方法和 onStop 方法是在我点击 Home 键之后才有的，这就说明对话框的出现并没有使 Activity 进入后台。而是点击Home键才使Activity进入后台工作。AlertDialog对话框实际上是Activity的一个组件。
 
 ### 12、Activity与Fragment之间生命周期比较
 
@@ -391,101 +390,133 @@ Context 从字面上理解就是上下文的意思，在实际应用中它也确
 
 taskAffinity是用来指示Activity属于哪一个Task的。taskAffinity能够决定以下两件事情（前提是Activity的launchMode为singleTask或者设置了FLAG_ACTIVITY_NEW_TASK）,默认情况下，在一个app中的所有Activity都有一样的taskAffinity，但是我们可以设置不同的taskAffinity，为这些Activity分Task。甚至可以在不同的app之中，设置相同的taskAffinity，以达到不同app的activity公用同一个Task的目的。
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## 三、Fragment面试详解
 
-### Fragment 是什么？
+### 1.Fragment  是什么？
+Fragment 是 Android 自 3.0 版本开始引入的一种可以嵌入在 Activity 当中的UI片段，主要是为了能在不同分辩率屏幕上进行更为动态和灵活的UI设计，让程序更加合理和充分利用大屏幕空间。
 
-碎片是一种可以嵌入在Activity当中的UI片段，它能让程序更加合理和充分地利用在大屏幕的空间，因而在平板上应用非常广泛，是Android自3.0版本开始引入的。
+### 2.Fragment 为什么被称为 第五大组件
 
-### Fragment 为什么被称为 第五大组件
+1. 使用频率高；
+1. 有自己的生命周期；
+1. 可以灵活加载到Activity中；
+1. 虽然 Fragment 有自己的生命周期，并不像 Activity 那样独立的，需要依附 Activity。
 
-- 使用频率高；
-- 有自己的生命周期；
-- 可以灵活加载到Activity中；
--  虽然 Fragment 有自己的生命周期，并不像 Activity 那样独立的，需要依附 Activity。
+### 3.Fragment 加载到 Activity 的两种方式
 
-### Fragment 加载到Activity的两种方式
+- **静态加载**：作为XML标签添加到 Activity 的布局文件当中。
 
-- **静态加载**：作为XML标签添加到 Activity 的布局文件当中。(过程省略...)
+```java
+//1.新建fragment.xml文件
+//2.在Fragment中onCreateView中加载fragment的方法：
+View view = inflater.inflate(R.layout.fragment,container,false);
+return view;
+//3.在主页面中添加fragment的包名
+```
+
+```xml
+<fragment
+	android:name="com.songsong.FragmentTest.fragment"
+	...
+/>
+```
+
 - **动态加载**：动态在 Activity 中添加 Fragment 。 (常用)
 
 ```java
 //前提1：先创建 Fragment1.java，并继承 Fragment，在onCreatview中初始化fragment的XML布局文件
-//前提2：在Fragment1的XML布局文件中准备好容器R.id.lin_id
+//前提2：在Activity的XML布局文件中准备好容器R.id.lin_id
 
 //步骤1：添加FragmentTransaction的实例
 FragmentManager fragmentManager = getFragmentManager();
 FragmentTransaction transaction = fragmentManager.beginTransaction();
 //步骤2：用add()加Fragment对象fragment1，并绑定到其XML页面里的容器内
 Fragment1 fragment1 = new Fragment1();
+//replace、add都可以
 transaction.add(R.id.lin_id, fragment1, "fragment1");
+//模拟返回栈
+transaction.addToBackStack(null);
 //步骤3：调用commit方法使得FragmentTransaction实例的改变生效
 transaction.commit();
 ```
+### 4.Fragment 和 Activity 之间的通信 
+- 在 Activity 中调用 Fragment 中的 **findFragmentById** 方法；
+```java
+//通过FragmentManage的findFragmentById得到实例，然后就可以调用fragment里的方法
+RightFragment rf = getFragmentManager().findFragmentById(R.id.right_fragment);
+```
+- 在 Fragment 中调用 Activity 中的 **getActivity** 方法；
+```java
+//fragment中调用Activity的方法，getActivity本身就是一个Context对象。
+MainActivity act = getActivity();
+```
+- Fragment 与 Fragment 之间的通信：**
+	- 先在一个碎片中可以得到与它相关联的活动，然后再通过这个活动去获取另外一个碎片的实例，这样实现了不同碎片之间的通信了 。
 
-### FragmentPagerAdapter 与 FragmentStatePagerAdaper 区别：
+### 5.Fragment 的生命周期
+
+![](https://i.imgur.com/EVTe4cq.png)
+
+- **onAttach**:表示在 Fragment 与 Activity 关联之后所回调的。
+- **onCreate**:表示初次创建 Fragment 的时候调用。(仅用来创建，但为完成)
+- **onCreateView**:系统在 Fragment 的首次**绘制**用户界面的时候调用。
+- **onViewCreated**:表示 Fragment 的UI界面已经绘制好了，可以初始化里面的控件资源。
+- *Activity - onCreate*:初始化Activity 的布局和数据之类。
+- **onActivityCreated**:在 Activity - onCreate()调用完成后才可以被调用，表示Activity被渲染绘制成功以后的调用方法。
+- *Activity - onStart*:表明 Activity 可见了。
+- **onStart**:表明 Fragment 也可见了。
+- *Activity - onResume*:表示 Activity 可以和用户交互了。
+- **onResume**:表示 Fragment 也可以和用户交互了。
+- ↑  (到此为止已经完成了 Fragment 从启动到展现的操作。)
+- ↓ (回退Fragment)
+- **onPause**: Fragment 无法和用户交互。
+- *Activity - onPause*:整个Activity 也无法和用户交互。
+- **onStop**:做一些相应的保存与释放。
+- *Activity - onStop*:做一些相应的保存与释放。
+- **onDestroyView**:对应创建的onCreateView，表示 Fragment 即将结束，然后会被保存。
+- **onDestroy**:表示 Fragment 不再被使用。
+- **onDetach**: Fragment 的最后一个方法，Fragment不再被使用。
+- *Activity - onDetach*:整个Activity被回收了。
+
+简单的Fragment流程图—— onAttach->onCreate -> onCreateView -> onActivityCreated -> onStart -> onResume  ->创建成功-> onPause->onStop->onDestroyView -> onDestroy->onDetach
+
+- **打开 Fragment**：onCreate->onCreateView->onActivityCreated->onStart->onResume
+- **替换 Fragment**：onPause->onStop->onDestroyView
+- **返回旧 Fragment**：onCreateView->onActivityCreated->onStart->onResume
+- **退出 Fragment**：onPause->onStop->onDestroyView->onDestroy->onDetach
+
+
+
+### 6.FragmentPagerAdapter 与 FragmentStatePagerAdaper 区别：
 
 - **FragmentPagerAdapter** ：FragmentPagerAdapter 在切换 ViewPager 的时候，只是把 Fragment的UI 与 Activity的UI 脱离开来，并不回收内存。所以它适用页面**较少**的情况。(在其源码 DestroyItem 方法中的最后一行，mCurTransaction.**detach** 可知)
 
 - **FragmentStatePagerAdaper** ：由于 FragmentStatePagerAdaper 在每次切换 ViewPager 的时候，它是回收内存的。又因为在页面较多的情况下会更耗内存，所以它适合页面**较多**的情况。(在源码 DestroyItem 方法中的最后一行，mCurTransaction.**remove** 可知 )
 
-### Fragment 的生命周期
 
-**onAttach**:表示在 Fragment 与 Activity 关联之后所回调的。
-
-**onCreate**:表示初次创建 Fragment 的时候调用。(仅用来创建，但为完成)
-
-**onCreateView**:系统在 Fragment 的首次**绘制**用户界面的时候调用。
-
-**onViewCreated**:表示 Fragment 的UI界面已经绘制好了，可以初始化里面的控件资源。
-
-*Activity - onCreate*:初始化Activity 的布局和数据之类。
-
-**onActivityCreated**:在 Activity - onCreate()调用完成后才可以被调用，表示Activity被渲染绘制成功以后的调用方法。
-
-*Activity - onStart*:表明 Activity 可见了。
-
-**onStart**:表明 Fragment 也可见了。
-
-*Activity - onResume*:表示 Activity 可以和用户交互了。
-
-**onResume**:表示 Fragment 也可以和用户交互了。
-
-  ↑  (到此为止已经完成了 Fragment 从启动到展现的操作。)
-
-  ↓ (回退Fragment)
-
-**onPause**: Fragment 无法和用户交互。
-
-*Activity - onPause*:整个Activity 也无法和用户交互。
-
-**onStop**:做一些相应的保存与释放。
-
-*Activity - onStop*:做一些相应的保存与释放。
-
-**onDestroyView**:对应创建的onCreateView，表示 Fragment 即将结束，然后会被保存。
-
-**onDestroy**:表示 Fragment 不再被使用。
-
-**onDetach**: Fragment 的最后一个方法，Fragment不再被使用。
-
-*Activity - onDetach*:整个Activity被回收了。
-
-简单的Fragment流程图—— onAttach->onCreate -> onCreateView -> onActivityCreated -> onStart -> onResume  ->创建成功-> onPause->onStop->onDestroyView -> onDestroy->onDetach
-
-### Fragment 之间的通信  (课后复习)
-
-- 在 Fragment 中调用 Activity 中的 **getActivity** 方法；
-- 在 Activity(实现) 中调用 Fragment(创建接口) 中的方法 **接口回调；**
-- 在 Fragment 中调用 Fragment 中的 **findFragmentById** 方法；
-
-### Fragment 的 replace、add、remove 方法
+### 7.Fragment 的 replace、add、remove 方法
 
 - **replace** 是 FragmentManager 的方法，是将 Activity 最上层的 Fragment **替换**掉。
 - **add** 将 Fragment 的实例添加到 Activity 的**最上层**；
 - **remove** 将 Fragment 的实例从 Activity 的队列中**删除**；
 
-### Fragment 特点
+### 8.Fragment 特点
 
 - Fragment 可以作为 Activity 界面的一部分组成出现；
 - 可以在一个 Activity 中同时出现多个 Fragment，并且一个 Fragment 也可以在多个 Activity 中使用；
@@ -496,17 +527,17 @@ transaction.commit();
 - Fragment 替代 TabActivity 做导航，性能更好。
 - Fragment 做局部内容更新更方便，原来为了达到这一点要把多个布局放到一个 activity 里面，现在可以用多 Fragment 来代替，只有在需要的时候才加载 Fragment，提高性能。
 
-### Fragment嵌套多个Fragment会出现bug吗？
+### 9.Fragment嵌套多个Fragment会出现bug吗？
 
 参考：http://blog.csdn.net/megatronkings/article/details/51417510
 
-### 怎么理解Activity和Fragment的关系？
+### 10.怎么理解Activity和Fragment的关系？
 
 - Fragment 拥有和 Activity 一致的生命周期，它和 Activity 一样被定义为 Controller 层的类。有过中大型项目开发经验的开发者，应该都会遇到过 Activity 过于臃肿的情况，而 Fragment 的出现就是为了缓解这一状况，可以说 它将屏幕分解为多个「Fragment（碎片）」（这句话很重要），但它又不同于 View，它干的实质上就是 Activity 的事情，负责控制 View 以及它们之间的逻辑。
 - 将屏幕碎片化为多个 Fragment 后，其实 Activity 只需要花精力去管理当前屏幕内应该显示哪些 Fragments，以及应该对它们进行如何布局就行了。这是一种组件化的思维，用 Fragment 去组合了一系列有关联的 UI 组件，并管理它们之间的逻辑，而 Activity 负责在不同屏幕下（例如横竖屏）布局不同的 Fragments 组合。
 - 这种碎片不单单能管理可视的 Views，它也能执行不可视的 Tasks，它提供了 retainInstance 属性，能够在 Activity 因为屏幕状态发生改变（例如切换横竖屏时）而销毁重建时，依然保留实例。这示意着我们能在 RetainedFragment 里面执行一些在屏幕状态发生改变时不被中断的操作。例如使用 RetainedFragment 来缓存在线音乐文件，它在横竖屏切换时依然维持下载进度，并通过一个 DialogFragment 来展示进度。
 
-### 遇到过哪些关于Fragment的问题，如何处理的？
+### 11.遇到过哪些关于Fragment的问题，如何处理的？
 
 - **getActivity()空指针**：这种情况一般发生在在异步任务里调用getActivity()，而Fragment已经onDetach()，此时就会有空指针，解决方案是在Fragment里使用 一个全局变量mActivity，在onAttach()方法里赋值，这样可能会引起内存泄漏，但是异步任务没有停止的情况下本身就已经可能内存泄漏，相比直接crash，这种方式 显得更妥当一些。
 
@@ -523,52 +554,135 @@ protected void onCreate(@Nullable Bundle savedInstanceState) {
 }
 ```
 ### Fragment 管理器 FragmentManager
-### fragment各种情况下的生命周期
 ### Fragment状态保存 startActivityForResult 是哪个类的方法，在什么情况下使用？
 ### 如何实现Fragment的滑动？
 ViewPager + Fragment
-### fragment之间传递数据的方式？
+### 谈一谈Fragment的生命周期？
+### Activity和Fragment的异同？
+### Activity和Fragment的关系？
+### 何时会考虑使用Fragment？
+
+
+
+
+
+
+
+
 
 
 ## 三、Service面试详解
 
-### 1、Service 是什么？
+### 1.Service 是什么？
 
-Service 是一种可以“在后台执行长时间运行操作”“没有用户界面”的应用组件。(Service 不能做耗时操作)
+Service 是 Android 中实现程序后台运行的解决方案，非常适用于去执行那些**不需要和用户交互**而且还要求**长期运行的任务**。服务的运行不依赖于任何用户界面，即使程序被切换到(Service 不能做耗时操作)
 
-### 2、Service 和 BroadcastReceiver 共同点
+### 2.Service 和 BroadcastReceiver 共同点
 
-都是运行在主线程当中，都不能做长时间的耗时操作。
+- 都是运行在主线程当中，都不能做长时间的耗时操作。
 
-### 3、Service 和 Thread 的区别
+### 3.Service 和 Thread 的区别
 
-- **定义**：Thread 是程序执行的最小单元，它是分配CPU的最小单位。可以执行异步操作，是相对**独立**的。
-Service 是Android的一种特殊机制，Service是运行在主线程当中的，是**依托于**所在的主线程。是由系统进程托管，也是一种轻量级IPC通信方式(Activity 和 Service 绑定，然后数据通信，并处于不同进程。 )
+- **定义**：
+	- Thread 是程序执行的最小单元，它是分配CPU的最小单位。可以执行异步操作，是相对**独立**的。
+	- Service 是 Android 的一种特殊机制，是运行在主线程当中的，是**依托于**所在的主线程。是由系统进程托管，也是一种轻量级IPC通信方式(Activity 和 Service 绑定，然后数据通信，并处于不同进程。 )
 
 - **关系**：Service 和 Thread 之间并没有什么关联，Service 翻译成中文是服务，同时服务可以理解为后台。Thread 是开启子线程执行耗时操作，而 Service 是在主线程中执行，但总被认为可以在后台处理耗时任务，容易混淆了两者之间的概念。
 
 - **实际开发中**：在Android系统当中，线程一般指的是工作线程，主线程主要负责UI绘制，而Service 就是运行在主线程当中的。
 
 - **应用场景**：
-
   - 当需要耗时的操作，比如网络请求，图片加载等等都应该使用工作线程。
   - 当需要在后台播放音乐、开启定位、数据统计等等应该使用Service。
 
 - **区分**
-
   - 1.不要把后台和子线程联系在一起；
   - 2.服务和后台是不同的概念；
   - 3.Android的后台是指它的运行不依赖与UI线程，即使程序被销毁了、程序被关闭了，服务进程仍然在后台进行计算、统计等等。
   - 4.如果在 Service 执行耗时，也需要创建子线程，然后去做耗时逻辑。
   - 5.Service是为了弥补 Activity 被销毁之后，无法获取之前所创建的子线程实例，并对后台进行控制的情况而产生的。
 
+### 4.开启子线程的方法
+
+- 新建类继承自Thread，然后重写父类的run方法，并在里面编写耗时逻辑。
+```java
+class MyThread extends Thread{
+  public void run(){
+    //具体逻辑
+  }
+}
+//只需要new出MyThread的实例
+//调用start方法，run方法就会在子线程中运行
+new MyThread().start();
+```
+- 实现Runnable接口可以降低继承的耦合性
+```java
+class MyThread implements Runnable{
+    public void run(){
+    //具体逻辑
+  }
+}
+//启动线程的方法
+MyThread my = new MyThread();
+new Thread(my).start();
+```
+- 使用匿名类的方式，这种方式最常见
+```java
+new Thread(new Runnable(){
+      public void run(){
+    //具体逻辑
+  }
+}).start()
+```
+
+### Service 的生命周期
+
+![](https://i.imgur.com/1Lf6nx0.png)
+
+- 回调方法含义：
+	- **onCreate**（）：服务第一次被创建时调用
+	- **onStartComand**（）：服务启动时调用
+	- **onBind**（）：服务被绑定时调用
+	- **onUnBind**（）：服务被解绑时调用
+	- **onDestroy**（）：服务停止时调用
+
+- 生命周期：
+	- 只是用 **startService**() 启动服务：onCreate() -> onStartCommand() -> onDestory()
+	- 只是用 **bindService**() 绑定服务：onCreate() -> onBind() -> onUnBind() -> onDestory()
+	- **同时使用startService()启动服务与bindService()绑定服务**：onCreate() -> onStartCommnad() -> onBind() -> onUnBind() -> onDestory。
+
+- 种类：
+	- **startService**()：开启Service，调用者退出后Service仍然**存在**。
+	- **bindService**()：开启Service，调用者退出后Service也随即**退出**。
+
+- 启动方式：
+	- **startService**()：通过startService()方法可以启动一个Service，并回调服务中的onStartCommand()。如果首次创建，那么回调的顺序是onCreate()->onStartCommand()。服务启动了之后会一直保持运行状态，直到stopService()或stopSelf()方法被调用，服务停止并回调onDestroy()。另外，无论调用多少次startService()方法，只需调用一次stopService()或stopSelf()方法，服务就会停止了。onCreate只在第一次创建的时候调用，onStartCommand()每次启动服务都调用。
+	- **bindService**()：通过bindService()可以绑定一个Service，并回调服务中的onBind()方法。类似地，如果该服务之前还没创建，那么回调的顺序是onCreate()->onBind()。之后，调用方可以获取到onBind()方法里返回的IBinder对象的实例，从而实现和服务进行通信。只要调用方和服务之间的连接没有断开，服务就会一直保持运行状态，直到调用了unbindService()方法服务会停止，回调顺序onUnBind()->onDestroy()。
+	- 注意，这两种启动方法并不冲突，当使用startService()启动Service之后，还可再使用bindService()绑定，只不过需要同时调用 stopService()和 unbindService()方法才能让服务销毁掉。
+
+
+### Service的基本用法
+
+#### a.普通Service
+
+- 第一步：新建类并继承Service且必须重写onBind()方法，有选择的重写onCreate()、onStartCommand()及onDestroy()方法。
+- 第二步：在配置文件AndroidManifest.xml中进行注册，否则不能生效。
+- 第三步：在 Activity 中利用 startService(Intent) 可实现 Service 的启动。
+- 第四步：在 Activity 中  stopService(Intent) 停止服务，或者在Service任意位置调用stopSelf()；
+
+```java
+//启动
+Intent intent = new Intent(this, MyService.class);
+ startService(intent);
+//停止
+Intent intent = new Intent(this, MyService.class);
+stopService(intent);
+```
+
+
+
 ### 开启 Service 的两种方式以及区别
 
-- **StartService**：
-	1. 定义一个类**继承** Service，并重写onCreate、onStartCommand、onDestory方法；
-	2. 在**Manifest.xml**文件中配置该 Service
-	3. 使用**startService(Intent)**方法启动Service
-	4. 不再使用时，调用 **stopService**(Intent) 方法停止该服务。
 
 - **bindService**：绑定服务提供了客户端和服务端接口，进行数据的交互(发送请求、获取结果、进程间通信)
 	1. 创建BindService服务端，继承自Service，并在类中创建一个实例IBinder接口实现对象并提供公共方法给客户端调用。
@@ -582,16 +696,6 @@ Service 是Android的一种特殊机制，Service是运行在主线程当中的�
 一次 onBind 方法。多次调用 unbindService 的话会抛出异常。
 
 
-### Service 的生命周期
-
-- startService()：开启Service，调用者退出后Service仍然**存在**。
-- bindService()：开启Service，调用者退出后Service也随即**退出**。
-
-**Service生命周期**：
-
-- 只是用 **startService**() 启动服务：onCreate() -> onStartCommand() -> onDestory()
-- 只是用 **bindService**() 绑定服务：onCreate() -> onBind() -> onUnBind() -> onDestory()
-- 同时使用startService()启动服务与bindService()绑定服务：onCreate() -> onStartCommnad() -> onBind() -> onUnBind() -> onDestory。
 
 ### Activity如何与Service通信？
 
@@ -623,10 +727,26 @@ Service 的服务对象那么肯定需要通过 **bindService**（）方法，�
 - 它的优先级比普通线程要高，所以适合执行高优先级的后台任务。
 - （HandlerThread是继承了Thread，他的作用是 不用每次创建线程，他内部有循环机制可以重复利用，不用的时候要quit或者quitSafely。）
 
+### Service调用方法
+
+1. 手动调用startService()启动服务，自动调用内部方法：onCreate()、onStartCommand()，如果一个Service被startService()多次启动，那么onCreate()也只会调用一次。
+2. 手动调用stopService()关闭服务，自动调用内部方法：onDestory()，如果一个Service被启动且被绑定，如果在没有解绑的前提下使用stopService()关闭服务是无法停止服务的。
+3. 手动调用bindService()后，自动调用内部方法：onCreate()、onBind()。
+4. 手动调用unbindService()后，自动调用内部方法：onUnbind()、onDestory()。
+5. startService()和stopService()只能开启和关闭Service，无法操作Service，调用者退出后Service仍然存在；bindService()和unbindService()可以操作Service，调用者退出后，Service随着调用者销毁。
 
 
 
-
+### 谈一谈Service的生命周期？
+### Service的两种启动方式？区别在哪？
+### 一个Activty先start一个Service后，再bind时会回调什么方法？此时如何做才能回调Service的destory()方法？
+### Service如何和Activity进行通信？
+### 用过哪些系统Service？
+### 是否能在Service进行耗时操作？如果非要可以怎么做？
+### AlarmManager能实现定时的原理？
+### 前台服务是什么？和普通服务的不同？如何去开启一个前台服务？
+### 是否了解ActivityManagerService，谈谈它发挥什么作用？
+### 如何保证Service不被杀死？
 
 
 
