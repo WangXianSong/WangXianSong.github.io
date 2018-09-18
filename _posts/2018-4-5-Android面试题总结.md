@@ -30,93 +30,7 @@ tags: 面试
 
 
 
-## 一、基本概念
-
-### Android 四大组件是什么
-
-- **Activity 活动**：Activity用于显示界面，它上面可以显示控件、监听控件并处理用户的事件做出响应。
-
-- **Service 服务**：是Android 中实现程序后台运行的解决方案，适合不需要和用户交互而且还要求长期运行的任务。依赖于创建服务的程序，程序被杀掉，服务也停止运行。服务不会自动开启线程，需要服务内部创建子线程。
-
-- **Broadcast Receiver 广播接收器**：主要用于接收系统或者 app 发送的广播事件，应用程序可以使用它对感兴趣的外部事件(如当电话呼入时，或者更改网络4Gwifi)进行接收并做出响应。广播接收器没有用户界面。然而，它们可以启动一个 Activity 或 Serice 来响应它们收到的信息，或者用 NotificationManager 来通知用户。通知可以用很多种方式来吸引用户的注意力──闪动背灯、震动、播放声音等。
-
-- **Content Provider 内容提供者**：主要用于在不同的应用程序之间实现数据共享的功能，允许一个程序访问另一个程序中的数据，同时还能保证被访问数据的安全性。与其他存储方式不同的是：可以选择哪部分数据分享，从而保证隐私数据的安全性。
-
-### Android平台的framework的层次结构
-
-- Linux Kernel(**Linux内核**)
-- Hardware Abstraction Layer(**HAL硬件抽象层**)
-- Native C/C++Libraies(**原生C/C++库**) Android Runtime(**安卓运行时**)
-- Java API Framework(**Java API 框架** )
-- Applications(**系统应用**)
-
-### Android中常用的布局。
-
-答：常用四种布局方式，分别是：FrameLayout（帧布局），LinearLayout （线性布局），AbsoluteLayout（绝对布局），RelativeLayout（相对布局）。
-
-（1）**FrameLayout**：所有东西依次都放在左上角，会重叠，这个布局比较简单，也只能放一点比较简单的东西。
-
-（2）**LinearLayout**：线性布局，每一个LinearLayout里面又可分为垂直布局 vertical 和水平布局horizontal。
-
-（3）**AbsoluteLayout**：绝对布局用 XY 坐标来指定元素的位置，这种布局方式也比较简单，但是在屏幕旋转时，往往会出问题，而且多个元素的时候，计算比较麻烦。
-
-（4）**RelativeLayout**：相对布局可以理解为某一个元素为参照物，来定位的布局方式。主要属性有：相对于某一个元素android:layout_below、 android:layout_toLeftOf相对于父元素的地方android:layout_alignParentLeft、android:layout_alignParentRigh；
-
-### 动画有哪几类，它们的特点和区别是什么
-
-**(1) 视图动画**：定义了透明度、平移、缩放、旋转动画。实现原理：是每次绘画视图时，View 所在的 ViewGroup 中的 drawChild 函数获取该 View 的 Animation 的 Transformation 值，然后调用 canvas.concat(transformToApply.getMatrix())，通过矩阵运算完成动画帧。缺点：是不具备交互性，当某个元素发生 View 动画后，其响应事件的位置仍然在动画前的地方。
-
-
-**(2) 属性动画**：在一定时间间隔内，通过不断对值进行改变，并不断将该值赋给对象的属性，从而实现该对象在该属性上的动画效果，响应点击事件的有效区域也会发生改变。比较常用的几个动画类是：**ValueAnimator**(注重过程)、**ObjectAnimator**(具体操作) 和 **AnimatorSet**(组合)，其中 ObjectAnimator 继承自 ValueAnimator，AnimatorSet 是动画集合。
-
-### Drawable
-
-### 1.res/raw和asserts的区别
-这两个目录下的文件都会被打包进APK，并且不经过任何的压缩处理。
-assets与res/raw不同点在于，assets支持任意深度的子目录，这些文件不会生成任何资源ID，只能使用AssetManager按相对的路径读取文件。如需访问原始文件名和文件层次结构，则可以考虑将某些资源保存在assets目录下。
-
-### 2.图片放错目录会产生的问题吗？
-高密度（density）的系统去使用低密度目录下的图片资源时，会将图片长宽自动放大以去适应高密度的精度，当然图片占用的内存会更大。所以如果能提各种dpi的对应资源那是最好，可以达到较好内存使用效果。如果提供的图片资源有限，那么图片资源应该尽量放在高密度文件夹下，这样可以节省图片的内存开支。
-
-### 3.drawable-nodpi文件夹
-这个文件夹是一个密度无关的文件夹，放在这里的图片系统就不会对它进行自动缩放，原图片是多大就会实际展示多大。但是要注意一个加载的顺序，drawable-nodpi文件夹是在匹配密度文件夹和更高密度文件夹都找不到的情况下才会去这里查找图片的，因此放在drawable-nodpi文件夹里的图片通常情况下不建议再放到别的文件夹里面。
-
-### 4.Bitmap和Drawable
-Bitmap是Android系统中的图像处理的最重要类。可以简单地说，Bitmap代表的是图片资源在内存中的数据结构，如它的像素数据，长宽等属性都存放在Bitmap对象中。Bitmap类的构造函数是私有的，只能是通过JNI实例化，系统提供BitmapFactory工厂类给我们从从File、Stream和byte[]创建Bitmap的方式。
-Drawable官文文档说明为可绘制物件的一般抽象。View也是可以绘制的，但Drawable与View不同，Drawable不接受事件，无法与用户进行交互。我们知道很多UI控件都提供设置Drawable的接口，如ImageView可以通过setImageDrawable(Drawable drawable)设置它的显示，这个drawable可以是来自Bitmap的BitmapDrawable，也可以是其他的如ShapeDrawable。
-也就是Drawable是一种抽像，最终实现的方式可以是绘制Bitmap的数据或者图形、Color数据等。理解了这些，你很容易明白为什么我们有时候需要进行两者之间的转换。
-
-### 5.要加载很大的图片怎么办？
-如果图片很大，比如他们的占用内存算下来就直接OOM了，那么我们肯定不能直接加载它。解决主法还是有很多的，系统也给我们提供了一个类BitmapRegionDecoder，可以用来分块加载图片。
-
-### 6.图片圆角（或称矩形圆角）或者圆形头像的实现方式
-除了把原图直接做成圆角外，常见有三种方式实现：
-- 使用Xfermode混合图层；
-- 使用BitmapShader；
-- 通过裁剪画布区域实现指定形状的图形（ClipPath）
-
-## Android 中有哪几种解析xml的类
-
-官方推荐哪种？以及它们的原理和区别。
-
-Android 提供了三种解析XML的方式：**SAX(Simple API XML)** ，**DOM(Document Object Model)**， **Pull解析** 
-
-- **Dom解析**：将XML文件的所有内容读取到内存中（内存的消耗比较大），然后允许您使用DOM API遍历XML树、检索所需的数据。
-- **Sax解析**：Sax是一个解析速度快并且占用内存少的xml解析器，Sax解析XML文件采用的是事件驱动，它并不需要解析完整个文档，而是按内容顺序解析文档的过程。
-- **Pull解析**：Pull解析器的运行方式与 Sax 解析器相似。它提供了类似的事件，可以使用一个switch对感兴趣的事件进行处理。
-
-
-
-
-
-
-
-
-
-
-
-
-## 二、Activity 面试详解
+## 一、Activity 面试详解
 
 ### 1、生命周期全解析
 
@@ -406,7 +320,7 @@ taskAffinity是用来指示Activity属于哪一个Task的。taskAffinity能够�
 
 
 
-## 三、Fragment面试详解
+## 二、Fragment面试详解
 
 ### 1.Fragment  是什么？
 Fragment 是 Android 自 3.0 版本开始引入的一种可以嵌入在 Activity 当中的UI片段，主要是为了能在不同分辩率屏幕上进行更为动态和灵活的UI设计，让程序更加合理和充分利用大屏幕空间。
@@ -585,7 +499,7 @@ Service 是 Android 中实现程序后台运行的解决方案，非常适用于
 
 - **定义**：
 	- Thread 是程序执行的最小单元，它是分配CPU的最小单位。可以执行异步操作，是相对**独立**的。
-	- Service 是 Android 的一种特殊机制，是运行在主线程当中的，是**依托于**所在的主线程。是由系统进程托管，也是一种轻量级IPC通信方式(Activity 和 Service 绑定，然后数据通信，并处于不同进程。 )
+	- Service 是 Android 的一种特殊机制，是运行在主线程当中的，是**依托于**所在的主线程。是由系统进程托管，也是一种轻量级IPC通信方式(Activity 和 Service 绑定，然后数据通信，并处于不同进程。）
 
 - **关系**：Service 和 Thread 之间并没有什么关联，Service 翻译成中文是服务，同时服务可以理解为后台。Thread 是开启子线程执行耗时操作，而 Service 是在主线程中执行，但总被认为可以在后台处理耗时任务，容易混淆了两者之间的概念。
 
@@ -607,9 +521,9 @@ Service 是 Android 中实现程序后台运行的解决方案，非常适用于
 - 新建类继承自Thread，然后重写父类的run方法，并在里面编写耗时逻辑。
 ```java
 class MyThread extends Thread{
-  public void run(){
-    //具体逻辑
-  }
+    public void run(){
+        //具体逻辑
+    }
 }
 //只需要new出MyThread的实例
 //调用start方法，run方法就会在子线程中运行
@@ -619,8 +533,8 @@ new MyThread().start();
 ```java
 class MyThread implements Runnable{
     public void run(){
-    //具体逻辑
-  }
+          //具体逻辑
+    }
 }
 //启动线程的方法
 MyThread my = new MyThread();
@@ -629,22 +543,22 @@ new Thread(my).start();
 - 使用匿名类的方式，这种方式最常见
 ```java
 new Thread(new Runnable(){
-      public void run(){
-    //具体逻辑
-  }
+    public void run(){
+        //具体逻辑
+    }
 }).start()
 ```
 
-### Service 的生命周期
+### 5.Service 的生命周期
 
 ![](https://i.imgur.com/1Lf6nx0.png)
 
 - 回调方法含义：
-	- **onCreate**（）：服务第一次被创建时调用
-	- **onStartComand**（）：服务启动时调用
-	- **onBind**（）：服务被绑定时调用
-	- **onUnBind**（）：服务被解绑时调用
-	- **onDestroy**（）：服务停止时调用
+	- **onCreate**：服务第一次被创建时调用；
+	- **onStartComand**：服务启动时调用；
+	- **onBind**：服务被绑定时调用；
+	- **onUnBind**：服务被解绑时调用；
+	- **onDestroy**：服务停止时调用；
 
 - 生命周期：
 	- 只是用 **startService**() 启动服务：onCreate() -> onStartCommand() -> onDestory()
@@ -661,9 +575,9 @@ new Thread(new Runnable(){
 	- 注意，这两种启动方法并不冲突，当使用startService()启动Service之后，还可再使用bindService()绑定，只不过需要同时调用 stopService()和 unbindService()方法才能让服务销毁掉。
 
 
-### Service的基本用法
+### 6.Service的基本用法
 
-#### a.普通Service
+#### startService
 
 - 第一步：新建类并继承Service且必须重写onBind()方法，有选择的重写onCreate()、onStartCommand()及onDestroy()方法。
 - 第二步：在配置文件AndroidManifest.xml中进行注册，否则不能生效。
@@ -679,25 +593,59 @@ Intent intent = new Intent(this, MyService.class);
 stopService(intent);
 ```
 
+#### bindService
 
+- 第一步：创建BindService服务端，继承自Service，并在类中创建一个实例IBinder接口实现对象并提供公共方法给客户端调用。
+- 第二步：从 onBind() 回调方法返回此Binder实例；
+- 第三步：在客户端中，从onServiceConnected()回调方法接收Binder，并使用提供的方法调用绑定服务。
+- 绑定服务提供了客户端和服务端接口，进行数据的交互(发送请求、获取结果、进程间通信)
 
-### 开启 Service 的两种方式以及区别
+```java
+public class TestService extends Service {
+    private Mybinder mBinder = new Mybinder();
+    public TestService() {
+    }
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+    public class Mybinder extends Binder {
+        public void showToast() {
+            Toast.makeText(getApplicationContext(), "BindService", Toast.LENGTH_SHORT).show();
+        }
+    }
+}
+```
 
+```java
+public class MainActivity extends AppCompatActivity {
+    private TestService.Mybinder mBinder;
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            //成功绑定
+            mBinder = (TestService.Mybinder) service;
+            mBinder.showToast();
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            //断开连接
+        }
+    };
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        //绑定服务
+        Intent bindIntent = new Intent(this, TestService.class);
+        bindService(bindIntent, mConnection, BIND_AUTO_CREATE);
+        //解绑服务
+        unbindService(mConnection);
+    }
+}
+```
 
-- **bindService**：绑定服务提供了客户端和服务端接口，进行数据的交互(发送请求、获取结果、进程间通信)
-	1. 创建BindService服务端，继承自Service，并在类中创建一个实例IBinder接口实现对象并提供公共方法给客户端调用。
-	2. 从 onBind() 回调方法返回此Binder实例
-	3. 在客户端中，从onServiceConnected()回调方法接收Binder，并使用提供的方法调用绑定服务。
-
-- 如果一个 service 通过 startService 被 start 之后，多次调用 startService 的话，service 会多次调
-用 onStart 方法。多次调用 stopService 的话，service 只会调用一次 onDestroyed 方法。
-
-- 如果一个 service 通过 bindService 被 start 之后，多次调用 bindService 的话，service 只会调用
-一次 onBind 方法。多次调用 unbindService 的话会抛出异常。
-
-
-
-### Activity如何与Service通信？
+### 7.Activity如何与Service通信？
 
 在 Activity 中可以通过 startService 和 bindService 方法启动 Service。一般情况下如果想获取
 Service 的服务对象那么肯定需要通过 **bindService**（）方法，比如音乐播放器，第三方支付等。如
@@ -709,78 +657,121 @@ Service 的服务对象那么肯定需要通过 **bindService**（）方法，�
 3. 在ServiceConnection匿名类的**onServiceConnected()**方法里启动 MyService 里的方法。
 4. 最后通过 **unbindService** 来解绑服务。
 
-### 说说 Activity、Intent、Service 是什么关系
+### 8.说说 Activity、Intent、Service 是什么关系
 
 他们都是 Android 开发中使用频率最高的类。其中 Activity 和 Service 都是 Android 四大组件
 之一。他俩都是 Context 类的子类 ContextWrapper 的子类，因此他俩可以算是兄弟关系吧。不过
 兄弟俩各有各自的本领，Activity 负责用户界面的显示和交互，Service 负责后台任务的处理。Activity
 和 Service 之间可以通过 Intent 传递数据，因此可以把 Intent 看作是通信使者。
 
-### Service 里面可以弹吐司么
+### 9.Service 里面可以弹吐司么
 可以的。弹吐司有个条件就是得有一个 Context 上下文，而 Service 本身就是 Context 的子类，因此在 Service 里面弹吐司是完全可以的。比如我们在 Service 中完成下载任务后可以弹一个吐司通知
 用户。
 
-### IntentService是什么？
+### 10.IntentService是什么？
 
 - IntentService 是一个特殊的 Service，它继承了 Service 并且它是一个抽象类，因此必须创建它的子类才能使用 IntentService。
 - 它封装了 HandlerThread 和 Handler，可用于执行后台耗时的任务，当任务全部执行完毕后自动停止。
 - 它的优先级比普通线程要高，所以适合执行高优先级的后台任务。
 - （HandlerThread是继承了Thread，他的作用是 不用每次创建线程，他内部有循环机制可以重复利用，不用的时候要quit或者quitSafely。）
 
-### Service调用方法
+#### 启动方法
 
-1. 手动调用startService()启动服务，自动调用内部方法：onCreate()、onStartCommand()，如果一个Service被startService()多次启动，那么onCreate()也只会调用一次。
+第一步：新建类并继承IntentService，在这里需要提供一个无参的构造函数且必须在其内部调用父类的有参构造函数，然后具体实现 onHandleIntent()方法，在里可以去处理一些耗时操作而不用担心 ANR的问题，因为这个方法已经是在子线程中运行的了。
+第二步：在配置文件中进行注册。
+第三步：在活动中利用startService(Intent)实现IntentService的启动，和Service用的方法是完全一样的。
+
+### 11.Service调用方法
+
+1. 手动调用 startService() 启动服务，自动调用内部方法：onCreate()、onStartCommand()，如果一个Service被startService()多次启动，那么onCreate()也只会调用一次。
 2. 手动调用stopService()关闭服务，自动调用内部方法：onDestory()，如果一个Service被启动且被绑定，如果在没有解绑的前提下使用stopService()关闭服务是无法停止服务的。
 3. 手动调用bindService()后，自动调用内部方法：onCreate()、onBind()。
 4. 手动调用unbindService()后，自动调用内部方法：onUnbind()、onDestory()。
 5. startService()和stopService()只能开启和关闭Service，无法操作Service，调用者退出后Service仍然存在；bindService()和unbindService()可以操作Service，调用者退出后，Service随着调用者销毁。
 
+### 12.一个Activty先start一个Service后，再bind时会回调什么方法？此时如何做才能回调Service的destory()方法？
+当对一个服务既调用 startService() 方法，又调用了bindService()方法，根据Android系统都机制，一个服务只要被启动或者被绑定了之后，就会一直处于运行状态，必须要让以上两种条件同时不满足，服务才能被销毁。所以，这种情况要同时调用是stopService()和unbindService方法，onDestroy才会执行。
 
+### 13.前台服务是什么？和普通服务的不同？如何去开启一个前台服务？
 
-### 谈一谈Service的生命周期？
-### Service的两种启动方式？区别在哪？
-### 一个Activty先start一个Service后，再bind时会回调什么方法？此时如何做才能回调Service的destory()方法？
-### Service如何和Activity进行通信？
+前台服务和普通服务最大的区别是，前者会一直有一个正在运行的图标在系统的状态栏显示，下拉状态栏后可以看到更加详细的信息，非常类似于通知的效果。使用前台服务或者为了防止服务被回收掉，比如听歌，或者由于特殊的需求，比如实时天气状况。
+
+想要实现一个前台服务非常简单，它和之前学过的发送一个通知非常类似，只不过在构建好一个Notification之后，不需要NotificationManager将通知显示出来，而是调用了startForeground()方法。
+
+```java
+//修改MyService的onCreate()方法：
+public void onCreate(){
+        Intent intent = new Intent(this,MainActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(this,0,intent,0);
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContentTitle("This is content title")
+                .setContentText("This is content text")
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher))
+                .setContentIntent(pi)
+                .build();
+        startForeground(1,notification);
+}
+```
+### 是否了解ActivityManagerService，谈谈它发挥什么作用？
+### 如何保证Service不被杀死？
 ### 用过哪些系统Service？
 ### 是否能在Service进行耗时操作？如果非要可以怎么做？
 ### AlarmManager能实现定时的原理？
-### 前台服务是什么？和普通服务的不同？如何去开启一个前台服务？
-### 是否了解ActivityManagerService，谈谈它发挥什么作用？
-### 如何保证Service不被杀死？
+### 谈一谈Service的生命周期？
+### Service的两种启动方式？区别在哪？
 
 
 
 
 
+## 四、ContentProvider
 
+### 1.ContentProvider 内容提供者
 
-## 四、Content Provider
+- **内容提供者**：主要用于在不同的应用程序之间实现数据共享的功能，允许一个程序访问另一个程序中的数据，同时还能保证被访问数据的安全性。与其他存储方式不同的是：可以选择哪部分数据分享，从而保证隐私数据的安全性。
 
-### 1、Content Provider是什么？
+#### 1.1ContentProvider 特点
 
-**内容提供者**：主要用于在不同的应用程序之间实现数据共享的功能，允许一个程序访问另一个程序中的数据，同时还能保证被访问数据的安全性。与其他存储方式不同的是：可以选择哪部分数据分享，从而保证隐私数据的安全性。
-
-### 2、ContentProvider 的特点
-
-1. 四大组件之一，需要在 Mainifest.xml 文件中进行注册。
-2. 接口的统一，并不能用于存储数据，只是为数据的获取、添加、修改的操作提供统一的接口。
+1. 四大组件之一，需要在 AndroidMainifest.xml 文件中进行注册。
+2. 接口的统一，是为数据的获取、添加、修改的操作提供统一的接口。
 3. 跨进程供多个应用程序共享数据；
 4. 设备存储数据：通讯录、图片；
 5. 数据更新监听：UI更新；
 
-### ContentProvider 的优缺点
+#### 1.2ContentProvider 的优缺点
 
 1. 数据访问统一接口（存储方式都不用管）优点。 
-2. 跨进程数据的访问 优点。
-3. 无法单独使用，必须与其他的存储方式结合使用缺点。
+2. 跨进程数据的访问，优点。
+3. 无法单独使用，必须与其他的存储方式结合使用，缺点。
 
-### 如何实现数据的访问？
+#### 1.3ContentProvider 如何提供数据，实现共享？
 
-- ContentResolver   Contex.getContentResolver()。
+1. 新建类去继承ContentProvider，然后覆写 query、insert、update、delete 等6个抽象方法。
+2. 必须在 AndroidManifest 文件中进行注册。
+3. 把自己的数据通过 uri 的形式共享出去。
+4. 借助UriMather.match()方法实现匹配内容URI的功能。
+5. 第三方可以通过 ContentResolver 来访问该 Provider。
+
+#### 1.4ContentProvider工作流程
+
+1. 应用程序A(提供者)定义了 ContentProvider，定义了一些数据库和文件来存放数据。
+2. 应用程序B(访问者)获得 ContentResolver 对象，根据Uri访问指定的 ContentProvider。
+3. ContentProvider 就会访问底层的存储方式，并返回数据给 ContentProvider。
+4. ContentProvider 将数据返回给 ContentResolver，ContentResolver 再转到应用B。
+
+
+### 2.ContentResolver 内容访问者
+
+- 想要访问内容提供器中的共享数据，就一定要借助 ContentResolver 类，可以通过 getContentResolver() 方法获取该类实例，并且提供了一系列CRUD操作(insert、update、delete、query)，不同于其他存储方式的是不接收表名参数，而是用 Uri 参数来代替(由协议声明、authority和path组成)。
+
+#### 2.1ContentResolver如何实现数据的访问
+
+- ContentResolver的Contex.getContentResolver().query()
     - 提供了CRUD操作；
     - Transport implements；
     - IContentProvider；
-
 - Uri，ContentResolver中的增删查改都是用Uri来代替表名参数。
     - 概念：统一资源标识符；
     - 组成：协议、域名authority、路径path；
@@ -788,26 +779,69 @@ Service 的服务对象那么肯定需要通过 **bindService**（）方法，�
     - 作用：访问ContentProvider；
     - 不同：与其他组件交互不同的地方(Intent)；
 
-### ContentProvider工作流程
+```java
+//简单演示获取数据都代码
+Cursor mCursor = getContentResolver().query(uri,projection,selection,selectionArgs,orderBy);
+if (mCursor != null) {
+     while (mCursor.moveToNext()) {
+        String column1 = mCursor.getString(mCursor.getColumnIndex("column1"));
+        int column2 = mCursor.getInt(mCursor.getColumnIndex("column2"));
+    }
+    mCursor.close();
+}
+```
 
-1. 应用程序A(提供者)定义了 ContentProvider，定义了一些数据库和文件来存放数据。
-2. 应用程序B(访问者)获得 ContentResolver 对象，根据Uri访问指定的 ContentProvider。
-3. ContentProvider 就会访问底层的存储方式，并返回数据给 ContentProvider。
-4. ContentProvider 将数据返回给 ContentResolver，ContentResolver 再转到应用B。
+### 3.ContentObserver 内容观察者
 
-### 访问设备数据
+Android 内部提供了一种 ContentObserver 来监听数据库内容的变化。作用是观察（捕捉）特定 Uri 引起的数据库的变化，继而做一些相应的处理。
 
-在访问数据之前要了解：存放的位置、特点(数据库形式存联系人、File存头像)、Uri(地址)。
+#### 3.1如何定义ContentObserver
 
-### 更新设备数据
-
-1、ContentResoler：注册内容观察者
-2、ContentService：通过handler来更新UI
-3、ContentObserver:
+- **第一步**：创建一个 ContentObserver 的子类，实现 onChange() 方法。
+	- 监听的 Uri 中的数据发生变化的时候，会调用 onchange() 方法。
+	- 构造方法：public void ContentObserver(Handler handler)参数需要一个 Hanlder，因为 ContentObserver 内部使用了一个实现 Runnable 接口的内部类 NotificationRunnable，需要通过 Handler 去做比如 UI 变化。（可以从主线程传入一个 handler。）
+- **第二步**：通过 registerContentObserver 注册 ContentObserver。
+	- 第一个参数：需要监听的 uri。
+	- 第二个参数：为 false 表示精确匹配，即只匹配该 Uri。为 true 表示可以同时匹配其派生的 Uri，如：content://com.qin.cb/student（精确匹配）content://com.qin.cb/student/# （派生）content://com.qin.cb/student/schoolchild（派生）
+	- 第三个参数：ContentObserver 的实例。
+- **第三步**：用完后记得取消注册 unregisterContentObserver。
+- **第四步**：ContentProvider数据源发送改变后，通知ContentObserver。
 
 ```java
-public class Main2Activity extends AppCompatActivity {
+//第一步： 创建一个 ContentObserver 的子类，实现 onChange() 方法。
+public class MyContentObserver extends ContentObserver{
+    private Handler handler;
+    public MyContentObserver(Handler handler) {
+        super(handler);
+        this.handler=handler;
+    }
+    @Override
+    public void onChange(boolean selfChange) {
+        super.onChange(selfChange);
+        //  在onChange方法里面我们就可以执行变化的操作了
+    }
+}
+```
+```java
+//第二步：将这个监听者与我们所要监听的对象绑定
+//通过 registerContentObserver 注册 ContentObserver。
+MyContentObserver mObserver = new MyContentObserver(); 
+getContentResolver().registerContentObserver(Uri uri, boolean notifyForDescendants, ContentObserver observer);
+```
 
+```java
+//第三步：取消注册 unregisterContentObserver
+getContentResolver().unregisterContentObserver(mObserver)
+```
+
+```java
+//ContentProvider数据源发送改变后，通知ContentObserver。
+getContext().getContentResolver().notifyChange(uri, null);
+```
+#### 3.2也可以这样简单写
+```java
+
+public class Main2Activity extends AppCompatActivity {
     Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -828,63 +862,42 @@ public class Main2Activity extends AppCompatActivity {
     }
 }
 ```
-### ContentResolver 访问数据
 
-```java
-List<String> contactsList = new ArrayList<>();
-Cursor mCursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-        null, null, null, null);
-if (mCursor != null) {
-    while (mCursor.moveToNext()) {
-        String displayName = mCursor.getString(mCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-        String number = mCursor.getString(mCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-        contactsList.add(displayName + "\n" + number);
-    }
-}
-mCursor.close();
-```
-### ContentProvider 提供数据
+####  3.3为什么自定义的 ContentProvider 数据源发生改变后，却没有监听到任何反应？
 
-1. 新建类去继承ContentProvider，并实现6个抽象方法
-2. 借助UriMather实现匹配内容URI的功能。
-
-### ContentObserver 内容观察者
+每个ContentProvider数据源发生改变后，如果想通知其监听对象， 例如ContentObserver时，必须在其对应方法 update / insert / delete 时，显式地调用 this.getContentReslover().notifychange(uri,null) 方法，回调监听处理逻辑。否则，我们的 ContentObserver 是不会监听到数据发生改变的。
 
 
-### 说说ContentProvider、ContentResolver、ContentObserver 之间的关系
+### 4.说说ContentProvider、ContentResolver、ContentObserver 之间的关系
 
 - **ContentProvider**：**内容提供者**，用于对外提供数据，提供数据的增删改查操作，数据源可以是数据库、文件、XML、网络等，ContentProvider为这些数据的访问提供了统一的接口，可以用来做进程间数据共享。
 - **ContentResolver**：**内容解析者**，用于获取内容提供者提供的数据。ContentResolver可以不同URI操作不同的ContentProvider中的数据，外部进程可以通过ContentResolver与ContentProvider进行交互。
-- **ContentObserver**：**内容监听器**，可以监听数据的改变状态。
+- **ContentObserver**：**内容监听器**，可以监听数据的改变状态，当ContentProvider数据源发生改变时，如果想通知其监听对象， 例如ContentObserver时，就必须在其调用对应方法 update / insert / delete 时，显式地调用 this.getContentReslover().notifychange(uri,null) 方法，回调监听处理逻辑。
 
 
-### 为什么要用 ContentProvider？它和 sql 的实现上有什么差别？
+### 5.为什么要用 ContentProvider？它和 sql 的实现上有什么差别？
 
 - **ContentProvider** 屏蔽了数据存储的细节,内部实现对用户完全透明,用户只需要关心操作数据的
 uri 就可以了，ContentProvider 可以实现不同 app 之间共享。
 
-- **Sql** 也有增删改查的方法，但是 sql 只能查询本应用下的数据库。而 ContentProvider 还可
+- **Sql** 也有增删改查的方法，但是 sql 只能操作本应用下的数据库。而 ContentProvider 还可
 以去增删改查本地文件. xml 文件的读取等。
 
-### 请介绍下 ContentProvider 是如何实现数据共享的？
 
-- 1、在 Android 中如果想将自己应用的数据（一般多为数据库中的数据）提供给第三发应用，那么我们只能通过 ContentProvider 来实现了。
+### 6.多个进程同时调用一个ContentProvider的query获取数据，ContentPrvoider是如何反应的呢？
 
-- 2、ContentProvider 是应用程序之间共享数据的接口，使用的时候首先自定义一个类继承ContentProvider，然后覆写 query、insert、update、delete 等方法。因为它是四大组件之一因此必须在 AndroidManifest 文件中进行注册。
+尽管ContentResolver与ContentProvider类隐藏了实现细节，ContentProvider除了onCreate()是在UI线程运行，其余所提供的query()，insert()，delete()，update()都是在ContentProvider进程的线程池中被调用执行的，而不是进程的主线程中。因为那些方法可能同时被多个线程所调用，所以他们都应该是线程安全的。这个线程池是由Binder创建和维护的，其实使用的就是每个应用进程中的Binder线程池。
 
-- 3、把自己的数据通过 uri 的形式共享出去，第三方可以通过 ContentResolver 来访问该 Provider。
+### 7.你觉得Android设计ContentProvider的目的是什么呢？
 
-```java
-public class PersonContentProvider extends ContentProvider{
-	public boolean onCreate(){}
-	query(Uri, String[], String, String[], String)
-	insert(Uri, ContentValues)	
-	update(Uri, ContentValues, String, String[])
-	delete(Uri, String, String[])
-}
-```
+1. 隐藏数据的实现方式，对外提供统一的数据访问接口；
+2. 更好的数据访问权限管理。ContentProvider可以对开发的数据进行权限设置，不同的URI可以对应不同的权限，只有符合权限要求的组件才能访问到ContentProvider的具体操作。
+3. ContentProvider封装了跨进程共享的逻辑，我们只需要Uri即可访问数据。由系统来管理ContentProvider的创建、生命周期及访问的线程分配，简化我们在应用间共享数据（进程间通信）的方式。我们只管通过ContentResolver访问ContentProvider所提示的数据接口，而不需要担心它所在进程是启动还是未启动。
 
+### 8.运行在主线程的ContentProvider为什么不会影响主线程的UI操作?
 
+- ContentProvider的onCreate()是运行在UI线程的，而query()，insert()，delete()，update()是运行在线程池中的工作线程的，所以调用这几个方法并不会阻塞ContentProvider所在进程的主线程，但可能会阻塞调用者所在的进程的UI线程！
+- 所以，调用ContentProvider的操作仍然要放在子线程中去做。虽然直接的CRUD的操作是在工作线程的，但系统会让你的调用线程等待这个异步的操作完成，你才可以继续线程之前的工作。
 
 
 
@@ -894,31 +907,47 @@ public class PersonContentProvider extends ContentProvider{
 
 ## 五、Broadcast Receiver
 
-### 1、广播的定义
+### 1.广播的定义
 
-- 在 Android 中，Broadcast 是一种在应用程序之间传输信息的机制，Android 中我们要发送的广播内容是一个 Intent，这个 Intent 中可以携带我们要传送的数据。
+- 在 Android 中，Broadcast 是一种在应用程序之间传输信息的机制，要发送的广播内容是一个 Intent，这个 Intent 中可以携带我们要传送的数据。
 
-- 广播实现了不同程序之间的**(1)信息传输与共享**，只要和发送广播的 action 相同的接收者，都能接收到这个广播。还可以作为**(2)通知**的作用，发送消息给 service 来更新 UI。
+### 2.广播的用途
 
-- 类似设计模式中的“观察者模式”，当被观察者数据发生变化的时候，会去相应的通知观察者做相应的数据处理。
+1. 广播实现了不同程序之间的**信息传输与共享**，只要和发送广播的action相同的接收者，都能接收到这个广播。典型的应用就是android自带的短信，电话等等广播，只要我们实现了他们的action的广播，那么我们就能接收他们的数据了，以便做出一些处理。比如说拦截系统短信，拦截骚扰电话等
+2. 作为**通知**的作用，比如在service中要通知主程序、更新主程序的UI等，因为service是没有界面的，所以不能直接获得主程序中的控件，这样我们就只能在主程序中实现一个广播接收者专门用来接收service发过来的数据和通知了。
 
-### 2、广播的使用场景
+### 3.广播的使用场景
 
-- 同个 App 具有多个进程的不同组件之间的消息通信。
-- 不同 App 之间的组件之间消息通信。
+1. 同一app内部的同一组件内的消息通信（单个或多个线程之间）(可用handler解决)；
+1. 同一app内部的不同组件之间的消息通信（单个进程）(可用EventBus)；
+1. 同一app具有多个进程的不同组件之间的消息通信；
+1. 不同app之间的组件之间的消息通信；
+1. Android系统在特定情况下与App之间的消息通信。
 
-### 3、广播的种类
+### 4.广播主要的种类
 
-- **普通广播 Normal Broadcast**：异步执行的广播，所有接收者在同一时刻收到这条广播消息。效率高，没有先后顺序，无法截断。属于全局广播。调用 **sendBroadcast**() 发送，最常用的广播。
+- **普通广播 Normal Broadcast**：*异步*执行的广播，所有接收者在同一时刻收到这条广播消息。效率高，没有先后顺序，无法截断。属于全局广播。调用 **sendBroadcast**() 发送，最常用的广播。
 
-- **有序广播 Ordered Broadcast**：同步执行的广播，发出去的广播会被广播接收者按照顺序接收，广播接收者按照Priority属性值从大-小排序，Priority属性相同者，动态注册的广播优先，广播接收者还可以选择对广播进行截断和修改。调用 **sendOrderedBroadcast**() 发送。
+- **有序广播 Ordered Broadcast**：*同步*执行的广播，发出去的广播会被广播接收者按照顺序接收，广播接收者按照Priority属性值从大-小排序，Priority属性相同者，动态注册的广播优先，广播接收者还可以选择对广播进行截断和修改。调用 **sendOrderedBroadcast**() 发送。
+
+- ** 本地广播 Local  Broadcast**：App应用内广播可理解为一种局部广播，广播的发送者和接收者都同属于一个App。相比于全局广播（普通广播），App应用内广播优势体现在：安全性高 & 效率高。对于LocalBroadcastManager方式发送的应用内广播，只能通过LocalBroadcastManager动态注册，不能静态注册。调用**sendBroadcast**发送。
 
 ### 4、注册广播接收 (静态和动态)
 
-- **(1)静态注册** : 将广播写在 AndroidMainifest.xml 文件当中，特点是：常驻系统，不受组件生命周期影响，即便应用退出，广播还是可以被接收，耗电、占内存。
+- 1、自定义类继承 BroadcastReceiver，然后重写具体实现onReceive()。由于生命周期短，耗时工作应该发给service，onReceive()不要开启子线程。
+- 2、动态注册：在Activity重写onCreate()方法，加入代码registerReceiver(接收器实例，intentFilter实例)。重写onDestroy()方法，unregisterReceiver取消注册广播。
+- 3、静态注册：在配置文件中添加<receiver>，子标签intent-filter中添加需要监听的action。
 
+#### 两种注册方法的区别
+
+- 动态注册的接收器必须要在程序启动之后才能接收到广播；静态注册的接收器即便程序未启动也能接收到广播，比如想接收到手机开机完成后系统发出的广播就只能用静态注册了。
+
+#### 1.静态注册
+
+- **静态注册**：将广播写在 AndroidMainifest.xml 文件当中，特点是：常驻系统，不受组件生命周期影响，即便应用退出，广播还是可以被接收，耗电、占内存。
+- 第一步：创建 Broadcast Receiver文件，Exported 属性表示是否允许这个广播接收本程序以外的广播，Enabled 属性表示是否启用用这个广播接收器。
+- 第二步：在AndroidMainifest.xml中进行修改。
 ```java
-//首先创建 Broadcast Receiver文件，Exported 属性表示是否允许这个广播接收本程序以外的广播，Enabled 属性表示是否启用用这个广播接收器。
 public class MyReceiver extends BroadcastReceiver {
         //onReceive 不能做过多的耗时操作，10秒没响应就ANR
     public void onReceive(Context context, Intent intent) {
@@ -926,8 +955,6 @@ public class MyReceiver extends BroadcastReceiver {
     }
 }
 ```
-
-在AndroidMainifest.xml中进行修改：
 
 ```xml
 <receiver
@@ -938,73 +965,89 @@ public class MyReceiver extends BroadcastReceiver {
 </receiver>
 ```
 
-- **(2)动态注册** : 在代码中调用 registerReceiver() 注册来进行广播的注册。必须在 onDestroy 中调用 unregisterReceiver() 方法，否则会引起内存泄露，特点是：不常驻，跟随组件的生命变化，组件结束，广播结束。在组件结束前，需要先移除广播，否则容易造成内存泄漏。
+#### 2.动态注册
 
+- **动态注册** : 在代码中调用 registerReceiver() 注册来进行广播的注册。必须在 onDestroy 中调用 unregisterReceiver() 方法，否则会引起内存泄露，特点是：不常驻，跟随组件的生命变化，组件结束，广播结束。在组件结束前，需要先移除广播，否则容易造成内存泄漏。
 ```java
-       ChangeReceiver = new BroadcastReceiver();
+    protected void onCreate() {
+	...
+       myBroadcastReceiver ChangeReceiver = new myBroadcastReceiver();
        IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(ChangeReceiver, intentFilter);
-
+    }
     //在onDestroy()中要取消注册，否则会引起内存泄漏。
     protected void onDestroy() {
         unregisterReceiver(networkChangeReceiver);
     }
     //ChangeReceiver就是接收后会怎么样怎么样
+    class myBroadcastReceiver extends BroadcastReceiver {
+        public void onReceive(Context context, Intent intent){
+		//to do
+        }
+     }
 ```
 
-### 5、广播的发送：(标准、有序、本地广播)
+### 5、广播的发送
 
-- **(1)标准广播**：
-
-```xml
-    <intent-filter>
-        <action android:name="com.example.broadcasttest.LOCAL_BROADCAST" />
-    </intent-filter>
-```
-
+#### 1.标准广播(异步)
 ```java
 //通过sendBroadcast发送标准合家欢广播
-sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
+Intent intent = new Intent("com.example.minmin.MY_BROADCAST");
+sendBroadcast(intent);
+```
+#### 2.有序广播(同步)
+
+- 定义：发送出去的广播被广播接收者按照先后顺序接收
+
+- 接收广播的顺序规则（同时面向静态和动态注册的广播接受者）
+	- 按照Priority属性值从大-小排序；
+	- Priority属性相同者，动态注册的广播优先；
+
+- 特点：
+	- 接收广播按顺序接收；
+	- 先接收的广播接收者可以对广播进行截断，即后接收的广播接收者不再接收到此广播；
+	- 先接收的广播接收者可以对广播进行修改，那么后接收的广播接收者将接收到被修改后的广播
+
+```java
+//通过sendOrderBroadcast发送
+Intent intent = new Intent("com.example.minmin.MY_BROADCAST");
+sendOrderBroadcast(intent,null);
 ```
 
-- **(2)有序广播**：
-
 ```xml
-    /*1. 给广播接收器设置优先级 */
+    /*给广播接收器设置优先级 */
     <intent-filter android:priority="100">
         <action android:name="com.example.broadcasttest.LOCAL_BROADCAST" />
     </intent-filter>
 ```
-
 ```java
-//2.广播接收器截断：
+//广播接收器截断：
 public void onReceive(Context context, Intent intent) {
     abortBroadcast();
 }
 ```
-
+#### 3.本地广播
 ```java
-//3.通过sendOrderedBroadcast发送传递广播
-sendOrderedBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"),null);
+//发送1：实例化localBroadcastManager
+LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+//发送2：发送广播
+Intent intent = new Intent("android.net.conn.CONNECTIVITY_CHANGE");
+localBroadcastManager.sendBroadcast(intent);
+//接收1：实例化IntentFilter和接收器LocalReceiver
+IntentFilter intentFilter = new IntentFilter(); 
+LocalReceiver localReceiver  = new LocalReceiver();
+//接收2：设置广播接收类型
+intentFilter.addAction(android.net.conn.CONNECTIVITY_CHANGE);
+//接收3：进行动态注册本地广播
+localBroadcastManager.registerReceiver(localReceiver, intentFilter);
+//接收4：在onDestroy中取消注册
+localBroadcastManager.unregisterReceiver(localReceiver);
+//接收5：在localReceiver中继承BroadcastReceiver并重写onReceiver。
+...
 ```
 
-- **(3)本地广播**：
-
-```java
-//获取LocalBroadcastManager实例
-LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-//注册本地广播监听器(接收广播,intent)，以下是简介版
-lbm.registerReceiver(new BroadcastReceiver() {
-    public void onReceive(Context context, Intent intent) {
-        Toast.makeText(Main2Activity.this, "本地广播简介版", Toast.LENGTH_SHORT).show();
-    }
-}, new IntentFilter("com.example.broadcasttest.LOCAL_BROADCAST"));
-//通过sendBroadcast来发送广播
-lbm.sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
-```
-
-### 6、广播内部实现机制
+### 6.广播内部实现机制
 
 1. 自定义广播接收者 BroadcastReceiver，并复写 onRecvice();
 2. 通过 Binder 机制向 AMS(Activity Manager Service) 注册广播；
@@ -1012,46 +1055,201 @@ lbm.sendBroadcast(new Intent("com.example.broadcasttest.LOCAL_BROADCAST"));
 4. AMS 查找符合相应条件(IntentFilter/Permission等)的BroadcastReceiver，将广播发送到BroadcastReceiver 所在的消息循环队列中。
 5. BroadcastReceiver 所在消息队列拿到此广播后，回调它的 onReceive() 方法。
 
-### 7、AMS 是什么？
+### 7.AMS 是什么？
 
  AMS(Activity Manager Service)：是贯穿Android系统组件的核心服务，负责启动四大组件启动切换调度。
 
-### 8、本地广播 LocalBroadcastManager 详解
+### 8.本地广播 LocalBroadcastManager 详解
 
- - 发送的广播只能够在自己 App 的内部传递，不会泄露给其他 App，确保隐私数据不会泄露；
- - 广播接收器只能接收来自本 App 发出的广播；
- - 其他App也无法向你的App发送该广播，不用担心其他App会来搞破坏；
- - 比系统的全局广播更加高效。
+- **背景**：Android中的广播可以跨App直接通信（exported对于有intent-filter情况下默认值为true）
 
-1. LocalBroadcastManager 高效的原因主要因为它内部是通过Handler实现的，它的sendBroadcast()方法是通过handler()发送一个Message实现的。
-2. 相比系统广播是通过Binder实现的，本地广播会更加高效。别人应用无法向自己的App发送广播，而自己App发送的广播也不会离开自己的App。
-3. LocalBroadcastManager 内部协作主要是靠两个Map集合：mReceivers和mActions，当然还有一个List集合mPendingBroadcasts，主要是存储待接收的广播对象。
+- **冲突**：
+	- 其他App针对性发出与当前App intent-filter相匹配的广播，由此导致当前App不断接收广播并处理；
+	- 其他App注册与当前App一致的intent-filter用于接收广播，获取广播具体信息(即会出现安全性 & 效率性的问题)。
 
-### 9、全局广播的缺点
+- **解决方案**：使用App应用内广播（Local Broadcast）
+	- App应用内广播可理解为一种**局部广播**，广播的发送者和接收者都同属于一个App。
+	- 相比于全局广播（普通广播），App应用内广播优势体现在：安全性高 & 效率高；
+
+- **特点**：
+	- 发送的广播只能够在自己 App 的内部传递，不会泄露给其他 App，确保隐私数据不会泄露；
+	- 广播接收器只能接收来自本 App 发出的广播；
+	- 其他App也无法向你的App发送该广播，不用担心其他App会来搞破坏；
+	- 比系统的全局广播更加高效。
+	
+- **内部实现原理**：
+	1. LocalBroadcastManager 高效的原因主要因为它内部是通过Handler实现的，它的sendBroadcast()方法是通过handler()发送一个Message实现的。
+	2. 相比系统广播是通过Binder实现的，本地广播会更加高效。别人应用无法向自己的App发送广播，而自己App发送的广播也不会离开自己的App。
+	3. LocalBroadcastManager 内部协作主要是靠两个Map集合：mReceivers和mActions，当然还有一个List集合mPendingBroadcasts，主要是存储待接收的广播对象。
+
+### 9.全局广播的缺点
 
 - App被反编译获得Action后，会被植入广告、数据泄露。
 
-### 10、BroadcastReceiver 和 LocalBroadcastReceiver 区别
+### 10.BroadcastReceiver 和 LocalBroadcastReceiver 区别
 
 - **BroadcastReceiver** 是跨应用广播，利用Binder机制实现。
 - **LocalBroadcastReceiver** 是应用内广播，利用Handler实现，利用了IntentFilter的match功能，提供消息的发布与接收功能，实现应用内通信，效率比较高。
 
-### 广播传输的数据是否有限制，是多少，为什么要限制？
-
-### Broadcast Receiver能在onReceive中执行耗时任务吗？
+### 11.Broadcast Receiver能在onReceive中执行耗时任务吗？
 
 BroadcastReceiver 在 10 秒内没有执行完毕，Android 会认为该程序无响应，所以在 onReceive 通常是不能开启线程的，一般是通过 service 或者 IntentService 来处理。
 
-
-### BroadCastReceiver 的生命周期
+### 12.BroadCastReceiver 的生命周期
 
 - a. 广播接收者的生命周期非常短暂的，在接收到广播的时候创建，onReceive()方法结束之后销
 - 毁；
-- b. 广播接收者中不要做一些耗时的工作，否则会弹出 Application No Response 错误对话框；
+- b. 广播接收者中不要做一些耗时的工作，否则会弹出 Application No Response应用无响应对话框；
 - c. 最好也不要在广播接收者中创建子线程做耗时的工作，因为广播接收者被销毁后进程就成为了
 - 空进程，很容易被系统杀掉；
 - d. 耗时的较长的工作最好放在服务中完成；
 
+### 13.广播传输的数据是否有限制，是多少，为什么要限制？
+
+
+
+
+
+
+
+## 六、Android中数据存储方式
+
+Android中有5种数据存储方式，分别为文件存储、SQLite数据库、SharedPreferences、ContentProvider、网络。每种存储方式的特点如下：
+
+### 文件存储/SD卡
+
+文件存储方式是一种较常用的方法，在Android中读取/写入文件的方法，与Java中实现I/O的程序是完全一样的，提供openFileInput()和openFileOutput()方法来读取设备上的文件。
+
+   - 将数据存储到文件中：
+
+```java
+String data = "data to save";
+FileOutputStream out = openFileOutput("文件名", 覆盖:MODE_PRIVATE 追加:MODE_APPEND);
+BufferedWriter writer = new BufferedWriter(new OutputStreamWriter());
+writer.write(data);
+writer.close();
+```
+
+   - 将数据存储到文件中：
+
+```java
+FileInputStream in = openFileInput("文件名");
+BufferedReader reader = new BufferedReader(new InputStreamReader());
+StringBuffer content = new StringBuffer();
+String line = "";
+while ((line.reader.readLine()) != null) {
+    content.append(line);
+}
+reader.close();
+return content.toString();
+```
+
+
+### SQLite数据库
+SQLite是Android所集成的一个轻量级的嵌入式数据库，它不仅可以使用Andorid API操作，同时它也支持SQL语句进行增删改查等操作。
+
+```java
+
+public class MyDatabaseHelper extends SQLiteOpenHelper {
+    private Context mContext;
+    public static final String CREATE_BOOK = "create table Book(" +
+            "id integer primary key autoincrement," +
+            "author text," +
+            "price readl," +
+            "price integer," +
+            "name text)";
+    public MyDatabaseHelper(Context context, String name,
+                            SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, name, factory, version);
+        mContext = context;
+    }
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_BOOK);
+    }
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        //升级数据库的话先修改版本号
+        //drop删除表，delete是删除数据
+        db.execSQL("drop table if exists Book");
+        onCreate(db);
+    }
+}
+
+public class Main2Activity extends AppCompatActivity {
+    private MyDatabaseHelper dbHepler;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        dbHepler = new MyDatabaseHelper(this, "BookStore.db", null, 1);
+        //都是打开和创建，区别在于空间满的情况w是出现异常，R是只读
+        //dbHepler.getWritableDatabase();
+        dbHepler.getReadableDatabase();
+
+        //添加
+        SQLiteDatabase db = dbHepler.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("name", "tom");
+        values.put("pages", 464);
+        values.put("price", 14.23);
+        db.insert("Book", null, values);
+        //更新
+        SQLiteDatabase db = dbHepler.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("name", "HHH");
+        db.update("Book", values, "price>?", new String[]{"10"});
+        //删除
+        //查询
+    }
+}
+```
+
+- 3）**SharedPreferences**：是Android提供的用于存储一些简单配置信息的一种机制，采用了XML格式将数据存储到设备中。不仅可以在同一个包下使用，还可以访问其他应用程序的数据，但是由于SharedPreferences的局限性，在实际操作中很少用来读取其他应用程序的数据。
+
+	3.1 将数据存储到SharedPreferences：
+
+	(1)Context类中的getSharedPreferences()方法：第一个参数是文件名，第二个参数是操作模式 MODE_PRIVATE只有当前程序才能读写。
+
+	(2)Activity类中的getPreferences()方法：自动将当期活动类名作为SharedPreferences的文件名。
+
+	(3)PreferenceManager类中的getDefaulSharedPreferences()方法：当前程序的包名作为前缀来命名SharedPreferences文件。
+
+	步骤：
+
+	(1)调用SharedPreferences对象的edit()方法来获取SharedPreferences.Editor对象。
+
+	(2)向 SharedPreferences.Editor 对象中添加数据，比如putBoolean、putInt、putString
+
+	(3)调用apply方法提交数据。
+
+```java
+SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
+editor.putString("name", "Tom");
+editor.putInt("age", 28);
+editor.putBoolean("married", false);
+```
+
+	3.2从SharedPreferences中读取数据：
+
+```java
+SharedPreferences pref  = getSharedPreferences("data",MODE_PRIVATE);
+String name = pref.getString("name","默认值");
+int age = pref.getInt("age",0);
+boolean married = pref.getBoolean("married",false);
+```
+
+- 4）**ContentProvider**：并不能用户存储数据。主要用于不同应用程序之间共享数据，只是为我们存储以及添加数据制定统一的接口而已。
+
+- 5）**网络存储数据**：通过网络上提供的存储空间来上传(存储)或下载(获取)我们存储在网络空间中的数据信息
+
+### 共享数据的方式
+1.File， 2.Sqlite，3.Content Provider，4.Service，5.Broadcast Receiver，6.Intent
+
+Q：Android中提供哪些数据持久存储的方法？
+Q：Java中的I/O流读写怎么做？
+Q：SharePreferences适用情形？使用中需要注意什么？
+Q：了解SQLite中的事务处理吗？是如何做的？
+Q：使用SQLite做批量操作有什么好的方法吗？
+Q：如果现在要删除SQLite中表的一个字段如何做？
+Q：使用SQLite时会有哪些优化操作?
 
 
 
@@ -1060,14 +1258,118 @@ BroadcastReceiver 在 10 秒内没有执行完毕，Android 会认为该程序�
 
 
 
+## 七、Android布局相关的问题
+
+### Android中常用的布局。
+
+- 常用四种布局方式，分别是：FrameLayout（帧布局），LinearLayout （线性布局），AbsoluteLayout（绝对布局），RelativeLayout（相对布局）。TableLayout(已弃用)
+- **FrameLayout**：所有东西依次都放在左上角，会重叠，这个布局比较简单，也只能放一点比较简单的东西。
+- **LinearLayout**：线性布局，每一个LinearLayout里面又可分为垂直布局 vertical 和水平布局horizontal。
+- **AbsoluteLayout**：绝对布局用 XY 坐标来指定元素的位置，这种布局方式也比较简单，但是在屏幕旋转时，往往会出问题，而且多个元素的时候，计算比较麻烦。
+- **RelativeLayout**：相对布局可以理解为某一个元素为参照物，来定位的布局方式。主要属性有：相对于某一个元素android:layout_below、 android:layout_toLeftOf相对于父元素的地方android:layout_alignParentLeft、android:layout_alignParentRigh；
+
+### 你是如何解决Android的布局嵌套问题的？
+
+- 我们都清楚Android界面的布局太复杂，嵌套层次过深，会使整个界面的测量、布局和绘制变得更复杂，对性能会造成影响。所以我们在写Layout文件时，也要尽量避免布局的嵌套层次过深的问题。
+- 有一个好方法先判断当前的问题情况。Android SDK工具箱中有一个叫做*Hierarchy Viewer*的工具，能够在App运行时分析Layout。
+
+- **merge**：merge标签的作用是合并UI布局，使用该标签能降低UI布局的嵌套层次。merge标签可用于两种情况：
+	-  一、布局顶结点是FrameLayout且不需要设置background或padding等属性，可以用merge代替，因为Activity内容试图的parent view就是个FrameLayout，所以可以用merge消除只剩一个。
+	-  二、某布局作为子布局被其他布局include时，使用merge当作该布局的顶节点，这样在被引入时顶结点会自动被忽略，而将其子节点全部合并到主布局中。
+- **ViewStub**：ViewStub标签引入的布局默认不会inflate，既不会显示也不会占用位置。 ViewStub常用来引入那些默认不会显示，只在特殊情况下显示的布局，如数据加载进度布局、出错提示布局等。
+	- ViewStub在一定的程度可以起到减少嵌套层次的作用，特别是很多时候我们的程序可能不需要走到ViewStub的界面。 
+```java
+//需要在使用时手动inflate:
+ViewStub stub = (ViewStub)findViewById(R.id.error_layout);
+errorView = stub.inflate();
+errorView.setVisibility(View.VISIBLE);
+```
+- **include**：include主要解决的是相同布局的复用问题，它并不能减少布局的层次。
+- **用RelativeLayout代替LinearLayout**
+	- 很多人为了减少布局层次喜欢用RelativeLayout代替LinearLayout，不过可能达到的效果并不会很明显。层次是减少了，但本身RelativeLayout就会比LinearLayout性能差一点。
+	- 有一些界面，比如一个图片和一个文本的布局（ListItem常见的布局方式），可以利用TextView有drawableLeft, drawableRight等属性，完全不需要RelativeLayout或者LinearLayout布局。
+
+### 两种新的布局方式
+
+传统的布局方式存在一定的缺陷，如RelativeLayout要两次测量（measure）它的子View才能知道确切的高度；如果LinearLayout布局的子View有设置了layout_weight，那么它也需要测量两次才能获得布局的高度。
+
+- **ConstraintLayout**：约束布局，在2016年由Google I/O推出。ConstraintLayout和RelativeLayout有点类似，控件之间根据依赖关系而存在，但比RelativeLayout更加灵活。创建大型复杂的布局仍然可以使用扁平的层级(不用嵌套View Group)，说的简单些就是，再复杂的界面也可以只有2层层次。
+	- Android Studio 2.3及之后的版本使用引导创建Empty的Activity时，默认就是使用ConstraintLayout布局。关于“如何解决Android的布局嵌套问题”的答案，官方其实已经明确给出信号了。 
+	- 使用ConstraintLayout可以有效的解决布局嵌套过多导致的性能问题，官方也对其渲染性能进行了优化，并且ConstraintLayout支持可视化的方式编写布局。
+	- 官方文档：https://developer.android.com/training/constraint-layout/index.html
+- **FlexBoxLayout**：做过前端开发（CSS方面）的同学对FlexBox一定不会陌生，最近我在做微信小程序开发时也涉及到FlexBox。FlexBox(弹性布局)是w3c在2009年提出的一种新的布局方案，解决以前那种传统css的盒模型的局限性。
+	- FlexBoxLayout可以理解成一种更高级的LinearLayout，不过比LinearLayout更加强大和灵活。如果我们使用LinearLayout布局的话，那么不同的分辨率，也许我们要重新调整布局，势必会需要跟多的布局文件放在不同的资源目录。而使用FlexBoxLayout来布局的话，它可以适应各种界面的改变（所以叫响应式布局）。
+	- Google开源了FlexboxLayout布局和前端CSS FlexBox布局具有相同的功能（肯定有不一样的地方），但已经足够在Android上改进布局的构建方式。
+	- 项目地址：https://github.com/google/flexbox-layout
+	
+
+
+## 基本概念
+
+### Android 四大组件是什么
+
+- **Activity 活动**：Activity用于显示界面，它上面可以显示控件、监听控件并处理用户的事件做出响应。
+
+- **Service 服务**：是Android 中实现程序后台运行的解决方案，适合不需要和用户交互而且还要求长期运行的任务。依赖于创建服务的程序，程序被杀掉，服务也停止运行。服务不会自动开启线程，需要服务内部创建子线程。
+
+- **Broadcast Receiver 广播接收器**：主要用于接收系统或者 app 发送的广播事件，应用程序可以使用它对感兴趣的外部事件(如当电话呼入时，或者更改网络4Gwifi)进行接收并做出响应。广播接收器没有用户界面。然而，它们可以启动一个 Activity 或 Serice 来响应它们收到的信息，或者用 NotificationManager 来通知用户。通知可以用很多种方式来吸引用户的注意力──闪动背灯、震动、播放声音等。
+
+- **Content Provider 内容提供者**：主要用于在不同的应用程序之间实现数据共享的功能，允许一个程序访问另一个程序中的数据，同时还能保证被访问数据的安全性。与其他存储方式不同的是：可以选择哪部分数据分享，从而保证隐私数据的安全性。
+
+### Android平台的framework的层次结构
+
+- Linux Kernel(**Linux内核**)
+- Hardware Abstraction Layer(**HAL硬件抽象层**)
+- Native C/C++Libraies(**原生C/C++库**) Android Runtime(**安卓运行时**)
+- Java API Framework(**Java API 框架** )
+- Applications(**系统应用**)
 
 
 
 
 
+### 动画有哪几类，它们的特点和区别是什么
+
+**(1) 视图动画**：定义了透明度、平移、缩放、旋转动画。实现原理：是每次绘画视图时，View 所在的 ViewGroup 中的 drawChild 函数获取该 View 的 Animation 的 Transformation 值，然后调用 canvas.concat(transformToApply.getMatrix())，通过矩阵运算完成动画帧。缺点：是不具备交互性，当某个元素发生 View 动画后，其响应事件的位置仍然在动画前的地方。
 
 
+**(2) 属性动画**：在一定时间间隔内，通过不断对值进行改变，并不断将该值赋给对象的属性，从而实现该对象在该属性上的动画效果，响应点击事件的有效区域也会发生改变。比较常用的几个动画类是：**ValueAnimator**(注重过程)、**ObjectAnimator**(具体操作) 和 **AnimatorSet**(组合)，其中 ObjectAnimator 继承自 ValueAnimator，AnimatorSet 是动画集合。
 
+### Drawable
+
+### 1.res/raw和asserts的区别
+这两个目录下的文件都会被打包进APK，并且不经过任何的压缩处理。
+assets与res/raw不同点在于，assets支持任意深度的子目录，这些文件不会生成任何资源ID，只能使用AssetManager按相对的路径读取文件。如需访问原始文件名和文件层次结构，则可以考虑将某些资源保存在assets目录下。
+
+### 2.图片放错目录会产生的问题吗？
+高密度（density）的系统去使用低密度目录下的图片资源时，会将图片长宽自动放大以去适应高密度的精度，当然图片占用的内存会更大。所以如果能提各种dpi的对应资源那是最好，可以达到较好内存使用效果。如果提供的图片资源有限，那么图片资源应该尽量放在高密度文件夹下，这样可以节省图片的内存开支。
+
+### 3.drawable-nodpi文件夹
+这个文件夹是一个密度无关的文件夹，放在这里的图片系统就不会对它进行自动缩放，原图片是多大就会实际展示多大。但是要注意一个加载的顺序，drawable-nodpi文件夹是在匹配密度文件夹和更高密度文件夹都找不到的情况下才会去这里查找图片的，因此放在drawable-nodpi文件夹里的图片通常情况下不建议再放到别的文件夹里面。
+
+### 4.Bitmap和Drawable
+Bitmap是Android系统中的图像处理的最重要类。可以简单地说，Bitmap代表的是图片资源在内存中的数据结构，如它的像素数据，长宽等属性都存放在Bitmap对象中。Bitmap类的构造函数是私有的，只能是通过JNI实例化，系统提供BitmapFactory工厂类给我们从从File、Stream和byte[]创建Bitmap的方式。
+Drawable官文文档说明为可绘制物件的一般抽象。View也是可以绘制的，但Drawable与View不同，Drawable不接受事件，无法与用户进行交互。我们知道很多UI控件都提供设置Drawable的接口，如ImageView可以通过setImageDrawable(Drawable drawable)设置它的显示，这个drawable可以是来自Bitmap的BitmapDrawable，也可以是其他的如ShapeDrawable。
+也就是Drawable是一种抽像，最终实现的方式可以是绘制Bitmap的数据或者图形、Color数据等。理解了这些，你很容易明白为什么我们有时候需要进行两者之间的转换。
+
+### 5.要加载很大的图片怎么办？
+如果图片很大，比如他们的占用内存算下来就直接OOM了，那么我们肯定不能直接加载它。解决主法还是有很多的，系统也给我们提供了一个类BitmapRegionDecoder，可以用来分块加载图片。
+
+### 6.图片圆角（或称矩形圆角）或者圆形头像的实现方式
+除了把原图直接做成圆角外，常见有三种方式实现：
+- 使用Xfermode混合图层；
+- 使用BitmapShader；
+- 通过裁剪画布区域实现指定形状的图形（ClipPath）
+
+## Android 中有哪几种解析xml的类
+
+官方推荐哪种？以及它们的原理和区别。
+
+Android 提供了三种解析XML的方式：**SAX(Simple API XML)** ，**DOM(Document Object Model)**， **Pull解析** 
+
+- **Dom解析**：将XML文件的所有内容读取到内存中（内存的消耗比较大），然后允许您使用DOM API遍历XML树、检索所需的数据。
+- **Sax解析**：Sax是一个解析速度快并且占用内存少的xml解析器，Sax解析XML文件采用的是事件驱动，它并不需要解析完整个文档，而是按内容顺序解析文档的过程。
+- **Pull解析**：Pull解析器的运行方式与 Sax 解析器相似。它提供了类似的事件，可以使用一个switch对感兴趣的事件进行处理。
 
 
 
@@ -1145,26 +1447,30 @@ Android Binder是用来做进程通信的，Android的各个应用以及系统�
 
 ### 主要涉及的角色：
 
-- Message：消息，分为硬件产生的消息（例如：按钮、触摸）和软件产生的消息。
-- MessageQueue：消息队列，主要用来向消息池添加消息和取走消息。
-- Looper：消息循环器，主要用来把消息分发给相应的处理者。
-- Handler：消息处理器，主要向消息队列发送各种消息以及处理各种消息。
+- **Message**：消息对象，是线程间通讯的消息载体。
+- **MessageQueue**：消息队列，它的内部存储了一组消息，以队列(先进先出)的形式对外提供插入和读取的操作。
+- **Looper**：轮播器，负责管理线程的消息队列和消息循环。
+- **Handler**：消息处理器，负责发送和处理消息，通过它可以实现其他线程与主线程之间的消息通讯。
 
 ### 整个消息的循环流程
 
 1. Handler通过sendMessage()发送消息Message到消息队列MessageQueue。
-1. Looper通过loop()不断提取触发条件的Message，并将Message交给对应的target handler来处理。
-1. target handler调用自身的handleMessage()方法来处理Message。
+1. Looper通过loop()不断提取触发条件的Message，并将Message交给对应的handler来处理。
+1. handler调用自身的handleMessage()方法来处理Message。
+
+### Handler的工作流程
+
+工作流程：Handler 的 post/send 方法将一个 Runnabl/Message 投递或发送到 Handler 内部，然后 MessageQueue 的 enqueueMessage 方法将这个消息放入消息队列中，然后 Looper.loop() 方法发现有新消息来时，就会处理这个消息。最终消息中的 Runnabl 或者 handlerMessage 方法就会被调用。
+
+### Handler中每个成员的核心方法
+- handler通过post（Runnable）和sendMessage（Message）传递Runnable和Message，最后调用的是sendMessage；
+- MessageQueue核心方法：enqueueMessage和next(实现原理：synchronized 和 for(;;))
+- Looper核心方法：Looper.prepare()和Looper.loop()，其中loop()方法里面是一个for(;;)死循环
+msg.target = this。
 
 ### 在一个工作线程中创建自己的消息队例应该怎么做
 
 Looper.prepare（在每个线程只允许执行一次）
-
-### handler
-- handler通过post（Runnable）和sendMessage（Message）传递Runnable和Message，最后调用的是sendMessage；
-- MessageQueue核心方法：enqueueMessage和next(实现原理：synchronized 和 for(;;))
-- Looper核心方法：Looper.prepare()和Looper.loop()，其中loop()方法里面是一个for(;;)死循环
-msg.target = this
 
 ### 为什么主线程不会因为Looper.loop()里的死循环卡死？
 
@@ -1801,133 +2107,11 @@ APK整体的的打包流程如下图所示：
 
 
 
-### Android中数据存储方式
-
-Android中有5种数据存储方式，分别为文件存储、SQLite数据库、SharedPreferences、ContentProvider、网络。每种存储方式的特点如下：
-
-- 1）**文件存储/SD卡**：文件存储方式是一种较常用的方法，在Android中读取/写入文件的方法，与Java中实现I/O的程序是完全一样的，提供openFileInput()和openFileOutput()方法来读取设备上的文件。
-
-   - 将数据存储到文件中：
-
-```java
-String data = "data to save";
-FileOutputStream out = openFileOutput("文件名", 覆盖:MODE_PRIVATE 追加:MODE_APPEND);
-BufferedWriter writer = new BufferedWriter(new OutputStreamWriter());
-writer.write(data);
-writer.close();
-```
-
-   - 将数据存储到文件中：
-
-```java
-FileInputStream in = openFileInput("文件名");
-BufferedReader reader = new BufferedReader(new InputStreamReader());
-StringBuffer content = new StringBuffer();
-String line = "";
-while ((line.reader.readLine()) != null) {
-    content.append(line);
-}
-reader.close();
-return content.toString();
-```
 
 
-- 2）**SQLite数据库**：SQLite是Android所集成的一个轻量级的嵌入式数据库，它不仅可以使用Andorid API操作，同时它也支持SQL语句进行增删改查等操作。
 
-```java
 
-public class MyDatabaseHelper extends SQLiteOpenHelper {
-    private Context mContext;
-    public static final String CREATE_BOOK = "create table Book(" +
-            "id integer primary key autoincrement," +
-            "author text," +
-            "price readl," +
-            "price integer," +
-            "name text)";
-    public MyDatabaseHelper(Context context, String name,
-                            SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
-        mContext = context;
-    }
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_BOOK);
-    }
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //升级数据库的话先修改版本号
-        //drop删除表，delete是删除数据
-        db.execSQL("drop table if exists Book");
-        onCreate(db);
-    }
-}
 
-public class Main2Activity extends AppCompatActivity {
-    private MyDatabaseHelper dbHepler;
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        dbHepler = new MyDatabaseHelper(this, "BookStore.db", null, 1);
-        //都是打开和创建，区别在于空间满的情况w是出现异常，R是只读
-        //dbHepler.getWritableDatabase();
-        dbHepler.getReadableDatabase();
-
-        //添加
-        SQLiteDatabase db = dbHepler.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("name", "tom");
-        values.put("pages", 464);
-        values.put("price", 14.23);
-        db.insert("Book", null, values);
-        //更新
-        SQLiteDatabase db = dbHepler.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("name", "HHH");
-        db.update("Book", values, "price>?", new String[]{"10"});
-        //删除
-        //查询
-    }
-}
-```
-
-- 3）**SharedPreferences**：是Android提供的用于存储一些简单配置信息的一种机制，采用了XML格式将数据存储到设备中。不仅可以在同一个包下使用，还可以访问其他应用程序的数据，但是由于SharedPreferences的局限性，在实际操作中很少用来读取其他应用程序的数据。
-
-	3.1 将数据存储到SharedPreferences：
-
-	(1)Context类中的getSharedPreferences()方法：第一个参数是文件名，第二个参数是操作模式 MODE_PRIVATE只有当前程序才能读写。
-
-	(2)Activity类中的getPreferences()方法：自动将当期活动类名作为SharedPreferences的文件名。
-
-	(3)PreferenceManager类中的getDefaulSharedPreferences()方法：当前程序的包名作为前缀来命名SharedPreferences文件。
-
-	步骤：
-
-	(1)调用SharedPreferences对象的edit()方法来获取SharedPreferences.Editor对象。
-
-	(2)向 SharedPreferences.Editor 对象中添加数据，比如putBoolean、putInt、putString
-
-	(3)调用apply方法提交数据。
-
-```java
-SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
-editor.putString("name", "Tom");
-editor.putInt("age", 28);
-editor.putBoolean("married", false);
-```
-
-	3.2从SharedPreferences中读取数据：
-
-```java
-SharedPreferences pref  = getSharedPreferences("data",MODE_PRIVATE);
-String name = pref.getString("name","默认值");
-int age = pref.getInt("age",0);
-boolean married = pref.getBoolean("married",false);
-```
-
-- 4）**ContentProvider**：并不能用户存储数据。主要用于不同应用程序之间共享数据，只是为我们存储以及添加数据制定统一的接口而已。
-
-- 5）**网络存储数据**：通过网络上提供的存储空间来上传(存储)或下载(获取)我们存储在网络空间中的数据信息
-
-### 共享数据的方式
-1.File， 2.Sqlite，3.Content Provider，4.Service，5.Broadcast Receiver，6.Intent
 
 ### Binder
 
