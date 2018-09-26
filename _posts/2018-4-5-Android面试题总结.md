@@ -85,16 +85,16 @@ tags: 面试
 ### 4、生命周期的各阶段
 
 - **完整生命周期**：
-Activity在onCreate()和onDestroy()之间所经历的。
-在onCreate()中完成各初始化操作，在onDestroy()中释放资源。
+	- Activity在onCreate()和onDestroy()之间所经历的。
+	- 在onCreate()中完成各初始化操作，在onDestroy()中释放资源。
 
 - **可见生命周期**：
-Activity在onStart()和onStop()之间所经历的。
-活动对于用户是可见的，但仍无法与用户进行交互。
+	- Activity在onStart()和onStop()之间所经历的。
+	- 活动对于用户是可见的，但仍无法与用户进行交互。
 
 - **前台生命周期**：
-Activity在onResume()和onPause()之间所经历的。
-活动可见，且可交互。
+	- Activity在onResume()和onPause()之间所经历的。
+	- 活动可见，且可交互。
 
 ### 5、onSaveInstanceState和onRestoreInstanceState的区别/在Activity中如何保存/恢复状态？
 
@@ -108,10 +108,7 @@ Activity在onResume()和onPause()之间所经历的。
 
 - 可通过onRestoreInstanceState(Bundle savedInstanceState)和onCreate((Bundle savedInstanceState)来判断Activity是否被重建，并取出数据进行恢复。但需要注意的是，在onCreate取出数据时一定要先判断savedInstanceState是否为空。另外，谷歌更推荐使用onRestoreInstanceState进行数据恢复。
 
-- 需要注意的是，onSaveInstanceState()方法并不是一定会被调用的, 因为有些场景是不需要保存
-状态数据的。比如用户按下 BACK 键退出 activity 时，用户显然想要关闭这个 activity，此时是没有必
-要 保 存 数 据 以 供 下 次 恢 复  , 也 就 是 onSaveInstanceState() 方 法 不 会 被 调 用。如 果 调 用
-onSaveInstanceState()方法，调用将发生在 onPause()或 onStop()方法之前。
+- 需要注意的是，onSaveInstanceState()方法并不是一定会被调用的, 因为有些场景是不需要保存状态数据的。比如用户按下 BACK 键退出 activity 时，用户显然想要关闭这个 activity，此时是没有必要 保 存 数 据 以 供 下 次 恢 复  , 也 就 是 onSaveInstanceState() 方 法 不 会 被 调 用。如 果 调 用 onSaveInstanceState() 方法，调用将发生在 onPause() 或 onStop()方法之前。
 ```java
 //MainActivity 中添加代码进行临时保存
 protected void onSaveInstanceState(Bundle outState){
@@ -153,16 +150,15 @@ protected void onCreate(Bundle saveInstanceState){
 	- b.通过标记位设定，方法是intent.addFlags(Intent.xxx)。
 
 - **standard**：标准模式，这也是系统的默认模式。每次启动一个Activity都会重新创建一个新的实例，不管这个实例是否已经存在；
-	- (1) 注意：使用ApplicationContext去启动standard模式Activity就会报错。因为standard模式的Activity会默认进入启动它所属的任务栈，但是由于非Activity的Context没有所谓的任务栈。
 
 - **singleTop**：栈顶复用模式。
-	- (1) 如果新Activity已经位于任务栈的栈顶，那么此Activity不会被重新创建，同时它的**onNewIntent**方法会被回调；
-	- (2) 需要注意的是，这个Activity的onCreate、onStart不会被系统调用，因为它并没有发生改变；
-	- (3) 如果新的Activity的实例已经存在但不是位于栈顶，那么新的Activity仍然会新创建一个；
+	- (1) 如果已经位于栈顶，那么生命周期不走onCreate、onStart，会回调**onNewIntent**方法；
+	- (2) 如果新的Activity的实例已经存在但不是位于栈顶，那么新的Activity仍然会新创建一个；
+	- (3) 适合推送消息详情页，比如新闻推送详情Activity;
 
-- **singleTask**：栈内复用模式。如果要启动的在栈内存在了，但不在栈顶，它会把上面的全部出栈。系统也会回调其onNewIntent；
+- **singleTask**：栈内复用模式。如果存在栈内，则在其上所有Activity全部出栈，系统也会回调其onNewIntent；App首页基本是用这个。
 
-- **singleInstance**：单实例模式，具有此模式的Activity只能单独位于一个任务栈中，且此任务栈中只有唯一一个实例。
+- **singleInstance**：单实例模式，具有此模式的Activity只能单独位于一个任务栈中，且此任务栈中只有唯一一个实例。适用新开Activity和app能独立开的，如系统闹钟，微信的视频聊天界面。
 
 - **常用的可设定Activity启动模式的标记位**
 	- ①**FLAG_ACTIVITY_NEW_TASK**：这个标记位的作用是为Activity指定”singleTask”启动模式，其效果和在XML中指定该启动模式相同；
@@ -303,7 +299,11 @@ Context 从字面上理解就是上下文的意思，在实际应用中它也确
 
 taskAffinity是用来指示Activity属于哪一个Task的。taskAffinity能够决定以下两件事情（前提是Activity的launchMode为singleTask或者设置了FLAG_ACTIVITY_NEW_TASK）,默认情况下，在一个app中的所有Activity都有一样的taskAffinity，但是我们可以设置不同的taskAffinity，为这些Activity分Task。甚至可以在不同的app之中，设置相同的taskAffinity，以达到不同app的activity公用同一个Task的目的。
 
-
+### 21、Activity的布局文件是如何被加载的呢？
+- Activity是使用setContentView来设置一个布局的。
+- Activity通常包含Window对象，由PhoneWindow来实现Window对象。
+- PhoneWindow将一个DecorView设置为整个应用窗口都根View。
+- DecorView作为窗口界面都顶层视图，封装了一些窗口操作都通用方法。
 
 
 
@@ -324,7 +324,7 @@ taskAffinity是用来指示Activity属于哪一个Task的。taskAffinity能够�
 ### 1.Fragment  是什么？
 Fragment 是 Android 自 3.0 版本开始引入的一种可以嵌入在 Activity 当中的UI片段，主要是为了能在不同分辩率屏幕上进行更为动态和灵活的UI设计，让程序更加合理和充分利用大屏幕空间。
 
-### 2.Fragment 为什么被称为 第五大组件
+### 2.Fragment 为什么被称为第五大组件
 
 1. 使用频率高；
 1. 有自己的生命周期；
@@ -929,7 +929,7 @@ uri 就可以了，ContentProvider 可以实现不同 app 之间共享。
 
 - **有序广播 Ordered Broadcast**：*同步*执行的广播，发出去的广播会被广播接收者按照顺序接收，广播接收者按照Priority属性值从大-小排序，Priority属性相同者，动态注册的广播优先，广播接收者还可以选择对广播进行截断和修改。调用 **sendOrderedBroadcast**() 发送。
 
-- ** 本地广播 Local  Broadcast**：App应用内广播可理解为一种局部广播，广播的发送者和接收者都同属于一个App。相比于全局广播（普通广播），App应用内广播优势体现在：安全性高 & 效率高。对于LocalBroadcastManager方式发送的应用内广播，只能通过LocalBroadcastManager动态注册，不能静态注册。调用**sendBroadcast**发送。
+- **本地广播 Local  Broadcast**：App应用内广播可理解为一种局部广播，广播的发送者和接收者都同属于一个App。相比于全局广播（普通广播），App应用内广播优势体现在：安全性高 & 效率高。对于LocalBroadcastManager方式发送的应用内广播，只能通过LocalBroadcastManager动态注册，不能静态注册。调用**sendBroadcast**发送。
 
 ### 4、注册广播接收 (静态和动态)
 
@@ -1271,7 +1271,11 @@ Q：使用SQLite时会有哪些优化操作?
 ### 你是如何解决Android的布局嵌套问题的？
 
 - 我们都清楚Android界面的布局太复杂，嵌套层次过深，会使整个界面的测量、布局和绘制变得更复杂，对性能会造成影响。所以我们在写Layout文件时，也要尽量避免布局的嵌套层次过深的问题。
-- 有一个好方法先判断当前的问题情况。Android SDK工具箱中有一个叫做*Hierarchy Viewer*的工具，能够在App运行时分析Layout。
+- 有一个好方法先判断当前的问题情况。Android SDK工具箱中有一个叫做*Hierarchy 
+- 
+- 
+- 
+- er*的工具，能够在App运行时分析Layout。
 
 - **merge**：merge标签的作用是合并UI布局，使用该标签能降低UI布局的嵌套层次。merge标签可用于两种情况：
 	-  一、布局顶结点是FrameLayout且不需要设置background或padding等属性，可以用merge代替，因为Activity内容试图的parent view就是个FrameLayout，所以可以用merge消除只剩一个。
@@ -1585,81 +1589,24 @@ Handelr：结构清晰，功能明确。对于多个后台任务时，清晰简�
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## 十二、View绘制
-
-### view树的绘制流程
-
-- **onMeasure**：测量视图的大小，从顶层父View到子View递归调用measure()方法，measure()调用onMeasure()方法，onMeasure()方法完成测量工作。
-- **onLayout**：确定视图的位置，从顶层父View到子View递归调用layout()方法，父View将上一步measure()方法得到的子View的布局大小和布局参数，将子View放在合适的位置上。
-- **onDraw**：绘制最终的视图，首先ViewRoot创建一个Canvas对象，然后调用onDraw()方法进行绘制。onDraw()方法的绘制流程为：① 绘制视图背景。② 绘制画布的图层。 ③ 绘制View内容。 ④ 绘制子视图，如果有的话。⑤ 还原图层。⑥ 绘制滚动条。
-
-### measure
-
-![](https://i.imgur.com/C3hEYc5.png)
-
-重要的参数：
-
-ViewGroup.LayoutParams：用来指定视图高度宽带(具体的长宽高、和父控件一样、包含即可)
-MeasureSpec：测量规格，包括两种(测量模式、..)
-
-measure方法调用：
-
-- measure：为每一个View的宽高赋值
-- onMeasure：
-- setMeasuredDimension ：完成整个测量
-
-
-### layout
-### draw
-
-### 描述一下View的绘制原理？
-
-
-
-
-
-
-
-
-
-## 十三、View事件分发
-
-### 为什么会有事件分发机制？
-
-答： Android 的 View 是树形结构的，View 可能会重叠在一起，当我们点击的地方有多个 View 都可以响应的时候，这个点击事件由谁来触发呢？为了解决这个问题，就有了事件分发机制。 
-
-- **Phonewindow**：最顶层的管理容器，作为window的唯一实现类。
-- **DecorView**：Phonewindow的内部类，作为传递消息的使者。
-
-### 事件分发流程
-
-Activity-> PhoneWindow -> DecorView -> ViewGroup -> ... -> View
-
-当最后一个View 没有消费事件，这个事件会依次返转回到最高位的Activity，如果这样都没消费的话才抛弃。
-
-### 三个重要的事件分发方法
-
-- **dispatchTouchEvent**：用来进行事件的分发。
-- **onInterceptTouchEvent**：用来判断是否拦截某个事件。在 dispatchTouchEvent 方法内部调用，果当前 View 拦截了某个事件，那在同一个事件序列中，此方法不会再次调用，返回结果表示是否拦截当前事件。
-- **onTouchEvent**：用来处理点击事件。在 dispatchTouchEvent 方法内部调用，返回结果表示是否消耗当前事件，如果不消耗，在同一事件序列里，当前 View 无法再次接收到事件。
-
-```java
-// 父View调用 dispatchTouchEvent() 开始分发事件
-public boolean dispatchTouchEvent(MotionEvent event){
-    boolean consume = false;
-    // 父View决定是否拦截事件
-    if(onInterceptTouchEvent(event)){
-        // 父View调用onTouchEvent(event)消费事件，如果该方法返回true，表示
-        // 该View消费了该事件，后续该事件序列的事件（Down、Move、Up）将不会在传递
-        // 该其他View。
-        consume = onTouchEvent(event);
-    }else{
-        //否则， 调用子View的dispatchTouchEvent(event)方法继续分发事件
-        consume = child.dispatchTouchEvent(event);
-    }
-    return consume;
-}
-```
 
 
 
