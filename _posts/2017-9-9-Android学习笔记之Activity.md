@@ -148,6 +148,7 @@ protected void onCreate(Bundle saveInstanceState){
 - **paused**：处于失去焦点状态或者被一个非全屏的Activity占据，又或者被一个透明的Activity放置栈顶。Activity只是失去和用户的交互能力，处于内存紧张状态。
 - **stopped**：被另外的 Activity 全屏覆盖，不再是可见的，
 - **killed**：Activity 已经被系统回收掉了。
+
 ---
 
 ### 10、Activity之间的通信方式
@@ -160,6 +161,7 @@ protected void onCreate(Bundle saveInstanceState){
   - 使用Android数据库 SQLite 
   - 赤裸裸的使用 File 
 - 5)借助Service
+
 
 ---
 
