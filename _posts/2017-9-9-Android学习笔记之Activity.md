@@ -89,7 +89,7 @@ protected void onCreate(Bundle saveInstanceState){
 
 - a.**如何避免配置改变时导致Activity重建？**
 
-可在AndroidManifest.xml中对应的Activity中设置**android:configChanges = "orientation|keyboardHidden|screenSize"**。此时再次旋转屏幕时，该Activity不会被系统杀死和重建，只会调用**onConfigurationChanged**。因此，当配置程序需要响应配置改变，指定configChanges属性，重写onConfigurationChanged方法即可。
+	- 可在AndroidManifest.xml中对应的Activity中设置`android:configChanges = "orientation|keyboardHidden|screenSize"`。此时再次旋转屏幕时，该Activity不会被系统杀死和重建，只会调用**onConfigurationChanged**。因此，当配置程序需要响应配置改变，指定configChanges属性，重写onConfigurationChanged方法即可。
 
 - b.**由于系统资源不足，导致优先级低的Activity被回收。**
 	- ①Activity优先级排序：前台可见Activity>前台可见不可交互Activity（前台Activity弹出Dialog)>后台Activity（用户按下Home键、切换到其他应用）
