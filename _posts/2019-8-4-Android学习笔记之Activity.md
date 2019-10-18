@@ -153,15 +153,14 @@ protected void onCreate(Bundle saveInstanceState){
 
 ### 10、Activity之间的通信方式
 
-- 1)在Intent跳转时携带数据 
-- 2)借助类的静态变量
-- 3)借助全局变量 Application
-- 4)借助外部存储来实现通讯
+- 在Intent跳转时携带数据 
+- 借助类的静态变量
+- 借助全局变量 Application
+- 借助外部存储来实现通讯
   - 借助 SharedPreference 
   - 使用Android数据库 SQLite 
   - 赤裸裸的使用 File 
-- 5)借助Service
-
+- 借助Service
 
 ---
 
