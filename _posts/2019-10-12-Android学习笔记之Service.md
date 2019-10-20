@@ -81,7 +81,7 @@ new Thread(new Runnable(){
 
 ### 5.Service 的生命周期
 
-![Service 的生命周期](https://github.com/WangXianSong/Wangxiansong.github.io/blob/master/images/ServiceLife.png)
+![Service 的生命周期](http://upload-images.jianshu.io/upload_images/6491732-3c3cf72da513e485.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 - 回调方法含义：
 	- **onCreate**：服务第一次被创建时调用；
