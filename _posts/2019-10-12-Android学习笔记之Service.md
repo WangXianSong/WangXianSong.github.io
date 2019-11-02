@@ -25,8 +25,48 @@ Service 是 Android 中实现程序后台运行的解决方案，非常适用于
 
 ### 2.Service 的生命周期
 
+<<<<<<< HEAD
 ![Service 的生命周期](https://upload-images.jianshu.io/upload_images/6491732-71e23049eb056188.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+=======
+---
 
+### 4.开启子线程的方法
+
+- 新建类继承自Thread，然后重写父类的run方法，并在里面编写耗时逻辑。
+```java
+class MyThread extends Thread{
+    public void run(){
+        //具体逻辑
+    }
+}
+new MyThread().start();
+```
+- 实现Runnable接口可以降低继承的耦合性
+```java
+class MyThread implements Runnable{
+    public void run(){
+          //具体逻辑
+    }
+}
+//启动线程的方法
+MyThread my = new MyThread();
+new Thread(my).start();
+```
+- 使用匿名类的方式，这种方式最常见
+```java
+new Thread(new Runnable(){
+    public void run(){
+        //具体逻辑
+    }
+}).start()
+```
+
+---
+
+### 5.Service 的生命周期
+
+![Service 的生命周期](http://upload-images.jianshu.io/upload_images/6491732-3c3cf72da513e485.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+>>>>>>> parent of abf8bf3... Update 2019-10-12-Android学习笔记之Service.md
 
 - 回调方法含义：
 	- **onCreate**：服务第一次被创建时调用；
