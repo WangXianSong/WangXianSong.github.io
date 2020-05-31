@@ -9,6 +9,8 @@ tags: MVP架构
 * content
 {:toc}
 
+
+
 ### 前言
 
 在学习了 MVC 架构之后，发现 Activity 和 Fragment 和 XML 界面的开发就是典型的 MVC 架构模式，在 Activity 中不仅要处理 UI 操作，还要处理请求数据的操作。
